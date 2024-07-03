@@ -1,4 +1,7 @@
+"use client"
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import ColorCard from "./components/ColorCard";
 import EventCard from "./components/EventCard";
 import StudentCard from "./components/StudentCard";
@@ -11,7 +14,63 @@ import student from "./img/student.png";
 import teachers from "./img/teachers.png";
 import Link from "next/link";
 import InteractiveGraph from "./components/InteractiveGraph";
+import { fetcheventData } from "../../../../api/api";
+
+async function getData() {
+  const res = await fetch('http://localhost:5000/api/count/count', { cache: 'no-store' });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
 export default function Main() {
+  const [data, setData] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getData();
+        setData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventData = await fetcheventData();
+        setEvents(eventData);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!data) {
+    return <div>No data found</div>;
+  }
+
+
   return (
     <>
       <div className=" w-full px-10 flex flex-col gap-5  py-10 ">
@@ -19,37 +78,37 @@ export default function Main() {
           <ColorCard
             icon={student}
             text={"Number of Students"}
-            number={"500"}
+            number={data.count}
             color={"bg-blue-600"}
           />
           <ColorCard
             icon={student}
             text={"Total Present Students"}
-            number={"450"}
+            number={data.presentCount}
             color={"bg-green-600"}
           />
           <ColorCard
             icon={teachers}
             text={"Number of Teachers"}
-            number={"20"}
+            number={data.teacher}
             color={"bg-blue-600"}
           />
           <ColorCard
             icon={teachers}
             text={"Total Present Teacher"}
-            number={"18"}
+            number={data.teacherpresent}
             color={"bg-green-600"}
           />
           <ColorCard
             icon={staffs}
             text={"Number of Staffs"}
-            number={"10"}
+            number={data.staffCount}
             color={"bg-blue-600"}
           />
           <ColorCard
             icon={staffs}
             text={"Total Present Staffs"}
-            number={"9"}
+            number={data.staffpresentCount}
             color={"bg-green-600"}
           />
         </div>
@@ -69,24 +128,21 @@ export default function Main() {
 
         {/*  Upcoming School Events */}
 
-        <div className="flex flex-col gap-3  w-full ">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-black text-xl font-bold">
-              Upcoming School Events
-            </h1>
-            <Link href={"/AdminDashboard/SeeAll"}>
-              <h1 className="text-blue-600 text-sm underline">See All</h1>
-            </Link>
-          </div>
-
+        <div className="flex flex-col gap-3 w-full">
+          <h1 className="text-black text-xl font-bold">Upcoming School Events</h1>
           <div className="flex flex-row gap-3">
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
+            {events.map((event) => (
+              <EventCard
+                key={event._id}
+                name={event.eventName}
+                date={new Date(event.eventDate).toLocaleDateString()}
+                time={event.eventTime}
+                description={event.description}
+                organizer={event.organizerName}
+              />
+            ))}
           </div>
         </div>
-
         {/* Top Student */}
 
         <div className="flex flex-row gap-3 w-full ">
