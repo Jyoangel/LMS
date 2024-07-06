@@ -1,12 +1,13 @@
 "use client";
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
-
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { addStudentData } from "../../../../../api/api";
 
 export default function StudentDetails() {
   const [isSelectOpen, setisSelectOpen] = useState(false);
+
 
   const openModal = () => {
     setisSelectOpen(true);
@@ -15,9 +16,97 @@ export default function StudentDetails() {
   const closeModal = () => {
     setisSelectOpen(false);
   };
+  const initialFormData = {
+    studentID: '',
+    formNumber: '',
+    admissionNumber: '',
+    class: '',
+    admissionType: '',
+    name: '',
+    nationality: '',
+    motherTongue: '',
+    dateOfBirth: '',
+    gender: '',
+    religion: '',
+    caste: '',
+    bloodGroup: '',
+    aadharNumber: '',
+    contactNumber: '',
+    email: '',
+    address: '',
+    parent: {
+      fatherName: '',
+      fatherContactNumber: '',
+      fatherAadharNumber: '',
+      fatherOccupation: '',
+      motherName: '',
+      motherContactNumber: '',
+      motherAadharNumber: '',
+      motherOccupation: '',
+      annualIncome: '',
+      parentAddress: ''
+    },
+    localGuardian: {
+      guardianName: '',
+      relationWithStudent: '',
+      guardianContactNumber: '',
+      guardianAadharNumber: '',
+      guardianOccupation: '',
+      guardianAddress: ''
+    }
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const handleParentChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      parent: {
+        ...prevData.parent,
+        [name]: value
+      }
+    }));
+  };
+
+  const handleLocalGuardianChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      localGuardian: {
+        ...prevData.localGuardian,
+        [name]: value
+      }
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      await addStudentData(formData);
+      console.log('Student created successfully');
+      // Reset form data
+      setFormData(initialFormData);
+      openModal();
+      // You can add code here to refresh the student list in UserManagementTable if needed
+    } catch (error) {
+      console.error('Error creating student:', error);
+      // Handle error (e.g., show error message)
+    }
+  };
 
   return (
     <>
+
       <div className="h-screen w-full flex flex-col px-5 py-10 gap-10">
         <div className="w-full">
           <Link href={"/AdminDashboard/UserManagement"}>
@@ -30,19 +119,29 @@ export default function StudentDetails() {
 
         {/* form */}
 
-        <form action="#" className="flex flex-col gap-10">
-          {/* Student Details */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
           <div className="flex flex-col gap-8">
             <h1 className="text-lg font-semibold">Student Details</h1>
             <div className="w-full grid grid-cols-3 items-center gap-5">
-              {/*  Form Number* */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Form Number*
-                </label>
+                <label className="text-lg font-normal text-black">Student ID*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="studentID"
+                  value={formData.studentID}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">Form Number*</label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  name="formNumber"
+                  value={formData.formNumber}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
@@ -55,6 +154,9 @@ export default function StudentDetails() {
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="admissionNumber"
+                  value={formData.admissionNumber}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
@@ -65,6 +167,9 @@ export default function StudentDetails() {
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
@@ -73,15 +178,30 @@ export default function StudentDetails() {
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">Class*</label>
                 <select
-                  type="text"
-                  placeholder="Type here"
+                  name="class"
+                  value={formData.class}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
-                  <option value="" className="text-gray-400 px">
+                  <option value="" className="text-gray-400">
                     Select
                   </option>
+                  {[...Array(10)].map((_, index) => (
+                    <option key={index + 1} value={index + 1}>{index + 1}</option>
+                  ))}
                 </select>
+              </div>
+
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">Admission Type*</label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  name="admissionType"
+                  value={formData.admissionType}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
               </div>
 
               {/* Date of Birth */}
@@ -92,44 +212,55 @@ export default function StudentDetails() {
                 <input
                   type="date"
                   placeholder="Type here"
+                  name="dateOfBirth"
+                  value={formData.dateOfBirth}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
               {/* Gender */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Gender*
-                </label>
+                <label className="text-lg font-normal text-black">Gender*</label>
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
               {/* Nationality */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Nationality*
-                </label>
+                <label className="text-lg font-normal text-black">Nationality*</label>
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="nationality"
+                  value={formData.nationality}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="Indian">Indian</option>
+                  <option value="American">American</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
+
+              {/* Mother Tongue */}
               {/* Mother Tongue */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
@@ -138,29 +269,38 @@ export default function StudentDetails() {
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="motherTongue"
+                  value={formData.motherTongue}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
               {/* Religion */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Religion*
-                </label>
+                <label className="text-lg font-normal text-black">Religion*</label>
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="religion"
+                  value={formData.religion}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="Hindu">Hindu</option>
+                  <option value="Muslim">Muslim</option>
+                  <option value="Christian">Christian</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
@@ -170,12 +310,18 @@ export default function StudentDetails() {
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="caste"
+                  value={formData.caste}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="General">General</option>
+                  <option value="OBC">OBC</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
                 </select>
               </div>
 
@@ -187,16 +333,26 @@ export default function StudentDetails() {
                 <select
                   type="text"
                   placeholder="Type here"
+                  name="bloodGroup"
+                  value={formData.bloodGroup}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 >
-                  {" "}
                   <option value="" className="text-gray-400 px">
                     Select
                   </option>
+                  <option value="A+">A+</option>
+                  <option value="B+">B+</option>
+                  <option value="O+">O+</option>
+                  <option value="AB+">AB+</option>
+                  <option value="A-">A-</option>
+                  <option value="B-">B-</option>
+                  <option value="O-">O-</option>
+                  <option value="AB-">AB-</option>
                 </select>
               </div>
 
-              {/* Aadhar Number*/}
+              {/* Aadhar Number */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
                   Aadhar Number*
@@ -204,6 +360,9 @@ export default function StudentDetails() {
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="aadharNumber"
+                  value={formData.aadharNumber}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
@@ -216,88 +375,106 @@ export default function StudentDetails() {
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="contactNumber"
+                  value={formData.contactNumber}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
-            </div>{" "}
+
+              {/* Email */}
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">Email*</label>
+                <input
+                  type="email"
+                  placeholder="Type here"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Address * */}
-          <div className="flex flex-col gap-3 w-full">
-            <label className="text-lg font-normal text-black">Address *</label>
+          {/* Address */}
+          <div className="flex flex-col gap-3 w-full col-span-3">
+            <label className="text-lg font-normal text-black">Address*</label>
             <textarea
               type="text"
               placeholder="Type here"
-              className="h-20 border border-gray-300 rounded-md w-full py-3
-             px-5 outline-none "
-            ></textarea>
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+            />
           </div>
 
-          {/* Parents Details */}
+
+          {/* Parent's Details */}
           <div className="flex flex-col gap-8">
-            <h1 className="text-lg font-semibold">Parents Details</h1>
+            <h1 className="text-lg font-semibold">Parent&apos;s Details</h1>
             <div className="w-full grid grid-cols-3 items-center gap-5">
-              {/*  Father Name */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
-                  Father Name*
+                  Father&apos;s Name*
                 </label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="fatherName"
+                  value={formData.parent.fatherName}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Contact Number */}
+              {/* Father Contact Number */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
-                  Contact Number*
+                  Father Contact Number*
                 </label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="fatherContactNumber"
+                  value={formData.parent.fatherContactNumber}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Aadhar Number */}
+              {/* Father Aadhar Number */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
-                  Aadhar Number*
+                  Father Aadhar Number*
                 </label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="fatherAadharNumber"
+                  value={formData.parent.fatherAadharNumber}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Occupation */}
+              {/* Father Occupation */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
-                  Occupation*
+                  Father Occupation*
                 </label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="fatherOccupation"
+                  value={formData.parent.fatherOccupation}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Annual Income  */}
-              <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Annual Income*
-                </label>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                />
-              </div>
-
-              {/*  Mother Name  */}
+              {/* Mother Name */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
                   Mother Name*
@@ -305,132 +482,191 @@ export default function StudentDetails() {
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="motherName"
+                  value={formData.parent.motherName}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Aadhar Number  */}
+              {/* Mother Contact Number */}
               <div className="flex flex-col gap-3 w-full">
                 <label className="text-lg font-normal text-black">
-                  Aadhar Number*
+                  Mother Contact Number*
                 </label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="motherContactNumber"
+                  value={formData.parent.motherContactNumber}
+                  onChange={handleParentChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+
+              {/* Mother Aadhar Number */}
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">
+                  Mother Aadhar Number*
+                </label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  name="motherAadharNumber"
+                  value={formData.parent.motherAadharNumber}
+                  onChange={handleParentChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+
+              {/* Mother Occupation */}
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">
+                  Mother Occupation*
+                </label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  name="motherOccupation"
+                  value={formData.parent.motherOccupation}
+                  onChange={handleParentChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+
+              {/* Annual Income */}
+              <div className="flex flex-col gap-3 w-full">
+                <label className="text-lg font-normal text-black">
+                  Annual Income*
+                </label>
+                <input
+                  type="text"
+                  placeholder="Type here"
+                  name="annualIncome"
+                  value={formData.parent.annualIncome}
+                  onChange={handleParentChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+
+              {/* Parent Address */}
+              <div className="flex flex-col gap-3 w-full col-span-3">
+                <label className="text-lg font-normal text-black">
+                  Parent Address*
+                </label>
+                <textarea
+                  type="text"
+                  placeholder="Type here"
+                  name="parentAddress"
+                  value={formData.parent.parentAddress}
+                  onChange={handleParentChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
             </div>
-          </div>
-
-          {/* Address * */}
-          <div className="flex flex-col gap-3 w-full">
-            <label className="text-lg font-normal text-black">Address *</label>
-            <textarea
-              type="text"
-              placeholder="Type here"
-              className="h-20 border border-gray-300 rounded-md w-full py-3
-             px-5 outline-none "
-            ></textarea>
           </div>
 
           {/* Local Guardian Details */}
           <div className="flex flex-col gap-8">
             <h1 className="text-lg font-semibold">Local Guardian Details</h1>
             <div className="w-full grid grid-cols-3 items-center gap-5">
-              {/*  Guardian Name */}
+              {/* Guardian Name */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Guardian Name*
-                </label>
+                <label className="text-lg font-normal text-black">Guardian Name*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="guardianName"
+                  value={formData.localGuardian.guardianName}
+                  onChange={handleLocalGuardianChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Relation With Student     */}
+              {/* Relation With Student */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Relation With Student*
-                </label>
+                <label className="text-lg font-normal text-black">Relation With Student*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="relationWithStudent"
+                  value={formData.localGuardian.relationWithStudent}
+                  onChange={handleLocalGuardianChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Contact Number */}
+              {/* Contact Number */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Contact Number*
-                </label>
+                <label className="text-lg font-normal text-black">Contact Number*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="guardianContactNumber"
+                  value={formData.localGuardian.guardianContactNumber}
+                  onChange={handleLocalGuardianChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Aadhar Number */}
+              {/* Aadhar Number */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Aadhar Number*
-                </label>
+                <label className="text-lg font-normal text-black">Aadhar Number*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="guardianAadharNumber"
+                  value={formData.localGuardian.guardianAadharNumber}
+                  onChange={handleLocalGuardianChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
 
-              {/*  Occupation  */}
+              {/* Occupation */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Occupation*
-                </label>
+                <label className="text-lg font-normal text-black">Occupation*</label>
                 <input
                   type="text"
                   placeholder="Type here"
+                  name="guardianOccupation"
+                  value={formData.localGuardian.guardianOccupation}
+                  onChange={handleLocalGuardianChange}
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
             </div>
           </div>
 
-          {/* Address * */}
+          {/* Address */}
           <div className="flex flex-col gap-3 w-full">
             <label className="text-lg font-normal text-black">Address *</label>
             <textarea
               type="text"
               placeholder="Type here"
-              className="h-20 border border-gray-300 rounded-md w-full py-3
-             px-5 outline-none "
-            ></textarea>
+              name="guardianAddress"
+              value={formData.localGuardian.guardianAddress}
+              onChange={handleLocalGuardianChange}
+              className="h-20 border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+            />
           </div>
 
           <div className="flex gap-5 pb-10">
             <button
-              onsubmit={event.preventDefault()}
-              onClick={openModal}
+              type="submit"
               className="w-[33%] bg-blue-400 text-white font-medium text-lg p-3 rounded-lg"
             >
               Submit
             </button>
-            <button className="w-44   text-black border border-gray-400 font-medium text-lg p-2  ">
-              Cancle
+            <button type="button" className="w-44 text-black border border-gray-400 font-medium text-lg p-2">
+              Cancel
             </button>
           </div>
           {isSelectOpen && (
-            <Successcard
-              onClose={closeModal}
-              para={"Student added successfully!"}
-            />
+            <Successcard onClose={closeModal} para={"Student added successfully!"} />
           )}
         </form>
       </div>
+
     </>
   );
 }

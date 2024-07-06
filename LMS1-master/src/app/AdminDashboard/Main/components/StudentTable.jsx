@@ -1,4 +1,75 @@
-const studentData = [
+"use Client"
+import React, { useState, useEffect } from 'react';
+import { fetchFeeData } from '../../../../../api/api';
+
+export default function StudentTable() {
+  const [studentList, setStudentList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadFeeData() {
+      try {
+        const data = await fetchFeeData();
+        const formattedData = data.map((fee, index) => ({
+          studentID: fee.studentID.studentID,
+          name: fee.studentID.name,
+          class: fee.studentID.class,
+          totalFee: fee.totalFee,  // Assuming totalFee is a field in your fee record
+          action: 'Pay Now',  // Placeholder for action button text
+        }));
+        setStudentList(formattedData);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    }
+
+    loadFeeData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+  return (
+    <div className="w-full">
+      <table className="w-full bg-white rounded-lg overflow-hidden">
+        <thead className="bg-blue-200 h-14 py-10">
+          <tr className="text-gray-700 text-sm font-normal leading-normal">
+            <th className="py-4 px-6 text-left">Sr. No</th>
+            <th className="py-4 px-6 text-left">UserID</th>
+            <th className="py-4 px-6 text-left">Name</th>
+            <th className="py-4 px-6 text-left">Class</th>
+            <th className="py-4 px-6 text-left">Total Fee</th>
+            <th className="py-4 px-6 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-600 text-sm font-light">
+          {studentList.map((student, index) => (
+            <tr
+              key={student.studentID}  // Assuming studentID is unique
+              className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}
+            >
+              <td className="py-4 px-6 text-left">{index + 1}</td>
+              <td className="py-4 px-6 text-left">{student.studentID}</td>
+              <td className="py-4 px-6 text-left">{student.name}</td>
+              <td className="py-4 px-6 text-left">{student.class}</td>
+              <td className="py-4 px-6 text-left">{student.totalFee}</td>
+              <td className="py-4 px-6 text-left">
+                <button className="bg-blue-500 text-white px-3 py-1 rounded">
+                  {student.action}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+{/*const studentData = [
   {
     srNo: "01",
     userId: "US001",
@@ -87,3 +158,4 @@ export default function StudentTable() {
     </>
   );
 }
+  */}

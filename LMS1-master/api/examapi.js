@@ -1,3 +1,4 @@
+"use server"
 export async function fetchExamData() {
     const res = await fetch('http://localhost:5000/api/exam/get');
 

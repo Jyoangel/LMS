@@ -75,25 +75,7 @@ export async function deleteStudentData(id) {
     }
 }
 
-//Fee for student 
 
-export async function fetchFeeRecordById(id) {
-    try {
-        console.log(`Fetchinginng fee record for id: ${id}`);
-        const res = await fetch(`http://localhost:5000/api/fees/get/${id}`);
-
-        if (!res.ok) {
-            throw new Error('Failed to fetch Fees data');
-        }
-
-        const data = await res.json();
-        console.log(`Fee record data received: ${data}`);
-        return data;
-    } catch (error) {
-        console.error(`Error fetching fee record: ${error.message}`);
-        throw error;
-    }
-}
 
 //event fetch 
 
@@ -129,4 +111,24 @@ export async function fetchFeeData() {
     }
 
     return res.json();
+}
+
+//Fee for student 
+
+export async function fetchFeeRecordById(id) {
+    try {
+        console.log(`Fetchinginng fee record for id: ${id}`);
+        const res = await fetch(`http://localhost:5000/api/fees/get/${id}`);
+
+        if (!res.ok) {
+            throw new Error('Failed to fetch Fees data');
+        }
+
+        const data = await res.json();
+        console.log(`Fee record data received: ${data}`);
+        return data;
+    } catch (error) {
+        console.error(`Error fetching fee record: ${error.message}`);
+        throw error;
+    }
 }

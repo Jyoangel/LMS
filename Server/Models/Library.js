@@ -32,6 +32,10 @@ const librarySchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    uploadedBy: {
+        type: String,
+        required: true
     }
 });
 

@@ -1,133 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PaymentEdit from "./PaymentEdit";
-
-const paymentData = [
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-  {
-    srNo: "01",
-    name: "Kamlesh Kumar",
-    assignClass: "class 8",
-    aadharNo: "8954 ",
-    subject: "English",
-    contactNo: "9999 ",
-    fatherName: "Vivek Kumar",
-    salary: "₹10,000",
-    status: "Due Amount",
-    action: "Edit",
-  },
-];
+import { fetchPaymentTeacherData } from "../../../../api/teacherapi"; // Adjust the path as per your file structure
 
 export default function PaymentTable({ filter, searchTerm }) {
   const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [paymentData, setPaymentData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const openNotice = () => {
     setIsNoticeOpen(true);
   };
@@ -136,12 +18,42 @@ export default function PaymentTable({ filter, searchTerm }) {
     setIsNoticeOpen(false);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchPaymentTeacherData();
+        const formattedData = data.payments.map((payment, index) => ({
+          srNo: index + 1,
+          name: payment.teacher.name,
+          assignedClass: payment.assignedClass,
+          aadharNo: payment.teacher.aadharNumber,
+          subject: payment.teacher.subjectTaught,
+          contactNo: payment.teacher.contactNumber,
+          fatherName: payment.teacher.parent.fatherName,
+          salary: `₹${payment.salary}`,
+          status: payment.status, // Adjust if needed
+          action: "Edit",
+        }));
+        setPaymentData(formattedData);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const filteredData = paymentData.filter(
     (item) =>
-      (filter === "" || item.class === filter) &&
+      (filter === "" || item.assignClass === filter) &&
       (searchTerm === "" ||
         item.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
@@ -165,33 +77,25 @@ export default function PaymentTable({ filter, searchTerm }) {
             {filteredData.map((item, index) => (
               <tr
                 key={index}
-                className={`text-gray-700 text-sm font-normal leading-normal ${
-                  index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                }`}
+                className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                  }`}
               >
                 <td className="py-4 px-6 text-left">{item.srNo}</td>
                 <td className="py-4 px-6 text-left">{item.name}</td>
-
-                <td className="py-4 px-6 text-left">{item.assignClass}</td>
+                <td className="py-4 px-6 text-left">{item.assignedClass}</td>
                 <td className="py-4 px-6 text-left">{item.aadharNo}</td>
                 <td className="py-4 px-6 text-left">{item.subject}</td>
                 <td className="py-4 px-6 text-left">{item.contactNo}</td>
                 <td className="py-4 px-6 text-left">{item.fatherName}</td>
                 <td className="py-4 px-6 text-left">{item.salary}</td>
-
-                <td
-                  className={`py-4 px-6 text-left text-orange-400 underline ${item.color}`}
-                >
+                <td className={`py-4 px-6 text-left text-orange-400 underline`}>
                   {item.status}
                 </td>
-
-                <button onClick={openNotice}>
-                  <td
-                    className={`py-4 px-6 text-left text-blue-500 underline ${item.color}`}
-                  >
+                <td>
+                  <button onClick={openNotice} className="py-4 px-6 text-left text-blue-500 underline">
                     {item.action}
-                  </td>
-                </button>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

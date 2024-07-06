@@ -1,12 +1,17 @@
 "use client";
-import Successcard from "@/Components/Successcard";
-import Link from "next/link";
-
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import Link from "next/link";
+import Successcard from "@/Components/Successcard";
+import { addHotelData } from "../../../../../api/hotelapi"; // Adjust the path as necessary
 
 export default function AddHotel() {
+  const [typeOfRoom, setTypeOfRoom] = useState("");
+  const [floor, setFloor] = useState("");
+  const [zone, setZone] = useState("");
+  const [price, setPrice] = useState("");
   const [isSelectOpen, setisSelectOpen] = useState(false);
+  const [error, setError] = useState(null);
 
   const openModal = () => {
     setisSelectOpen(true);
@@ -14,6 +19,24 @@ export default function AddHotel() {
 
   const closeModal = () => {
     setisSelectOpen(false);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const hotelData = {
+      typeOfRoom,
+      floor,
+      zone,
+      price,
+    };
+
+    try {
+      await addHotelData(hotelData);
+      openModal();
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -29,23 +52,20 @@ export default function AddHotel() {
         </div>
 
         {/* form */}
-
-        <form action="#" className="flex flex-col gap-10">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
           <div className="w-full grid grid-cols-3 items-center gap-8">
             {/* type of room */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">
-                Type of Room*
-              </label>
+              <label className="text-lg font-normal text-black">Type of Room*</label>
               <select
-                type="text"
-                placeholder="Type here"
+                value={typeOfRoom}
+                onChange={(e) => setTypeOfRoom(e.target.value)}
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               >
-                {" "}
-                <option value="" className="text-gray-400 px">
-                  Select
-                </option>
+                <option value="" className="text-gray-400 px">Select</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Suite">Suite</option>
               </select>
             </div>
 
@@ -53,59 +73,56 @@ export default function AddHotel() {
             <div className="flex flex-col gap-2 w-full">
               <label className="text-lg font-normal text-black">Floor*</label>
               <select
-                type="text"
-                placeholder="Type here"
+                value={floor}
+                onChange={(e) => setFloor(e.target.value)}
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               >
-                {" "}
-                <option value="" className="text-gray-400 px">
-                  Select
-                </option>
+                <option value="" className="text-gray-400 px">Select</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
               </select>
             </div>
-            {/* zone */}
+
+            {/* Zone */}
             <div className="flex flex-col gap-2 w-full">
               <label className="text-lg font-normal text-black">Zone*</label>
               <select
-                type="text"
-                placeholder="Type here"
+                value={zone}
+                onChange={(e) => setZone(e.target.value)}
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               >
-                {" "}
-                <option value="" className="text-gray-400 px">
-                  Select
-                </option>
+                <option value="" className="text-gray-400 px">Select</option>
+                <option value="North">North</option>
+                <option value="South">South</option>
+                <option value="East">East</option>
+                <option value="West">West</option>
               </select>
             </div>
-            {/* zone */}
+
+            {/* Price */}
             <div className="flex flex-col gap-2 w-full">
               <label className="text-lg font-normal text-black">Price*</label>
-              <select
+              <input
                 type="text"
-                placeholder="Type here"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-              >
-                {" "}
-                <option value="" className="text-gray-400 px">
-                  Select
-                </option>
-              </select>
+              />
             </div>
           </div>
 
-          {/* discription * */}
-
           <button
-            onsubmit={event.preventDefault()}
-            onClick={openModal}
+            type="submit"
             className="w-[33%] bg-blue-400 text-white font-medium text-lg p-3 rounded-lg"
           >
             Submit
           </button>
+          {error && <p className="text-red-600">{error}</p>}
           {isSelectOpen && (
             <Successcard
               onClose={closeModal}
-              para={" Room Created successfully!"}
+              para={"Room Created successfully!"}
             />
           )}
         </form>

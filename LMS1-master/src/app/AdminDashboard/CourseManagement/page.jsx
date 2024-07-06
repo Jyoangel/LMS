@@ -1,15 +1,15 @@
-"use client";
+
 
 import Link from "next/link";
-import { useState } from "react";
+//import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
 import CourseManagementTable from "./CourseManagementTable";
 
 export default function CourseManagement() {
-  const [filter, setFilter] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [filter, setFilter] = useState("");
+  //const [searchTerm, setSearchTerm] = useState("");
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-6 p-5">
@@ -61,7 +61,7 @@ export default function CourseManagement() {
             </div>
           </div>
           <div className="flex flex-col">
-            <CourseManagementTable filter={filter} searchTerm={searchTerm} />
+            <CourseManagementTable />
           </div>
         </div>
       </div>

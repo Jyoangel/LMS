@@ -1,12 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
 import FeesTable from "./Component/FeesTable";
+import { fetchFeeData } from "../../../../api/api";
 
 export default function Fees() {
+  const [filter, setFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [totalFeesCount, setTotalFeesCount] = useState(0);
+  const [totalPaidAmount, setTotalPaidAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadTotalFees = async () => {
+      try {
+        const data = await fetchFeeData();
+        setTotalFeesCount(data.totalFeesCount);
+        setTotalPaidAmount(data.totalPaidAmount);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+    loadTotalFees();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+
+  {/*export default function Fees() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -19,19 +52,19 @@ export default function Fees() {
   const closeSlip = () => {
     setIsSlipOpen(false);
   };
-
+*/}
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-5 pl-10 pt-10">
         <div className="h-12 w-full flex flex-row items-center justify-between">
           <div className="flex flex-row gap-6">
             <h1 className="text-black text-lg font-medium">
-              Total Students: 10
+              Total Students: {totalFeesCount}
             </h1>
             <h1 className="text-gray-500 text-sm">
               Collect Amount:{" "}
               <span className="text-blue-500 text-lg font-semibold">
-                ₹1,00,000
+                ₹{totalPaidAmount.toLocaleString()}
               </span>
             </h1>
           </div>

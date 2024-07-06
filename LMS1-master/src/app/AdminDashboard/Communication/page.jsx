@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
@@ -10,15 +10,39 @@ import MessageCard from "./MessageCard";
 import TeacherTable from "./TeacherTable";
 import StaffTable from "./StaffTable";
 
+import { fetchCountData } from "../../../../api/api";
+import { fetchCountStaffData } from "../../../../api/staffapi";
+import { fetchCountTeacherData } from "../../../../api/teacherapi";
+
 export default function Communication() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [select, setSelect] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
 
-  const handleSelect = (value) => {
-    setSelect(select === value ? 1 : value);
+  const handleSelect = async (value) => {
+    setSelect(value);
+    let fetchData;
+    if (value === 1) {
+      fetchData = fetchCountData;
+    } else if (value === 2) {
+      fetchData = fetchCountTeacherData;
+    } else if (value === 3) {
+      fetchData = fetchCountStaffData;
+    }
+
+    try {
+      const data = await fetchData();
+      setTotalUsers(data.count);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
   };
+
+  useEffect(() => {
+    handleSelect(select);
+  }, [select]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -27,11 +51,12 @@ export default function Communication() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-5 pl-10 pt-10">
         <div className="h-12 w-full flex flex-row items-center justify-between px-5">
-          <h1 className="text-black text-lg font-medium">Total Students:10</h1>
+          <h1 className="text-black text-lg font-medium">Total Users: {totalUsers}</h1>
           <div className="flex flex-row gap-2">
             <h1 className="text-black text-lg font-medium">Filter</h1>
             <select className="h-8 w-28 border border-gray-500 outline-none rounded-lg p-1 ">
@@ -42,45 +67,27 @@ export default function Communication() {
 
         <div className="h-20  w-full border border-gray-300 flex flex-row gap-6 p-2 py-4 rounded-lg">
           <button
-            onClick={() => {
-              handleSelect(1);
-            }}
-            className={`${
-              select === 1
-                ? "text-blue-500 underline"
-                : "text-gray-500 underline"
-            }  font-medium underline-offset-4`}
+            onClick={() => handleSelect(1)}
+            className={`${select === 1 ? "text-blue-500 underline" : "text-gray-500 underline"} font-medium underline-offset-4`}
           >
             Students
           </button>
           <button
-            onClick={() => {
-              handleSelect(2);
-            }}
-            className={`${
-              select === 2
-                ? "text-blue-500 underline"
-                : "text-gray-500 underline"
-            }  font-medium underline-offset-4`}
+            onClick={() => handleSelect(2)}
+            className={`${select === 2 ? "text-blue-500 underline" : "text-gray-500 underline"} font-medium underline-offset-4`}
           >
             Teachers
           </button>
           <button
-            onClick={() => {
-              handleSelect(3);
-            }}
-            className={`${
-              select === 3
-                ? "text-blue-500 underline"
-                : "text-gray-500 underline"
-            }  font-medium underline-offset-4`}
+            onClick={() => handleSelect(3)}
+            className={`${select === 3 ? "text-blue-500 underline" : "text-gray-500 underline"} font-medium underline-offset-4`}
           >
             Staffs
           </button>
         </div>
 
         <div className="h-auto w-full flex flex-col rounded-lg  border border-gray-300">
-          <div className="h-20 w-full  flex flex-row items-center justify-between px-5">
+          <div className="h-20 w-full flex flex-row items-center justify-between px-5">
             <div className="flex flex-row gap-5">
               <h1 className="text-black font-semibold">Show</h1>
               <select className="h-6 w-16 border border-gray-300 rounded-md">
@@ -121,7 +128,6 @@ export default function Communication() {
             {select === 1 && (
               <CommunicationTable filter={filter} searchTerm={searchTerm} />
             )}
-
             {select === 2 && (
               <TeacherTable filter={filter} searchTerm={searchTerm} />
             )}

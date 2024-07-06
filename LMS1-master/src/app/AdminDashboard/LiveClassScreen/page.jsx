@@ -2,19 +2,34 @@
 
 import { CiSearch } from "react-icons/ci";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
 import LiveClassTable from "./LiveClassTable";
+import { fetchCourseData } from "../../../../api/courseapi";
 
 export default function LiveClassScreen() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalCourses, setTotalCourses] = useState(0);
+
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const data = await fetchCourseData();
+        setTotalCourses(data.count); // Updated to use data.count
+      } catch (error) {
+        console.error("Failed to fetch courses data:", error);
+      }
+    }
+
+    loadCourses();
+  }, []);
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-5 p-5 py-10">
         <div className="h-12 w-full flex flex-row items-center justify-between">
-          <h1 className="text-black text-lg font-medium">Total Students:10</h1>
+          <h1 className="text-black text-lg font-medium">Total Course:{totalCourses}</h1>
           <div className="flex flex-row gap-2">
             <h1 className="text-black text-lg font-medium">Filter</h1>
             <select className="h-8 w-28 border border-gray-500 outline-none rounded-lg p-1 ">

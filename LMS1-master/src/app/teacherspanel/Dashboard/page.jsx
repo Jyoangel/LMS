@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import ColorCard from "./components/ColorCard";
 import EventCard from "./components/EventCard";
@@ -15,7 +18,28 @@ import staffs from "./img/staffs.png";
 import student from "./img/student.png";
 import teachers from "./img/teachers.png";
 import InteractiveGraph from "@/app/AdminDashboard/Main/components/InteractiveGraph";
+import { fetcheventData } from "../../../../api/api";
 export default function Dashboard() {
+  const [events, setEvents] = useState([]);
+
+
+
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventData = await fetcheventData();
+        setEvents(eventData);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    fetchEvents();
+  }, []);
+
+
+
+
   return (
     <>
       <div className=" w-full px-10 flex flex-col gap-5  py-10 ">
@@ -60,15 +84,19 @@ export default function Dashboard() {
 
         {/*  Upcoming School Events */}
 
-        <div className="flex flex-col gap-3  w-full ">
-          <h1 className="text-black text-xl font-bold">
-            Upcoming School Events
-          </h1>
+        <div className="flex flex-col gap-3 w-full">
+          <h1 className="text-black text-xl font-bold">Upcoming School Events</h1>
           <div className="flex flex-row gap-3">
-            <EventCard />
-            <EventCard />
-            <EventCard />
-            <EventCard />
+            {events.map((event) => (
+              <EventCard
+                key={event._id}
+                name={event.eventName}
+                date={new Date(event.eventDate).toLocaleDateString()}
+                time={event.eventTime}
+                description={event.description}
+                organizer={event.organizerName}
+              />
+            ))}
           </div>
         </div>
 

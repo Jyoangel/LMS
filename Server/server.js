@@ -26,6 +26,10 @@ const homeworkRoutes = require("./routes/homeworkroutes");
 const libraryRoutes = require("./routes/libraryroutes");
 const examRoutes = require("./routes/examroutes");
 const reportcardRoutes = require("./routes/reportcardroutes");
+const transpotationRoutes = require("./routes/transpotation");
+const enquiryRoutes = require("./routes/enquiryroutes");
+const hotelRoutes = require("./routes/hotelroutes");
+const subjectRoutes = require("./routes/subjectroutes");
 
 const app = express();
 app.use(cookieParser());
@@ -74,6 +78,11 @@ app.use("/api/homework",homeworkRoutes);
 app.use("/api/library",libraryRoutes);
 app.use("/api/exam",examRoutes);
 app.use("/api/reportcard",reportcardRoutes);
+app.use("/api/reportcard",reportcardRoutes);
+app.use("/api/transpotation",transpotationRoutes);
+app.use("/api/enquiry",enquiryRoutes);
+app.use("/api/hotel",hotelRoutes);
+app.use("/api/subject",subjectRoutes);
 
 const port = process.env.PORT
 

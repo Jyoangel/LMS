@@ -1,6 +1,216 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { MdOutlineMail } from "react-icons/md";
+import { LuPhone } from "react-icons/lu";
+import { RxCrossCircled } from "react-icons/rx";
+import Image from "next/image";
+import logo from "./logo.png";
+import { fetchFeeRecordById } from "../../../../../api/api";
+import format from "date-fns/format";
+
+export default function FeeSlip({ onClose, feeId }) {
+  const [feeDetails, setFeeDetails] = useState(null);
+
+  useEffect(() => {
+    if (feeId) {
+      const fetchDetails = async () => {
+        try {
+          const feeResponse = await fetchFeeRecordById(feeId);
+          setFeeDetails(feeResponse);
+        } catch (error) {
+          console.error("Error fetching fee record:", error);
+        }
+      };
+      fetchDetails();
+    }
+  }, [feeId]);
+
+  const noticeRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (noticeRef.current && !noticeRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [onClose]);
+
+  if (!feeDetails) {
+    return <div>Loading...</div>; // Show a loading indicator while fetching data
+  }
+
+  return (
+    <>
+      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+        <div
+          ref={noticeRef}
+          className="h-[750px] w-[700px] border border-blue-500 bg-white rounded-lg flex flex-col gap-3 p-5"
+        >
+          <div className="flex flex-row items-center justify-between ">
+            <h1 className="text-black text-sm font-semibold">Fees Slip</h1>
+            <button onClick={onClose} className="cursor-pointer">
+              <RxCrossCircled size={20} color="gray" />
+            </button>
+          </div>
+          <div className="flex flex-row gap-5  pb-5">
+            <Image src={logo} className="h-[80px] w-[80px]" />
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <h1 className="text-black text-lg font-semibold uppercase">
+                  Gyan Ganga Public School
+                </h1>
+                <p className=" text-gray-400 font-semibold">
+                  Piprahyan Road Bhagwatipur, Barauli, Gopal Ganj, (Bihar){" "}
+                </p>
+                <p className="text-sm text-black font-semibold">
+                  Registration No- {feeDetails.registrationNo}
+                </p>
+              </div>
+              <div className="flex flex-row gap-5">
+                <div className="flex flex-row gap-2 items-center justify-center">
+                  <LuPhone size={20} color="gray" />
+                  <h1 className="text-sm text-black font-semibold">
+                    {feeDetails.number}
+                  </h1>
+                </div>
+                <div className="flex flex-row gap-2 items-center justify-center">
+                  <MdOutlineMail size={20} color="gray" />
+                  <h1 className="text-sm text-black font-semibold">
+                    {feeDetails.schoolEmail}
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col">
+            <div className="h-[30px] w-full bg-gray-300 flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">Fee Receipt</h1>
+              <h1 className="text-sm text-black font-semibold">
+                Session: {feeDetails.session}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-gray-200 flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Receipt No:{feeDetails.receiptNo}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">Ref No:{feeDetails.referenceNo}</h1>
+              <h1 className="text-sm text-black font-semibold">
+                Date: {format(new Date(feeDetails.date), "yyyy-MM-dd")}{" "}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                REG. No: {feeDetails.registrationNo}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                SR No: {feeDetails.srNo}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                Class : {feeDetails.studentID?.class}{" "}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Name: {feeDetails.studentID?.name}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                DOB:{format(new Date(feeDetails.studentID?.dateOfBirth), "yyyy-MM-dd")}{" "}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Father Name: {feeDetails.studentID?.parent?.fatherName}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Address: {feeDetails.studentID?.address}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Fee Month: {feeDetails.feeMonth}
+              </h1>
+            </div>
+          </div>
+          <div className="flex flex-col border-b border-gray-500">
+            <div className="h-[30px] w-full bg-gray-300 flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">Fee Type</h1>
+              <h1 className="text-sm text-black font-semibold">Fee Amount</h1>
+            </div>
+
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">Monthly Fee</h1>
+              <h1 className="text-sm text-black font-semibold">
+                {feeDetails.monthlyFee}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">Festive Fee</h1>
+              <h1 className="text-sm text-black font-semibold">
+                {feeDetails.festiveFee}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">Other Fee</h1>
+            </div>
+            <div className="h-[30px] w-full bg-gray-200 flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Total : {feeDetails.total}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                Dues: {feeDetails.dueAmount}{" "}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                Total: {feeDetails.totalFee}
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black font-semibold">
+                Paid : {feeDetails.paidAmount}
+              </h1>
+              <h1 className="text-sm text-black font-semibold">
+                Balance: {feeDetails.dueAmount}
+              </h1>
+            </div>
+
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black  font-semibold">
+                Amount in word ({feeDetails.amountInWords})
+              </h1>
+            </div>
+            <div className="h-[30px] w-full bg-white flex flex-row items-center justify-between px-5">
+              <h1 className="text-sm text-black  font-semibold">
+                Payment Mode: {feeDetails.paymentMode} Reference No: {feeDetails.referenceNo}, Bank Name: {feeDetails.bankName}, Remark: {feeDetails.remark}
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex flex-row items-center justify-between px-5">
+            <h1 className="text-red-500 text-sm font-semibold">Student Copy</h1>
+            <h1 className="text-black text-sm font-semibold">
+              Print: {new Date(feeDetails.printDate).toLocaleString()}
+            </h1>
+            <h1 className="text-black text-sm font-semibold">
+              Receipt By: {feeDetails.receiptBy}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+{/*
+import React, { useState, useEffect, useRef } from "react";
+import { MdOutlineMail } from "react-icons/md";
 
 import { LuPhone } from "react-icons/lu";
 
@@ -171,3 +381,4 @@ export default function FeeSlip({ onClose }) {
     </>
   );
 }
+*/}
