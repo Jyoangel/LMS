@@ -20,7 +20,7 @@ export default function Classes() {
             <button className="text-base font-semibold text-blue-500 underline">
               import
             </button>
-            <Link href={"/teacherspanel/Assignment/AddAssignment"}>
+            <Link href={"/teacherspanel/Classes/AddHomeWork"}>
               <button className="text-base font-semibold text-white bg-blue-500 px-4 py-2 rounded-lg">
                 Add New
               </button>

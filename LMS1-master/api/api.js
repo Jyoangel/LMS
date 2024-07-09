@@ -132,3 +132,90 @@ export async function fetchFeeRecordById(id) {
         throw error;
     }
 }
+
+export const sendFeeNotice = async (id, noticeData) => {
+    try {
+        const response = await fetch(`http://localhost:5000/api/fees/sendNotice/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(noticeData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.msg || 'Error sending fee notice');
+        }
+
+        return await response.json();
+    } catch (error) {
+        throw new Error(error.message || 'Error sending fee notice');
+    }
+};
+
+
+// send Message
+export const selectStudent = async (studentId, selected) => {
+    try {
+        const response = await fetch(`http://localhost:5000/api/selectStudent/${studentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ selected }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update selected status');
+        }
+
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const sendMessages = async (subject, message) => {
+    try {
+        const response = await fetch(`http://localhost:5000/api/sendMessages`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subject, message }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to send messages');
+        }
+
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const sendSMS = async (message) => {
+    try {
+        const response = await fetch(`http://localhost:5000/api/sendSMS`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to send messages');
+        }
+
+        return response.json();
+    } catch (error) {
+        throw error;
+    }
+};

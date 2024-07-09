@@ -2,6 +2,122 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const parentSchema = require('./Parent');
 const localGuardianSchema = require('./LocalGuardian');
+const Communication = require('./Communication'); // Import Communication model
+
+const studentSchema = new Schema({
+    studentID: {
+        type: String,
+        required: [true, 'Student ID is required'],
+        unique: true
+    },
+    formNumber: {
+        type: String,
+        required: [true, 'Form number is required']
+    },
+    admissionNumber: {
+        type: String,
+        required: [true, 'Admission number is required']
+    },
+    class: {
+        type: String,
+        required: [true, 'Class is required']
+    },
+    admissionType: {
+        type: String,
+        required: [true, 'Admission type is required']
+    },
+    name: {
+        type: String,
+        required: [true, 'Name is required']
+    },
+    nationality: {
+        type: String,
+        required: [true, 'Nationality is required']
+    },
+    motherTongue: {
+        type: String,
+        required: [true, 'Mother tongue is required']
+    },
+    dateOfBirth: {
+        type: Date,
+        required: [true, 'Date of birth is required'],
+
+    },
+    gender: {
+        type: String,
+        required: [true, 'Gender is required'],
+        enum: ['Male', 'Female', 'Other']
+    },
+    religion: {
+        type: String,
+        required: [true, 'Religion is required']
+    },
+    caste: {
+        type: String,
+        required: [true, 'Caste is required']
+    },
+    bloodGroup: {
+        type: String,
+        required: [true, 'Blood group is required']
+    },
+    aadharNumber: {
+        type: String,
+        required: [true, 'Aadhar number is required'],
+        unique: true,
+        match: [/^\d{12}$/, 'Please enter a valid 12-digit Aadhar number']
+    },
+    contactNumber: {
+        type: String,
+        required: [true, 'Contact number is required'],
+        match: [/^\d{10}$/, 'Please enter a valid 10-digit contact number']
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address']
+    },
+    address: {
+        type: String,
+        required: [true, 'Address is required']
+    },
+    parent: {
+        type: parentSchema,
+        required: [true, 'Parent information is required']
+    },
+    localGuardian: {
+        type: localGuardianSchema,
+        required: [true, 'Local guardian information is required']
+    }
+}, { timestamps: true });
+
+// Post-save middleware to add student data to Communication schema
+studentSchema.post('save', async function (doc) {
+    try {
+        const communication = new Communication({
+            studentID: doc.studentID,
+            name: doc.name,
+            dateOfBirth: doc.dateOfBirth,
+            class: doc.class,
+            gender: doc.gender,
+            aadharNumber: doc.aadharNumber,
+            fatherName: doc.parent.fatherName,
+            contactNumber: doc.contactNumber,
+            email: doc.email,
+            selected: false // Default selected value
+        });
+        await communication.save();
+    } catch (error) {
+        console.error('Error saving communication document:', error);
+    }
+});
+
+module.exports = mongoose.model('StudentDetail', studentSchema);
+
+
+{/*const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const parentSchema = require('./Parent');
+const localGuardianSchema = require('./LocalGuardian');
 
 const studentSchema = new Schema({
     studentID: {
@@ -93,3 +209,4 @@ const studentSchema = new Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('StudentDetail', studentSchema);
+*/}

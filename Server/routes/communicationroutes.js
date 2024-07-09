@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Create a new communication
-router.post('/add', checkRole(['admin', 'teacher']), async (req, res) => {
+router.post('/add', async (req, res) => {
     try {
         const student = await StudentDetail.findOne({ studentID: req.body.studentID });
         if (!student) {
@@ -48,7 +48,7 @@ router.post('/add', checkRole(['admin', 'teacher']), async (req, res) => {
 });
 
 // Get all communications
-router.get('/get', checkRole(['admin', 'teacher']), async (req, res) => {
+router.get('/get', async (req, res) => {
     try {
         const communications = await Communication.find();
         res.json(communications);
@@ -58,12 +58,12 @@ router.get('/get', checkRole(['admin', 'teacher']), async (req, res) => {
 });
 
 // Get a communication by ID
-router.get('/get/:id', checkRole(['admin', 'teacher']), getCommunication, (req, res) => {
+router.get('/get/:id', getCommunication, (req, res) => {
     res.json(res.communication);
 });
 
 // Update a communication
-router.put('/update/:id', checkRole(['admin', 'teacher']), getCommunication, async (req, res) => {
+router.put('/update/:id', getCommunication, async (req, res) => {
     if (req.body.selected != null) {
         res.communication.selected = req.body.selected;
     }
@@ -77,7 +77,7 @@ router.put('/update/:id', checkRole(['admin', 'teacher']), getCommunication, asy
 });
 
 // Delete a communication
-router.delete('/delete/:id', checkRole(['admin', 'teacher']), getCommunication, async (req, res) => {
+router.delete('/delete/:id', getCommunication, async (req, res) => {
     try {
         await res.communication.remove();
         res.json({ message: 'Deleted Communication' });
@@ -103,7 +103,7 @@ async function getCommunication(req, res, next) {
 }
 
 // Endpoint to update the selected field
-router.put('/selectStudent/:studentId', checkRole(['admin', 'teacher']), async (req, res) => {
+router.put('/selectStudent/:studentId', async (req, res) => {
     const { studentId } = req.params;
     const { selected } = req.body;
 
@@ -129,7 +129,7 @@ router.put('/selectStudent/:studentId', checkRole(['admin', 'teacher']), async (
 });
 
 // Send message to selected students
-router.post('/sendMessages', checkRole(['admin', 'teacher']), async (req, res) => {
+router.post('/sendMessages', async (req, res) => {
     const { subject, message } = req.body;
 
     if (!subject || !message) {

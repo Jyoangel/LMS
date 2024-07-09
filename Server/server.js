@@ -30,6 +30,7 @@ const transpotationRoutes = require("./routes/transpotation");
 const enquiryRoutes = require("./routes/enquiryroutes");
 const hotelRoutes = require("./routes/hotelroutes");
 const subjectRoutes = require("./routes/subjectroutes");
+const classRoutes = require("./routes/classroutes");
 
 const app = express();
 app.use(cookieParser());
@@ -83,6 +84,7 @@ app.use("/api/transpotation",transpotationRoutes);
 app.use("/api/enquiry",enquiryRoutes);
 app.use("/api/hotel",hotelRoutes);
 app.use("/api/subject",subjectRoutes);
+app.use("/api/class",classRoutes);
 
 const port = process.env.PORT
 

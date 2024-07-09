@@ -95,7 +95,7 @@ export default function FeesTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{index + 1}</td>
                 <td className="py-4 px-6 text-left">{item.studentID.studentID}</td>
                 <td className="py-4 px-6 text-left text-blue-600 underline">
-                  <Link href={`/AdminDashboard/Fees/FeeDetails/${item.studentID.studentID}`}>
+                  <Link href={`/AdminDashboard/Fees/FeeDetails/${item._id}`}>
                     {item.studentID.name}
                   </Link>
                 </td>
