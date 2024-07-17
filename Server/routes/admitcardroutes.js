@@ -99,12 +99,17 @@ router.put('/update/:id', async (req, res) => {
 // Delete an Admit Card by ID
 router.delete('/delete/:id', async (req, res) => {
     try {
-        const deletedAdmitCard = await AdmitCard.findByIdAndDelete(req.params.id);
-        if (!deletedAdmitCard) return res.status(404).json({ message: 'Admit Card not found' });
-        const count = await getAssignmentCount();
-        res.status(200).json({ message: 'Admit Card deleted successfully', count });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+        const id = req.params.id;
+        const result = await AdmitCard.findByIdAndDelete(id);
+
+        if (!result) {
+            return res.status(404).json({ message: 'Admit card not found' });
+        }
+
+        res.status(200).json({ message: 'Admit card deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting admit card:', error);
+        res.status(500).json({ message: 'Failed to delete admit card' });
     }
 });
 

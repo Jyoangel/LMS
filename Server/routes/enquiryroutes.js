@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 const Enquiry = require('../Models/Enquiry');
 
+const getEnquiryCount = async () => {
+    return await Enquiry.countDocuments();
+};
 // Add a new enquiry
 router.post('/add', async (req, res) => {
     try {
@@ -18,7 +21,8 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const enquiries = await Enquiry.find();
-        res.status(200).json(enquiries);
+        const count = await getEnquiryCount();
+        res.status(200).json({ enquiries, count });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

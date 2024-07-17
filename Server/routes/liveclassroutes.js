@@ -5,21 +5,24 @@ const router = express.Router();
 const LiveClass = require('../Models/LiveClass');
 const checkRole = require('../middleware/checkRole');
 
+
 // Create a new live class
-router.post('/add', checkRole(['admin', 'teacher']), async (req, res) => {
+router.post('/add', async (req, res) => {
     try {
         const liveClass = new LiveClass(req.body);
         await liveClass.save();
         res.status(201).send(liveClass);
     } catch (error) {
-        res.status(400).send(error);
+        console.error('Failed to add live class data:', error);
+        res.status(500).send('Failed to add live class data');
     }
 });
 
+
 // Read all live classes
-router.get('/get', checkRole(['admin', 'teacher']), async (req, res) => {
+router.get('/get', async (req, res) => {
     try {
-        const liveClasses = await LiveClass.find({});
+        const liveClasses = await LiveClass.find({}).populate('courseID', 'courseName');
         res.status(200).send(liveClasses);
     } catch (error) {
         res.status(500).send(error);
@@ -27,7 +30,7 @@ router.get('/get', checkRole(['admin', 'teacher']), async (req, res) => {
 });
 
 // Read a specific live class by ID
-router.get('/get/:id', checkRole(['admin', 'teacher']), async (req, res) => {
+router.get('/get/:id', async (req, res) => {
     try {
         const liveClass = await LiveClass.findById(req.params.id);
         if (!liveClass) {
@@ -40,31 +43,19 @@ router.get('/get/:id', checkRole(['admin', 'teacher']), async (req, res) => {
 });
 
 // Update a live class by ID
-router.put('/update/:id', checkRole(['admin', 'teacher']), async (req, res) => {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['topic', 'section', 'liveRoom', 'date', 'time', 'duration', 'noteToStudents'];
-    const isValidOperation = updates.every(update => allowedUpdates.includes(update));
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' });
-    }
-
+router.put('/update/:id', async (req, res) => {
     try {
-        const liveClass = await LiveClass.findById(req.params.id);
-        if (!liveClass) {
-            return res.status(404).send();
+        const liveclass = await LiveClass.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!liveclass) {
+            return res.status(404).send({ error: 'HomeWork not found' });
         }
-
-        updates.forEach(update => liveClass[update] = req.body[update]);
-        await liveClass.save();
-        res.status(200).send(liveClass);
+        res.status(200).send(liveclass);
     } catch (error) {
-        res.status(400).send(error);
+        res.status(400).send({ error: error.message });
     }
 });
-
 // Delete a live class by ID
-router.delete('/delete/:id', checkRole(['admin', 'teacher']), async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     try {
         const liveClass = await LiveClass.findByIdAndDelete(req.params.id);
         if (!liveClass) {

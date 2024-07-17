@@ -77,7 +77,8 @@ const AdmitCardSchema = new Schema({
             },
             message: 'At least one exam subject is required'
         }
-    }
+    },
+
 });
 
 // Create model from schema

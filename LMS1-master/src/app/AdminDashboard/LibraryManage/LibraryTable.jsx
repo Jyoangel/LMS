@@ -35,7 +35,7 @@ export default function LibraryTable({ filter, searchTerm }) {
     async function fetchData() {
       try {
         const data = await fetchLibraryData();
-        setLibraryData(data);
+        setLibraryData(data.libraryItems);
       } catch (error) {
         console.error('Failed to fetch library data:', error);
       }

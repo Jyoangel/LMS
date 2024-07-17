@@ -1,10 +1,10 @@
 "use client";
 
 
+"use client";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-
 import { FaArrowLeftLong } from "react-icons/fa6";
 import FeeNotice from "../../Component/FeeNotice/[id]/FeeNotice";
 import { fetchFeeRecordById } from "../../../../../../api/api";
@@ -16,7 +16,6 @@ export default function FeeDetails({ params }) {
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   useEffect(() => {
     console.log("Fetching data for student ID:", studentID);
@@ -72,8 +71,13 @@ export default function FeeDetails({ params }) {
                 onClick={openNotice}
               >
                 Fee Notice
-              </button>{" "}
-              {isNoticeOpen && <FeeNotice studentData={studentData} onClose={closeNotice} />}
+              </button>
+              {isNoticeOpen && (
+                <FeeNotice
+                  studentID={studentID}
+                  onClose={closeNotice}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -122,6 +126,7 @@ export default function FeeDetails({ params }) {
     </>
   );
 }
+
 
 
 {/*

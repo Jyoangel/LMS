@@ -1,21 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
 import ClassTable from "./ClassTable";
+import { fetchClassData } from "../../../../api/classapi";
 
 export default function LibraryManage() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalClass, setTotalClass] = useState(0);
+
+  useEffect(() => {
+    async function loadClass() {
+      try {
+        const data = await fetchClassData();
+        setTotalClass(data.count); // Updated to use data.count
+      } catch (error) {
+        console.error("Failed to fetch courses data:", error);
+      }
+    }
+
+    loadClass();
+  }, []);
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-6 p-5">
         {/* total no */}
         <div className="w-full flex items-center justify-between">
-          <h1 className="text-base font-medium">Total Report Card: 10</h1>
+          <h1 className="text-base font-medium">Total class: {totalClass}</h1>
           <div className="flex items-center justify-center gap-5">
             <Link href={"/AdminDashboard/Class/AddClass"}>
               <button className="text-base font-semibold text-white bg-blue-500 px-4 py-2 rounded-lg">

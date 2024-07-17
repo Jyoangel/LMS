@@ -45,7 +45,7 @@ export default function Configuration() {
               <h1 className=" text-lg text-black font-semibold">Library</h1>
             </div>
           </Link>
-          <Link href={"/AdminDashboard/ReportCard"}>
+          <Link href={"/AdminDashboard/ClassSchedule"}>
             <div className="h-[180px] w-[260px] border border-gray-300 shadow-md flex flex-col gap-5 items-center justify-center rounded-lg">
               <Image src={classschedule} className="h-18 w-20" />
               <h1 className=" text-lg text-black font-semibold">

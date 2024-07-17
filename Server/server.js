@@ -31,6 +31,8 @@ const enquiryRoutes = require("./routes/enquiryroutes");
 const hotelRoutes = require("./routes/hotelroutes");
 const subjectRoutes = require("./routes/subjectroutes");
 const classRoutes = require("./routes/classroutes");
+const classScheduleRoutes = require("./routes/classscheduleroutes");
+const calendarRoutes = require("./routes/calendarroutes");
 
 const app = express();
 app.use(cookieParser());
@@ -85,6 +87,8 @@ app.use("/api/enquiry",enquiryRoutes);
 app.use("/api/hotel",hotelRoutes);
 app.use("/api/subject",subjectRoutes);
 app.use("/api/class",classRoutes);
+app.use("/api/classSchedule",classScheduleRoutes);
+app.use("/api/calendar",calendarRoutes);
 
 const port = process.env.PORT
 

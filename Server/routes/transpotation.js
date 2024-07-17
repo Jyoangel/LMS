@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Transportation = require('../Models/Transpotation');
 
+const getTransportationCount = async () => {
+    return await Transportation.countDocuments();
+};
 // Add a new transportation record
 router.post('/add', async (req, res) => {
     try {
@@ -17,7 +20,8 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const records = await Transportation.find();
-        res.status(200).json(records);
+        const count = await getTransportationCount();
+        res.status(200).json({ records, count });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

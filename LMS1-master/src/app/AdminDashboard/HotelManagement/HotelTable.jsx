@@ -20,7 +20,7 @@ export default function HotelTable({ filter, searchTerm }) {
     const loadData = async () => {
       try {
         const data = await fetchHotelData();
-        setHotelData(data);
+        setHotelData(data.hotels);
       } catch (error) {
         setError(error.message);
       }

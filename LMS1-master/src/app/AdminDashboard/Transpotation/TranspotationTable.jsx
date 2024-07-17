@@ -18,7 +18,7 @@ export default function TranspotationTable({ filter, searchTerm }) {
     async function getData() {
       try {
         const data = await fetchTranspotationData();
-        setTranspotationData(data);
+        setTranspotationData(data.records);
         setIsLoading(false);
       } catch (error) {
         setError(error.message);

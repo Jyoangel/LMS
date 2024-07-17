@@ -19,7 +19,7 @@ export default function SubjectTable({ filter, searchTerm }) {
     const getSubjects = async () => {
       try {
         const data = await fetchSubjectData();
-        setSubjects(data);
+        setSubjects(data.subjects);
       } catch (error) {
         console.error("Failed to fetch subjects:", error);
       }

@@ -4,6 +4,10 @@ const express = require('express');
 const router = express.Router();
 const Class = require('../models/Class');
 
+const getClassCount = async () => {
+    return await Class.countDocuments();
+};
+
 // Add a new class
 router.post('/add', async (req, res) => {
     try {
@@ -45,7 +49,8 @@ router.delete('/delete/:id', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const classes = await Class.find();
-        res.json(classes);
+        const count = await getClassCount();
+        res.json({ classes, count });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

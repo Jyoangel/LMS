@@ -6,6 +6,7 @@ const Teacher = require('../Models/TeacherDetails.js');
 const Staff = require('../Models/StaffDetails.js');
 const checkRole = require('../middleware/checkRole');
 
+
 // Create a new event
 router.post('/add', async (req, res) => {
     try {
@@ -50,6 +51,7 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const events = await Event.find();
+
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });

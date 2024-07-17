@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const ReportCard = require('../Models/Reportcard');
 
+
+
 // Route to create a new ReportCard
 router.post('/add', async (req, res) => {
     try {
@@ -20,6 +22,7 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const reportCards = await ReportCard.find();
+
         res.send(reportCards);
     } catch (err) {
         res.status(500).send(err);

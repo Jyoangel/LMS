@@ -17,7 +17,7 @@ export default function ExamTable({ filter, searchTerm }) {
     const loadExamData = async () => {
       try {
         const data = await fetchExamData();
-        setExamData(data);
+        setExamData(data.exams);
       } catch (error) {
         console.error("Failed to fetch exam data:", error);
         // Handle error, e.g., show an error message to the user

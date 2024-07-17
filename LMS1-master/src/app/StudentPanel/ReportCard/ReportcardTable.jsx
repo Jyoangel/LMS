@@ -60,8 +60,9 @@ export default function ReportCardTable() {
 
                 <td className="py-4 px-6 text-left text-blue-600 underline">
                   {" "}
-
-                  {item.name}
+                  <Link href={`/StudentPanel/ReportCard/FinalReportCard/${item._id}`}>
+                    {item.name}
+                  </Link>
 
                 </td>
 

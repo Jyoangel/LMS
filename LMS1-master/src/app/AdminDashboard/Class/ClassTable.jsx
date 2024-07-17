@@ -8,7 +8,7 @@ import { fetchClassData, deleteClassData } from "../../../../api/classapi"; // A
 import format from "date-fns/format";
 export default function ClassTable({ filter, searchTerm }) {
   const [isDelete, setDelete] = useState(false);
-  const [classData, setClassData] = useState([]);
+  const [classData, setClassData] = useState({ classes: [] });
   const [selectedClassId, setSelectedClassId] = useState(null);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function ClassTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = classData.filter(
+  const filteredData = classData.classes.filter(
     (item) =>
       (filter === "" || item.className === filter) &&
       (searchTerm === "" || item.className.toLowerCase().includes(searchTerm.toLowerCase()))

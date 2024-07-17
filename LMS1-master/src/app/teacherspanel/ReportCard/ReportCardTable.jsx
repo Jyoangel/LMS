@@ -12,7 +12,7 @@ export default function ReportCardTable() {
     async function fetchData() {
       try {
         const data = await fetchReportCardData();
-        setStudentData(data);
+        setStudentData(data.reportCards);
         setAccessProvided(Array(data.length).fill(false));
       } catch (error) {
         console.error('Error fetching data:', error);

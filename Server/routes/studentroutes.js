@@ -242,21 +242,24 @@ const formatPhoneNumber = (phoneNumber) => {
     // Remove non-numeric characters
     const cleaned = phoneNumber.replace(/\D/g, '');
 
-    // Check if it starts with '0' (assuming Indian format)
-    if (cleaned.startsWith('0')) {
-        return '+91' + cleaned.substring(1); // Replace '91' with the appropriate country code
+    // Assuming Indian phone numbers as an example, adjust accordingly for other countries
+    if (cleaned.length === 10) {
+        // Add country code for 10-digit numbers (assuming India)
+        return `+91${cleaned}`;
+    } else if (cleaned.length > 10) {
+        // If more than 10 digits, assume it includes a country code
+        return `+${cleaned}`;
+    } else {
+        // Invalid phone number length
+        return null;
     }
-
-    // Default to E.164 format
-    //return `+${cleaned}`;
 };
-
 
 router.post('/sendSMS', async (req, res) => {
     const { message } = req.body;
 
     if (!message) {
-        return res.status(400).json({ message: 'Subject and message are required' });
+        return res.status(400).json({ message: 'Message is required' });
     }
 
     try {
@@ -267,16 +270,24 @@ router.post('/sendSMS', async (req, res) => {
             return res.status(400).json({ message: 'No students selected for messaging' });
         }
 
-        // Map phone numbers to E.164 format
-        const phoneNumbers = selectedStudents.map(student => formatPhoneNumber(student.contactNumber));
+        // Map and validate phone numbers to E.164 format
+        const phoneNumbers = selectedStudents.map(student => formatPhoneNumber(student.contactNumber)).filter(number => number !== null);
 
-        const sendSMSPromises = phoneNumbers.map(number =>
-            client.messages.create({
+        // Log phone numbers for debugging
+        console.log('Phone numbers:', phoneNumbers);
+
+        if (phoneNumbers.length === 0) {
+            return res.status(400).json({ message: 'No valid phone numbers found for selected students' });
+        }
+
+        const sendSMSPromises = phoneNumbers.map(number => {
+            console.log('Sending SMS to:', number);
+            return client.messages.create({
                 body: message,
                 from: TWILIO_PHONE_NUMBER,
                 to: number
-            })
-        );
+            });
+        });
 
         // Send SMS messages in parallel
         await Promise.all(sendSMSPromises);
@@ -298,6 +309,8 @@ router.post('/sendSMS', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
 
 
 // Get the total number of students

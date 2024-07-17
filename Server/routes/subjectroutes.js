@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Subject = require('../Models/Subject'); // Adjust the path as needed
 
+const getSubjectCount = async () => {
+    return await Subject.countDocuments();
+};
 // Add a new subject
 router.post('/add', async (req, res) => {
     try {
@@ -17,7 +20,8 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const subjects = await Subject.find();
-        res.json(subjects);
+        const count = await getSubjectCount();
+        res.json({ subjects, count });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

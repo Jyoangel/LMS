@@ -143,6 +143,48 @@ router.put('/update/:id', checkRole(['admin', 'teacher']), async (req, res) => {
 });
 
 // Send notice route
+// Send notice route
+router.post('/sendNotice/:id', async (req, res) => {
+    const { message, remark, dueAmount, months } = req.body;
+    const feeID = req.params.id;
+
+    try {
+        // Fetch fee details
+        const fee = await Fee.findById(feeID).populate('studentID', 'email');
+        if (!fee) {
+            return res.status(404).json({ msg: 'Fee record not found' });
+        }
+
+        // Prepare the email content
+        const subject = 'Fee Notice';
+        const text = `
+            Hello,
+
+            This is a reminder regarding your pending fee. Below are the details:
+
+            Message: ${message}
+            Remark: ${remark}
+            Due Amount: ${dueAmount}
+            Due Months: ${months}
+
+            Please contact the school administration for further information.
+
+            Best regards,
+            School Administration
+        `;
+
+        // Send the email
+        await sendEmail(fee.studentID.email, subject, text);
+        console.log(`Notice sent to ${fee.studentID.email}`);
+
+        res.status(200).json({ msg: 'Notice sent successfully' });
+    } catch (err) {
+        console.error(`Error sending notice: ${err.message}`);
+        res.status(500).send('Server error');
+    }
+});
+
+{/*
 router.post('/sendNotice/:id', async (req, res) => {
     const { message, remark, dueAmount, months } = req.body;
     const studentID = req.params.id;
@@ -182,6 +224,7 @@ router.post('/sendNotice/:id', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+*/}
 
 module.exports = router;
 

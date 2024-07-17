@@ -12,7 +12,8 @@ const getLibraryCount = async () => {
 router.get('/get', async (req, res) => {
     try {
         const libraryItems = await LibraryItem.find();
-        res.json(libraryItems);
+        const count = await getLibraryCount();
+        res.json({ libraryItems, count });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

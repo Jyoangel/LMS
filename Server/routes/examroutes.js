@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Exam = require('../Models/Exam');
 
+const getExamCount = async () => {
+    return await Exam.countDocuments();
+};
 // Add a new exam
 router.post('/add', async (req, res) => {
     try {
@@ -17,7 +20,8 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const exams = await Exam.find();
-        res.status(200).send(exams);
+        const count = await getExamCount();
+        res.status(200).send({ exams, count });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

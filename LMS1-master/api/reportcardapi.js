@@ -24,6 +24,55 @@ export async function addReportCardData(reportcardData) {
     return res.json();
 }
 
+export async function fetchReportCardById(id) {
+    const res = await fetch(`http://localhost:5000/api/reportcard/get/${id}`);
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch admitCard data');
+    }
+
+    return res.json();
+}
+
+export const updateReportCardData = async (id, formData) => {
+    try {
+        // Perform update request with student ID and formData
+        const response = await fetch(`http://localhost:5000/api/reportcard/update/${id}`, {
+            method: 'PUT', // Assuming you use PUT method for updates
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to update exam data');
+        }
+        return await response.json(); // Assuming the response is JSON data
+    } catch (error) {
+        throw new Error(`Failed to update exam data: ${error.message}`);
+    }
+};
+
+
+export async function deleteReportCardData(id) {
+    const url = `http://localhost:5000/api/reportcard/delete/${id}`;
+
+    try {
+        const res = await fetch(url, {
+            method: 'DELETE'
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to delete admitcard data');
+        }
+
+        return res.json();
+    } catch (error) {
+        throw new Error(`Error deleting admitcard data: ${error.message}`);
+    }
+}
+
+
 //Admit Card
 export async function fetchAdmitCardData() {
     const res = await fetch('http://localhost:5000/api/admitcard/get');
@@ -68,7 +117,7 @@ export async function fetchAdmitCardById(id) {
     return res.json();
 }
 
-export const updateCardData = async (id, formData) => {
+export const updateAdmitCardData = async (id, formData) => {
     try {
         // Perform update request with student ID and formData
         const response = await fetch(`http://localhost:5000/api/admitcard/update/${id}`, {
@@ -97,11 +146,12 @@ export async function deleteAdmitCardData(id) {
         });
 
         if (!res.ok) {
-            throw new Error('Failed to delete admitcard data');
+            throw new Error('Failed to delete admit card data');
         }
 
         return res.json();
     } catch (error) {
-        throw new Error(`Error deleting admitcard data: ${error.message}`);
+        throw new Error(`Error deleting admit card data: ${error.message}`);
     }
 }
+

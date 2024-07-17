@@ -5,6 +5,7 @@ const xlsx = require('xlsx');
 const Course = require('../Models/Course');
 const checkRole = require('../middleware/checkRole');
 const auth = require('../middleware/auth');
+const LiveClass = require('../Models/LiveClass'); // Assuming path to your LiveClass model
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -54,9 +55,36 @@ router.post('/import', upload.single('file'), async (req, res) => {
 
 
 // Get all courses
+
+
 router.get('/get', async (req, res) => {
     try {
+        // Fetch courses without populating liveClasses initially
         const courses = await Course.find();
+
+        // Iterate through courses and fetch liveClasses for each course
+        const populatedCourses = await Promise.all(courses.map(async (course) => {
+            const populatedCourse = course.toJSON(); // Convert Mongoose doc to plain object
+
+            // Fetch liveClasses for current course
+            populatedCourse.liveClasses = await LiveClass.find({ courseId: course._id });
+
+            return populatedCourse;
+        }));
+
+        const count = populatedCourses.length; // Adjust as per your requirement
+
+        res.status(200).json({ courses: populatedCourses, count, message: `The total number of courses is: ${count}` });
+    } catch (err) {
+        console.log('Error fetching courses:', err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+{/*
+router.get('/get', async (req, res) => {
+    try {
+        const courses = await Course.find().populate('liveClasses');
         const count = await Course.countDocuments();
         res.status(200).json({ courses, count, message: `The total number of courses is: ${count}` });
     } catch (err) {
@@ -64,12 +92,12 @@ router.get('/get', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
+*/}
 
 // Get a course by ID
 router.get('/get/:id', async (req, res) => {
     try {
-        const course = await Course.findById(req.params.id);
+        const course = await Course.findById(req.params.id).populate('liveClasses');;
         if (!course) {
             return res.status(404).json('Course not found');
         }
@@ -129,6 +157,17 @@ router.get('/count', async (req, res) => {
         res.status(500).json(error);
     }
 });
+
+router.get('/courses-with-live-classes', async (req, res) => {
+    try {
+        const courses = await Course.find().populate('liveClasses');
+        res.status(200).json(courses);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 
 module.exports = router;
 

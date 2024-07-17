@@ -96,16 +96,14 @@ export default function AddReportCard() {
             {/* Type */}
             <div className="flex flex-col gap-3">
               <label className="text-lg font-normal text-black">Type*</label>
-              <select
+              <input
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md py-3 px-5 outline-none"
                 required
-              >
-                <option value="">Select</option>
-                {/* Add other options as needed */}
-              </select>
+              />
+
             </div>
 
             {/* Name */}

@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
@@ -11,6 +11,7 @@ import ReportCardTable from "./ReportCardTable";
 export default function ReportCard() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-6 p-5">
@@ -21,7 +22,7 @@ export default function ReportCard() {
             <button className="text-base font-semibold text-blue-500 underline">
               import
             </button>
-            <Link href={"/AdminDashboard/ReportCard/AdmitCard"}>
+            <Link href={"/AdminDashboard/ReportCard/SelectCard"}>
               <button className="text-base font-semibold text-white bg-blue-500 px-4 py-2 rounded-lg">
                 Add New
               </button>

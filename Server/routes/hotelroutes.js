@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Hotel = require('../Models/Hotel'); // Adjust the path as necessary
 
+const getHotelCount = async () => {
+    return await Hotel.countDocuments();
+};
 // Add a new hotel
 router.post('/add', async (req, res) => {
     try {
@@ -17,7 +20,8 @@ router.post('/add', async (req, res) => {
 router.get('/get', async (req, res) => {
     try {
         const hotels = await Hotel.find({});
-        res.status(200).send(hotels);
+        const count = await getHotelCount();
+        res.status(200).send({ hotels, count });
     } catch (error) {
         res.status(500).send(error);
     }

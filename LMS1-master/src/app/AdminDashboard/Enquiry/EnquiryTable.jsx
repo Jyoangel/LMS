@@ -16,7 +16,7 @@ export default function EnquiryTable({ filter, searchTerm }) {
     const loadEnquiryData = async () => {
       try {
         const data = await fetchEnquiryData();
-        setEnquiryData(data);
+        setEnquiryData(data.enquiries);
         setIsLoading(false);
       } catch (error) {
         setError(error.message);

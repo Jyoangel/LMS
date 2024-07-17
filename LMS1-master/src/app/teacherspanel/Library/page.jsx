@@ -1,15 +1,30 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 import { SlRefresh } from "react-icons/sl";
 import LibraryTable from "./LibraryTable";
+import { fetchLibraryData } from "../../../../api/libraryapi";
 
 export default function Library() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalCourses, setTotalCourses] = useState(0);
+
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const data = await fetchLibraryData();
+        setTotalCourses(data.count); // Updated to use data.count
+      } catch (error) {
+        console.error("Failed to fetch courses data:", error);
+      }
+    }
+
+    loadCourses();
+  }, []);
 
   const [select, setSelect] = useState(1);
 
@@ -23,7 +38,7 @@ export default function Library() {
         <div className="h-12 w-full flex flex-row items-center justify-between">
           <div className="flex flex-row gap-6">
             <h1 className="text-black text-lg font-medium">
-              Total Students:10
+              Total Book:{totalCourses}
             </h1>
             <h1 className="text-gray-500 text-sm">
               Amount:{" "}
