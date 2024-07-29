@@ -7,7 +7,7 @@ import Chat from './user';
 const Home = () => {
   return (
     <div>
-      <h1>Real-Time chat Application</h1>
+      <h1>Real-Time chat </h1>
       <div style={{ display: 'flex' }}>
         <div style={{ marginRight: '50px' }}>
           <h2>User 1</h2>
