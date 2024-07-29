@@ -1,39 +1,13 @@
 // frontend/pages/index.
-"use client"
-import { useState, useEffect } from 'react';
-import fetchAllUsers from './user';
-
-export default function UsersPage() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const otherUsers = await fetchAllUsers();
-      setUsers(otherUsers);
-    };
-    fetchUsers();
-  }, []);
-
-  return (
-    <div>
-      <h1>Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.given_name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
 
 
-{/*
+
 import Chat from './user';
 
 const Home = () => {
   return (
     <div>
-      <h1>Real-Time Chat</h1>
+      <h1>Real-Time chat Application</h1>
       <div style={{ display: 'flex' }}>
         <div style={{ marginRight: '50px' }}>
           <h2>User 1</h2>
