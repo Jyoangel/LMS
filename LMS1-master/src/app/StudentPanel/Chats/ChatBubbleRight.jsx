@@ -1,4 +1,24 @@
-export default function ChatBubbleRight({ text, time }) {
+import React from 'react';
+
+const ChatBubbleRight = ({ text, time, fileUrl, voiceUrl }) => {
+  console.log('ChatBubbleRight props:', { text, time, fileUrl, voiceUrl });
+  return (
+    <div className="max-w-xs p-3 m-1 bg-blue-200 rounded-lg self-end">
+      {text && <p className="text-black">{text}</p>}
+      {fileUrl && <img src={fileUrl} alt="file" className="w-full h-auto" />}
+      {voiceUrl && (
+        <audio controls className="w-[200px]">
+          <source src={voiceUrl} type="audio/webm" />
+        </audio>
+      )}
+      <span className="text-xs text-gray-500">{time}</span>
+    </div>
+  );
+};
+
+export default ChatBubbleRight;
+
+{/*export default function ChatBubbleRight({ text, time }) {
   return (
     <>
       <div className="flex gap-2   justify-center m-3">
@@ -16,3 +36,4 @@ export default function ChatBubbleRight({ text, time }) {
     </>
   );
 }
+  */}

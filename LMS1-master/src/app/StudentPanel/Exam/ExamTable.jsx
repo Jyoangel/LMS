@@ -72,7 +72,7 @@ export default function ExamTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{item.startTime}</td>
                 <td className="py-4 px-6 text-left">{item.totalMarks}</td>
                 <td className="py-4 px-6 text-left">{item.passingMarks}</td>
-                <td className="py-4 px-6 text-left">{item.createdBy}</td>
+                <td className="py-4 px-6 text-left">kamlesh Kumar</td>
 
 
 

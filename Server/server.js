@@ -1,4 +1,292 @@
+// backend/index.js
+
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const chatRoutes = require('./routes/chatroutes');
+const Chat = require('./Models/Chat');
+const axios = require('axios');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+app.use(express.json());
+app.use('/api/chat', chatRoutes);
+
+connectDB();
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('sendMessage', async (messageData) => {
+    try {
+      const chatMessage = new Chat(messageData);
+      await chatMessage.save();
+      io.emit('receiveMessage', messageData);
+    } catch (err) {
+      console.error('Error saving message:', err.message);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+app.post('/api/token', async (req, res) => {
+  try {
+    const response = await axios.post(`https://lms1.kinde.com/oauth2/token`, {
+      grant_type: 'client_credentials',
+      client_id: "b36fe335d3e642a3909b8d7929d646eb",
+
+      client_secret: "cBUIwPA9wJPGHvT8xYub3SPB4mmIVmOFrBULVQTo7j8wr1Aqy",
+      audience: `https://lms1.kinde.com/api`,
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error getting auth token:', error.response ? error.response.data : error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const response = await axios.get(`https://lms1.kinde.com/api/v1/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error fetching users:', error.response ? error.response.data : error.message);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+{/*const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const Chat = require('../Server/Models/Chat');
+
+// Importing routes
+const loginRoutes = require('./routes/authroutes/loginroutes');
+const protectedRoutes = require('./routes/authroutes/protectedroutes');
+const studentRoutes = require('./routes/studentroutes');
+const teacherRoutes = require('./routes/teacherroutes');
+const staffRoutes = require('./routes/staffroutes');
+const courseRoutes = require('./routes/courseroutes');
+const eventRoutes = require('./routes/eventroutes');
+const liveclassRoutes = require('./routes/liveclassroutes');
+const forgotpasswordRoutes = require('./routes/authroutes/forgotpassword');
+const feeRoutes = require('./routes/feeroutes');
+const paymentTeacherRoutes = require('./routes/paymentteacherroutes');
+const paymentStaffRoutes = require('./routes/staffpaymentroutes');
+const paymentRoutes = require('./routes/paymentroutes');
+const admitCardRoutes = require('./routes/admitcardroutes');
+const communicationRoutes = require('./routes/communicationroutes');
+const countRoutes = require('./routes/countroutes');
+const assignmentRoutes = require('./routes/assignmentroutes');
+const homeworkRoutes = require('./routes/homeworkroutes');
+const libraryRoutes = require('./routes/libraryroutes');
+const examRoutes = require('./routes/examroutes');
+const reportcardRoutes = require('./routes/reportcardroutes');
+const transpotationRoutes = require('./routes/transpotation');
+const enquiryRoutes = require('./routes/enquiryroutes');
+const hotelRoutes = require('./routes/hotelroutes');
+const subjectRoutes = require('./routes/subjectroutes');
+const classRoutes = require('./routes/classroutes');
+const classScheduleRoutes = require('./routes/classscheduleroutes');
+const calendarRoutes = require('./routes/calendarroutes');
+//const chatRoutes = require('./routes/chatroutes');
+const userRoutes = require('./routes/userroutes');
+
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('sendMessage', async (messageData) => {
+    try {
+      const chatMessage = new Chat(messageData);
+      await chatMessage.save();
+      io.emit('receiveMessage', messageData);
+    } catch (err) {
+      console.error('Error saving message:', err);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+app.use(cookieParser());
+
+app.use(session({
+  secret: '5c69a3691b9269010ce3f516d894af1106a7b15015b7442e62643a09154e18c6d451d28ce47dce76c8c794a67cc0cc61f56eabc6520f44aa0acf2321112bb9eb',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, httpOnly: true }
+}));
+
+const connectDB = require('./config/db');
+connectDB();
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("PhonePe Integration APIs!");
+});
+
+// Defining routes
+app.use("/api", studentRoutes);
+app.use("/api/teacher", teacherRoutes);
+app.use("/api/staff", staffRoutes);
+app.use("/api/course", courseRoutes);
+app.use("/api/event", eventRoutes);
+app.use("/api/auth", loginRoutes);
+app.use("/api/protected", protectedRoutes);
+app.use("/api/liveclass", liveclassRoutes);
+app.use("/api/forgotpassword", forgotpasswordRoutes);
+app.use("/api/fees", feeRoutes);
+app.use("/api/paymentTeacher", paymentTeacherRoutes);
+app.use("/api/StaffPayment", paymentStaffRoutes);
+app.use("/api/pay", paymentRoutes);
+app.use("/api/admitcard", admitCardRoutes);
+app.use("/api/communication", communicationRoutes);
+app.use("/api/count", countRoutes);
+app.use("/api/assignment", assignmentRoutes);
+app.use("/api/homework", homeworkRoutes);
+app.use("/api/library", libraryRoutes);
+app.use("/api/exam", examRoutes);
+app.use("/api/reportcard", reportcardRoutes);
+app.use("/api/transpotation", transpotationRoutes);
+app.use("/api/enquiry", enquiryRoutes);
+app.use("/api/hotel", hotelRoutes);
+app.use("/api/subject", subjectRoutes);
+app.use("/api/class", classRoutes);
+app.use("/api/classSchedule", classScheduleRoutes);
+app.use("/api/calendar", calendarRoutes);
+//app.use("/api/chat", chatRoutes);
+app.use("/api/user", userRoutes);
+
+const port = process.env.PORT || 5000;
+
+server.listen(port, () => {
+  console.log(`Server is running on port http://localhost:${port}`);
+});
+
+{/*
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.post('/upload-voice', upload.single('voice'), (req, res) => {
+  console.log('Received upload voice request');
+  res.json({ voiceUrl: `/uploads/${req.file.filename}` });
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
+
+  socket.on('sendMessage', (message) => {
+    console.log(message);
+    socket.broadcast.emit('receiveMessage', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+const users = {};
+
+io.on('connection', (socket) => {
+  console.log('New connection');
+
+  socket.on('register', (userId) => {
+    users[userId] = socket;
+    console.log(`User ${userId} registered`);
+  });
+
+  socket.on('call', (data) => {
+    console.log(`Call from ${data.from} to ${data.to}`);
+    const receiverSocket = users[data.to];
+    if (receiverSocket) {
+      receiverSocket.emit('call', { from: data.from, signal: data.signal });
+    }
+  });
+
+  socket.on('answer', (data) => {
+    console.log(`Answer from ${data.from} to ${data.to}`);
+    const callerSocket = users[data.to];
+    if (callerSocket) {
+      callerSocket.emit('answer', { from: data.from, signal: data.signal });
+    }
+  });
+});
+*/}
+{/*const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const mongoose = require('mongoose');
 const cors = require('cors')
@@ -36,12 +324,31 @@ const calendarRoutes = require("./routes/calendarroutes");
 
 const app = express();
 app.use(cookieParser());
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('sendMessage', (message) => {
+    io.emit('receiveMessage', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 app.use(session({
-    secret: '5c69a3691b9269010ce3f516d894af1106a7b15015b7442e62643a09154e18c6d451d28ce47dce76c8c794a67cc0cc61f56eabc6520f44aa0acf2321112bb9eb',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true } // Hardcoded secure to true
+  secret: '5c69a3691b9269010ce3f516d894af1106a7b15015b7442e62643a09154e18c6d451d28ce47dce76c8c794a67cc0cc61f56eabc6520f44aa0acf2321112bb9eb',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, httpOnly: true } // Hardcoded secure to true
 }));
 
 const connectDB = require('./config/db');
@@ -51,14 +358,14 @@ connectDB();
 
 //app.use(cors())
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  }));
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("PhonePe Integration APIs!");
-  });
+  res.send("PhonePe Integration APIs!");
+});
 
 app.use("/api", studentRoutes);
 app.use("/api/teacher", teacherRoutes);
@@ -76,30 +383,25 @@ app.use("/api/pay", paymentRoutes);
 app.use("/api/admitcard", admitCardRoutes);
 app.use("/api/communication", communicationRoutes);
 app.use("/api/count", countRoutes);
-app.use("/api/assignment",assignmentRoutes);
-app.use("/api/homework",homeworkRoutes);
-app.use("/api/library",libraryRoutes);
-app.use("/api/exam",examRoutes);
-app.use("/api/reportcard",reportcardRoutes);
-app.use("/api/reportcard",reportcardRoutes);
-app.use("/api/transpotation",transpotationRoutes);
-app.use("/api/enquiry",enquiryRoutes);
-app.use("/api/hotel",hotelRoutes);
-app.use("/api/subject",subjectRoutes);
-app.use("/api/class",classRoutes);
-app.use("/api/classSchedule",classScheduleRoutes);
-app.use("/api/calendar",calendarRoutes);
+app.use("/api/assignment", assignmentRoutes);
+app.use("/api/homework", homeworkRoutes);
+app.use("/api/library", libraryRoutes);
+app.use("/api/exam", examRoutes);
+app.use("/api/reportcard", reportcardRoutes);
+app.use("/api/reportcard", reportcardRoutes);
+app.use("/api/transpotation", transpotationRoutes);
+app.use("/api/enquiry", enquiryRoutes);
+app.use("/api/hotel", hotelRoutes);
+app.use("/api/subject", subjectRoutes);
+app.use("/api/class", classRoutes);
+app.use("/api/classSchedule", classScheduleRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 const port = process.env.PORT
 
 app.listen(port, () => {
-    console.log('Server is running on port http://localhost:5000');
+  console.log('Server is running on port http://localhost:5000');
 
 })
 
-//{
-    // "studentID":"66571f73046e6577d72ba13c",
-    // "totalFee": 12000,
-    // "paidAmount":6000
-     
- //}
+*/}

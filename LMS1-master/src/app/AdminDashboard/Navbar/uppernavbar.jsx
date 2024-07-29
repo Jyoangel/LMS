@@ -2,6 +2,11 @@ import Image from "next/image";
 import noti from "./img/notification.png";
 import person1 from "./img/person1.png";
 import { IoIosArrowDown } from "react-icons/io";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+
+
+
+
 
 export default function uppernavbar() {
   return (
@@ -14,6 +19,7 @@ export default function uppernavbar() {
           <h1 className="text-xl font-medium">Jay Kumar</h1>
           <IoIosArrowDown size={25} />
         </div>
+        <LogoutLink>Log out</LogoutLink>
       </div>
     </>
   );
