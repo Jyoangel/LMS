@@ -112,14 +112,31 @@ router.post('/send', upload.single('file'), async (req, res) => {
         res.status(500).send('Server Error');
     }
 });*/}
-router.get('/messages', async (req, res) => {
+router.get("/messages", async (req, res) => {
+    const { sender, receiver } = req.query;
+
+    console.log("Received request to /messages");
+    console.log("UserID:", sender);
+    console.log("SelectedUserID:", receiver);
+
     try {
-        const messages = await Chat.find().sort({ time: 1 });
+        const messages = await Chat.find({
+            $or: [
+                { sender: sender, receiver: receiver },
+                { sender: receiver, receiver: sender },
+            ],
+        }).sort({ createdAt: 1 }); // Sort messages by creation date
+
+
+
         res.json(messages);
-    } catch (err) {
-        res.status(500).send('Server error');
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to fetch messages" });
     }
 });
+
+
 
 
 module.exports = router;

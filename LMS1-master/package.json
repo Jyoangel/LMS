@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@babel/preset-react": "^7.24.6",
     "@fullcalendar/common": "^5.11.5",
     "@fullcalendar/interaction": "^6.1.13",

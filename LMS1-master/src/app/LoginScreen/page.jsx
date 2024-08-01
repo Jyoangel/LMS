@@ -1,23 +1,27 @@
-import React from 'react'
-import { RegisterLink, LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
+
+
+import React from 'react';
 
 export default function LoginScreen() {
   return (
-    <div><LoginLink>Sign in</LoginLink>
-      <RegisterLink>Sign up</RegisterLink></div>
-  )
+    <>
+      <div><a href="/api/auth/login">Login</a></div>
+      <div><a href="/api/auth/signup">Sign Up</a></div>
+    </>
+  );
 }
 
 
-{/*"use client";
+{/*
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import login from "../../Assets/login.png";
 import ForgotPassword from "../ForgotPassword/page";
-import {RegisterLink, LoginLink} from "@kinde-oss/kinde-auth-nextjs/components";
+
 
 
 export default function LoginScreen() {
@@ -103,4 +107,4 @@ export default function LoginScreen() {
     </>
   );
 }
-  */}
+*/}

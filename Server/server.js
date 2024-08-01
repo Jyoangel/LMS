@@ -1,94 +1,6 @@
-// backend/index.js
+
 
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const cors = require('cors');
-const connectDB = require('./config/db');
-const chatRoutes = require('./routes/chatroutes');
-const Chat = require('./Models/Chat');
-const axios = require('axios');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
-
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
-app.use(express.json());
-app.use('/api/chat', chatRoutes);
-
-connectDB();
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('sendMessage', async (messageData) => {
-    try {
-      const chatMessage = new Chat(messageData);
-      await chatMessage.save();
-      io.emit('receiveMessage', messageData);
-    } catch (err) {
-      console.error('Error saving message:', err.message);
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-});
-
-app.post('/api/token', async (req, res) => {
-  try {
-    const response = await axios.post(`https://lms1.kinde.com/oauth2/token`, {
-      grant_type: 'client_credentials',
-      client_id: "b36fe335d3e642a3909b8d7929d646eb",
-
-      client_secret: "cBUIwPA9wJPGHvT8xYub3SPB4mmIVmOFrBULVQTo7j8wr1Aqy",
-      audience: `https://lms1.kinde.com/api`,
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error getting auth token:', error.response ? error.response.data : error.message);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-app.get('/api/users', async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(' ')[1];
-    const response = await axios.get(`https://lms1.kinde.com/api/v1/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json',
-      },
-    });
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error fetching users:', error.response ? error.response.data : error.message);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-const PORT = process.env.PORT || 5000;
-
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-
-
-{/*const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
@@ -129,8 +41,8 @@ const subjectRoutes = require('./routes/subjectroutes');
 const classRoutes = require('./routes/classroutes');
 const classScheduleRoutes = require('./routes/classscheduleroutes');
 const calendarRoutes = require('./routes/calendarroutes');
-//const chatRoutes = require('./routes/chatroutes');
-const userRoutes = require('./routes/userroutes');
+const chatRoutes = require('./routes/chatroutes');
+//const userRoutes = require('./routes/userroutes');
 
 const app = express();
 
@@ -147,24 +59,81 @@ const io = socketIo(server, {
   }
 });
 
+const userSockets = {};
+
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('A user connected:', socket.id);
+
+  // Register the user's socket ID
+  socket.on('register', (userId) => {
+    userSockets[userId] = socket.id;
+    console.log(`User ${userId} registered with socket ID ${socket.id}`);
+  });
 
   socket.on('sendMessage', async (messageData) => {
     try {
-      const chatMessage = new Chat(messageData);
-      await chatMessage.save();
-      io.emit('receiveMessage', messageData);
+      console.log('Message data:', messageData);
+      socket.broadcast.emit('receiveMessage', messageData);
     } catch (err) {
       console.error('Error saving message:', err);
     }
   });
 
+  socket.on('call', (data) => {
+    const receiverSocketId = userSockets[data.to];
+    if (receiverSocketId) {
+      console.log(`Call from ${data.from} to ${data.to}`);
+      io.to(receiverSocketId).emit('call', { from: data.from, signal: data.signal });
+    }
+  });
+
+  socket.on('answer', (data) => {
+    const callerSocketId = userSockets[data.to];
+    if (callerSocketId) {
+      console.log(`Answer from ${data.from} to ${data.to}`);
+      io.to(callerSocketId).emit('answer', { from: data.from, signal: data.signal });
+    }
+  });
+
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('User disconnected:', socket.id);
+    // Remove the socket ID from userSockets
+    for (const userId in userSockets) {
+      if (userSockets[userId] === socket.id) {
+        delete userSockets[userId];
+        break;
+      }
+    }
   });
 });
+{/*
+const users = {};
 
+io.on('connection', (socket) => {
+  console.log('New connection');
+
+  socket.on('register', (userId) => {
+    users[userId] = socket;
+    console.log(`User ${userId} registered`);
+  });
+
+  socket.on('call', (data) => {
+    console.log(`Call from ${data.from} to ${data.to}`);
+    const receiverSocket = users[data.to];
+    if (receiverSocket) {
+      receiverSocket.emit('call', { from: data.from, signal: data.signal });
+    }
+  });
+
+  socket.on('answer', (data) => {
+    console.log(`Answer from ${data.from} to ${data.to}`);
+    const callerSocket = users[data.to];
+    if (callerSocket) {
+      callerSocket.emit('answer', { from: data.from, signal: data.signal });
+    }
+  });
+});
+*/}
 app.use(cookieParser());
 
 app.use(session({
@@ -216,8 +185,8 @@ app.use("/api/subject", subjectRoutes);
 app.use("/api/class", classRoutes);
 app.use("/api/classSchedule", classScheduleRoutes);
 app.use("/api/calendar", calendarRoutes);
-//app.use("/api/chat", chatRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/chat", chatRoutes);
+//app.use("/api/user", userRoutes);
 
 const port = process.env.PORT || 5000;
 
