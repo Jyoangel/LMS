@@ -1,4 +1,3 @@
-"use Client"
 import React, { useState, useEffect } from 'react';
 import { fetchFeeData } from '../../../../../api/api';
 
@@ -10,18 +9,25 @@ export default function StudentTable() {
   useEffect(() => {
     async function loadFeeData() {
       try {
-        const data = await fetchFeeData();
-        const formattedData = data.map((fee, index) => ({
-          studentID: fee.studentID.studentID,
-          name: fee.studentID.name,
-          class: fee.studentID.class,
-          totalFee: fee.totalFee,  // Assuming totalFee is a field in your fee record
-          action: 'Pay Now',  // Placeholder for action button text
-        }));
-        setStudentList(formattedData);
+        const response = await fetchFeeData();
+        console.log("API Response:", response); // Log to verify the structure
+        const data = response.fees; // Adjust this based on actual structure, e.g., response.data if the array is in a data property
+
+        if (Array.isArray(data)) {
+          const formattedData = data.map((fee, index) => ({
+            studentID: fee.studentID.studentID,
+            name: fee.studentID.name,
+            class: fee.studentID.class,
+            totalFee: fee.totalFee,
+            action: 'Pay Now',
+          }));
+          setStudentList(formattedData);
+        } else {
+          throw new Error('Nested data is not an array');
+        }
         setLoading(false);
       } catch (err) {
-        setError(err.message);
+        setError('Failed to load data: ' + err.message);
         setLoading(false);
       }
     }
@@ -68,6 +74,7 @@ export default function StudentTable() {
     </div>
   );
 }
+
 
 {/*const studentData = [
   {

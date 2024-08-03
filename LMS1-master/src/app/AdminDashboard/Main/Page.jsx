@@ -15,6 +15,7 @@ import teachers from "./img/teachers.png";
 import Link from "next/link";
 import InteractiveGraph from "./components/InteractiveGraph";
 import { fetcheventData } from "../../../../api/api";
+import SchoolChart from './components/InteractiveGraph';
 
 async function getData() {
   const res = await fetch('http://localhost:5000/api/count/count', { cache: 'no-store' });
@@ -70,6 +71,70 @@ export default function Main() {
     return <div>No data found</div>;
   }
 
+  const schoolPerformanceData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      {
+        label: 'Average Student Grades',
+        data: [78, 81, 83, 82, 85, 84, 86, 87, 88, 86, 85, 84],
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      },
+      {
+        label: 'Attendance Rate (%)',
+        data: [92, 93, 91, 94, 95, 96, 95, 94, 95, 93, 94, 92],
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      },
+      {
+        label: 'Teacher Performance Score',
+        data: [4.2, 4.3, 4.4, 4.5, 4.6, 4.5, 4.7, 4.8, 4.9, 4.7, 4.6, 4.5],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      },
+      {
+        label: 'Extracurricular Participation (%)',
+        data: [70, 72, 74, 73, 75, 77, 76, 78, 80, 79, 77, 76],
+        borderColor: 'rgb(255, 206, 86)',
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+      }
+    ]
+  };
+
+
+  const schoolOverviewData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      {
+        label: 'Total Present Students',
+        data: [65, 67, 70, 73, 75, 77, 80, 82, 80, 78, 75, 73],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+      },
+      {
+        label: 'Total Present Teachers',
+        data: [100, 98, 95, 88, 86, 96, 97, 87, 85, 94, 92, 93],
+        borderColor: 'rgb(153, 102, 255)',
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+      },
+
+      {
+        label: 'Student Attendance (%)',
+        data: [95, 94, 93, 96, 97, 95, 96, 95, 94, 93, 92, 93],
+        borderColor: 'rgb(255, 159, 64)',
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+      },
+      {
+        label: 'Teacher Attendance (%)',
+        data: [98, 97, 96, 98, 99, 98, 97, 96, 97, 98, 97, 98],
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      },
+
+
+    ]
+  };
+
 
   return (
     <>
@@ -118,11 +183,12 @@ export default function Main() {
         <div className="h-auto w-full flex flex-row gap-5 items-center justify-center  ">
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Performance</h1>
-            <InteractiveGraph />
+            {/* <InteractiveGraph /> */}
+            <SchoolChart chartId="schoolPerformanceChart" chartData={schoolPerformanceData} />
           </div>
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Overview</h1>
-            <InteractiveGraph />
+            <SchoolChart chartId="schoolOverviewChart" chartData={schoolOverviewData} />
           </div>
         </div>
 

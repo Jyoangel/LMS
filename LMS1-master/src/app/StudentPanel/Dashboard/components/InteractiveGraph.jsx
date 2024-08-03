@@ -1,5 +1,46 @@
 "use client";
 // components/InteractiveGraph.js
+// Import required components and libraries
+import { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto';
+
+const PerformanceChart = ({ studentData, selectedStudent }) => {
+  const chartRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = chartRef.current.getContext('2d');
+
+    // Destroy the previous chart instance if it exists
+    if (window.myChart instanceof Chart) {
+      window.myChart.destroy();
+    }
+
+    window.myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: `${studentData[selectedStudent]?.name}`,
+          data: studentData[selectedStudent]?.scores,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }, [selectedStudent, studentData]);
+
+  return <canvas ref={chartRef}></canvas>;
+}
+
+export default PerformanceChart;
+{/*
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -95,3 +136,4 @@ const InteractiveGraph = () => {
 };
 
 export default InteractiveGraph;
+*/}

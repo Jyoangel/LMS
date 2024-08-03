@@ -1,4 +1,53 @@
-"use client";
+"use client"
+import { useEffect } from 'react';
+import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip } from 'chart.js';
+
+// Register the components required by Chart.js
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip);
+
+const SchoolChart = ({ chartId, chartData, chartType = 'line' }) => {
+  useEffect(() => {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    const schoolChart = new Chart(ctx, {
+      type: chartType,
+      data: chartData,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              label: function (tooltipItem) {
+                let label = tooltipItem.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += Math.round(tooltipItem.parsed.y * 100) / 100;
+                return label;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return () => schoolChart.destroy();
+  }, [chartId, chartData, chartType]);
+
+  return <canvas id={chartId}></canvas>;
+};
+
+export default SchoolChart;
+
+
+
+{/*"use client";
 // components/InteractiveGraph.js
 import {
   CategoryScale,
@@ -95,3 +144,4 @@ const InteractiveGraph = () => {
 };
 
 export default InteractiveGraph;
+*/}

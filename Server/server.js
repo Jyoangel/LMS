@@ -42,7 +42,8 @@ const classRoutes = require('./routes/classroutes');
 const classScheduleRoutes = require('./routes/classscheduleroutes');
 const calendarRoutes = require('./routes/calendarroutes');
 const chatRoutes = require('./routes/chatroutes');
-//const userRoutes = require('./routes/userroutes');
+const attendanceRoutes = require('./routes/attendanceroutes');
+
 
 const app = express();
 
@@ -186,6 +187,7 @@ app.use("/api/class", classRoutes);
 app.use("/api/classSchedule", classScheduleRoutes);
 app.use("/api/calendar", calendarRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/attendance", attendanceRoutes);
 //app.use("/api/user", userRoutes);
 
 const port = process.env.PORT || 5000;

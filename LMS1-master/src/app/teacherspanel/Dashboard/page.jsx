@@ -5,8 +5,6 @@ import Image from "next/image";
 import ColorCard from "./components/ColorCard";
 import EventCard from "./components/EventCard";
 import StudentCard from "./components/StudentCard";
-import StudentTable from "./components/StudentTable";
-import TeacherTable from "./components/TeacherTable";
 import img1 from "./img/img1.png";
 import img2 from "./img/img2.png";
 import graph from "./graph.png";
@@ -17,12 +15,85 @@ import progress from "./progress.png";
 import staffs from "./img/staffs.png";
 import student from "./img/student.png";
 import teachers from "./img/teachers.png";
-import InteractiveGraph from "@/app/AdminDashboard/Main/components/InteractiveGraph";
+import InteractiveGraph from "./components/InteractiveGraph";
 import { fetcheventData } from "../../../../api/api";
+import AttendanceChart from "./components/AttendanceChart";
+import { fetchReportCardData } from "../../../../api/reportcardapi";
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+const classColors = ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)']; // Define more colors if needed
 export default function Dashboard() {
+
+
   const [events, setEvents] = useState([]);
+  const [selectedClass, setSelectedClass] = useState('');
+  const [classData, setClassData] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [topStudents, setTopStudents] = useState([]);
+  const [error, setError] = useState(null);// For the class dropdown
 
+  useEffect(() => {
+    // Fetch classes once when the component mounts
+    fetchClasses().then(data => setClasses(data));
+  }, []);
 
+  useEffect(() => {
+    if (selectedClass) {
+      fetchClassAttendanceData(selectedClass).then(data => {
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          setClassData(data);
+        } else {
+          console.error('Invalid data format:', data);
+          setClassData([]);
+        }
+      });
+    }
+  }, [selectedClass]);
+
+  const fetchClasses = async () => {
+    // Replace with your actual API call
+    return [
+      { id: '1', name: 'Class 1' },
+      { id: '2', name: 'Class 2' }
+    ];
+  };
+
+  const fetchClassAttendanceData = async (classId) => {
+    // Replace with your actual API call
+    const data = [
+      { month: 'January', attendance: 80 },
+      { month: 'February', attendance: 82 },
+      { month: 'March', attendance: 88 },
+      { month: 'April', attendance: 84 },
+      { month: 'May', attendance: 72 },
+      { month: 'June', attendance: 89 },
+      { month: 'July', attendance: 81 },
+      { month: 'August', attendance: 86 },
+      { month: 'September', attendance: 78 },
+      { month: 'October', attendance: 98 },
+      { month: 'November', attendance: 92 },
+      { month: 'December', attendance: 94 },
+      // ... more data
+    ];
+    return data;
+  };
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    const fetchData = async () => {
+      try {
+        const data = await fetchReportCardData();
+        const filteredStudents = data.filter(student => student.percentage > 80);
+        setTopStudents(filteredStudents);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
   useEffect(() => {
@@ -37,7 +108,38 @@ export default function Dashboard() {
     fetchEvents();
   }, []);
 
+  const schoolOverviewData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [
+      {
+        label: 'Total Present Students',
+        data: [65, 67, 70, 73, 75, 77, 80, 82, 80, 78, 75, 73],
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+      },
+      {
+        label: 'Total Present Teachers',
+        data: [100, 98, 95, 88, 86, 96, 97, 87, 85, 94, 92, 93],
+        borderColor: 'rgb(153, 102, 255)',
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+      },
 
+      {
+        label: 'Student Attendance (%)',
+        data: [95, 94, 93, 96, 97, 95, 96, 95, 94, 93, 92, 93],
+        borderColor: 'rgb(255, 159, 64)',
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+      },
+      {
+        label: 'Teacher Attendance (%)',
+        data: [98, 97, 96, 98, 99, 98, 97, 96, 97, 98, 97, 98],
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      },
+
+
+    ]
+  };
 
 
   return (
@@ -103,34 +205,47 @@ export default function Dashboard() {
         {/* School Parformance */}
 
         <div className="h-auto w-full flex flex-row gap-5 items-center justify-center  ">
-          <div className="flex flex-col gap-3  w-[50%]">
+          <div className="flex flex-col gap-3 w-[50%]">
             <h1 className="text-black text-xl font-bold">Top Student</h1>
-            <div className="w-full h-[324px] bg-blue-100 grid grid-cols-2 gap-3  justify-items-center p-5 rounded-lg">
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
+            <div className="w-full h-[324px] bg-blue-100 grid grid-cols-2 gap-3 justify-items-center p-5 rounded-lg">
+              {error && <p className="text-red-500">{error}</p>}
+              {topStudents.map((student) => (
+                <StudentCard
+                  key={student.id} // assuming each student has a unique id
+                  name={student.name}
+                  percentage={student.percentage}
+                />
+              ))}
             </div>
           </div>
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Overview</h1>
-            <InteractiveGraph />
+            <InteractiveGraph chartId="schoolOverviewChart" chartData={schoolOverviewData} />
           </div>
         </div>
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-row justify-between">
             <h1>Attendance</h1>
-            <div className="flex flex-row items-center justify-between gap-3 ">
+            <div className="flex flex-row items-center justify-between gap-3">
               <h1>Filter</h1>
-              <select className="h-10 w-24 rounded-lg border border-gray-300 outline-none">
-                <option>Select</option>
+              <select
+                className="h-10 w-24 rounded-lg border border-gray-300 outline-none"
+                value={selectedClass}
+                onChange={(e) => setSelectedClass(e.target.value)}
+              >
+                <option value="">Select Class</option>
+                {classes.map((classItem) => (
+                  <option key={classItem.id} value={classItem.id}>{classItem.name}</option>
+                ))}
               </select>
             </div>
           </div>
-          <Image src={graph} className=" w-full" />
+          <AttendanceChart
+            labels={months}
+            classData={classData}
+            colors={classColors}
+          />
         </div>
 
         <div className="flex flex-row gap-5 w-full">

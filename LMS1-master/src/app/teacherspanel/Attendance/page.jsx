@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
-import Attendancetable from "./Attendancetable";
+import Attendancetable from "./[id]/Attendancetable";
 import ConfirmationCard from "../components/ConfirmationCard";
 
 export default function Attendance() {
