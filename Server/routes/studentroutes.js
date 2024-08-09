@@ -10,7 +10,6 @@ const Message = require('../Models/Message');
 const nodemailer = require('nodemailer');
 const checkRole = require('../middleware/checkRole');
 require('dotenv').config();
-
 const EMAIL_USER = 'jyo209gup201@gmail.com'
 const EMAIL_PASS = 'endr hamj dblu rhiu'
 const TWILIO_SID = 'AC436e757eac2bdce1f9addce2c69e0ea7'
@@ -139,11 +138,17 @@ router.get('/get/:studentID', async (req, res) => {
 // Update a student by ID
 router.put('/update/:studentID', async (req, res) => {
     try {
-        const student = await StudentDetail.findOne({ studentID: req.params.studentID });
+        const student = await StudentDetail.findOneAndUpdate(
+            { studentID: req.params.studentID },
+            req.body,
+            { new: true } // This option returns the updated document
+        );
+
         if (!student) {
             return res.status(404).json({ error: 'Student not found' });
         }
-        res.status(200).json(student);
+
+        res.status(200).json({ student });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }

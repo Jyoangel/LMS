@@ -3,8 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const PaymentTeacher = require('../Models/Paymentteacher');
 const TeacherDetails = require('../Models/TeacherDetails');
-const checkRole = require('../middleware/checkRole');
-const auth = require('../middleware/auth');
+
 
 
 // Create a payment record for a teacher
@@ -46,15 +45,11 @@ router.get('/get', async (req, res) => {
         const totalAmountPaid = payments.reduce((acc, payment) => acc + payment.paidAmount, 0);
 
 
-        // Extract unique teachers from payments
-        const teachers = payments.map(payment => payment.teacher);
-        const uniqueTeachers = Array.from(new Set(teachers.map(teacher => teacher._id)))
-            .map(id => teachers.find(teacher => teacher._id.toString() === id.toString()));
 
         res.json({
             totalPayments,
             totalAmountPaid,
-            teachers: uniqueTeachers,
+
             payments
         });
     } catch (err) {
@@ -63,45 +58,15 @@ router.get('/get', async (req, res) => {
     }
 });
 
-router.get('/teacher-payments', auth, checkRole(['admin']), async (req, res) => {
-    try {
-        const payments = await PaymentTeacher.find().populate('teacher', 'name aadharNumber subject contactNumber parent.fatherName');
-        res.json(payments);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});
 
-// Get all payment records
-{/*router.get('/show', async (req, res) => {
-    try {
-        const payments = await PaymentTeacher.find().populate('teacher', 'name aadharNumber subjectTaught contactNumber parent.fatherName');
 
-        const totalPayments = await PaymentTeacher.countDocuments();
-        const totalAmountPaid = await PaymentTeacher.aggregate([
-            {
-                $group: {
-                    _id: null,
-                    totalPaidAmount: { $sum: "$paidAmount" }
-                }
-            }
-        ]);
 
-        const totalPaymentsCount = totalPayments.length ? totalPayments[0] : 0;
-        const totalPaidAmount = totalAmountPaid.length ? totalAmountPaid[0].totalPaidAmount : 0;
 
-        res.json({ payments, totalPayments: totalPaymentsCount, totalAmountPaid });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-});*/}
 
 // Get payment record by ID
 router.get('/show/:id', async (req, res) => {
     try {
-        const payment = await PaymentTeacher.findById(req.params.id).populate('teacher', 'name aadharNumber subject contactNumber parent.fatherName');
+        const payment = await PaymentTeacher.findById(req.params.id).populate('teacher', 'teacherID name aadharNumber subjectTaught highestDegreeEarned contactNumber parent.fatherName');
         if (!payment) {
             return res.status(404).json({ message: 'Payment record not found' });
         }
@@ -151,3 +116,20 @@ router.delete('/delete/:id', async (req, res) => {
 });
 
 module.exports = router;
+
+
+{/*router.get('/teacher-payments', auth, checkRole(['admin']), async (req, res) => {
+    try {
+        const payments = await PaymentTeacher.find().populate('teacher', 'name aadharNumber subject contactNumber parent.fatherName');
+        res.json(payments);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+*/}
+
+// Extract unique teachers from payments
+//const teachers = payments.map(payment => payment.teacher);
+//const uniqueTeachers = Array.from(new Set(teachers.map(teacher => teacher._id)))
+// .map(id => teachers.find(teacher => teacher._id.toString() === id.toString()));

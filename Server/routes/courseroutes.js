@@ -81,18 +81,7 @@ router.get('/get', async (req, res) => {
     }
 });
 
-{/*
-router.get('/get', async (req, res) => {
-    try {
-        const courses = await Course.find().populate('liveClasses');
-        const count = await Course.countDocuments();
-        res.status(200).json({ courses, count, message: `The total number of courses is: ${count}` });
-    } catch (err) {
-        console.log('Error fetching courses:', err);
-        res.status(500).json({ message: err.message });
-    }
-});
-*/}
+
 
 // Get a course by ID
 router.get('/get/:id', async (req, res) => {

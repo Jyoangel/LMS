@@ -47,6 +47,7 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // Update a teacher by ID
+{/*
 router.put('/update/:id', async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = [
@@ -74,7 +75,20 @@ router.put('/update/:id', async (req, res) => {
         await teacher.save();
         res.status(200).json(teacher);
     } catch (error) {
+        console.log(msg.error)
         res.status(400).json(error);
+    }
+});
+*/}
+router.put('/update/:id', async (req, res) => {
+    try {
+        const teacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!teacher) {
+            return res.status(404).json({ error: 'Teacher not found' });
+        }
+        res.status(200).json(teacher);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 });
 

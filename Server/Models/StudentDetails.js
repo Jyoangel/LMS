@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 const parentSchema = require('./Parent');
 const localGuardianSchema = require('./LocalGuardian');
 const Communication = require('./Communication'); // Import Communication model
-const Attendance = require('./Attendance')
+
 
 const studentSchema = new Schema({
     studentID: {
@@ -111,25 +111,6 @@ studentSchema.post('save', async function (doc) {
         console.error('Error saving communication document:', error);
     }
 });
-studentSchema.post('save', async function (doc) {
-    try {
-        const attendance = new Attendance({
-            studentID: doc.studentID,
-            name: doc.name,
-            dateOfBirth: doc.dateOfBirth,
-            class: doc.class,
-            gender: doc.gender,
-            aadharNumber: doc.aadharNumber,
-            fatherName: doc.parent.fatherName,
-            contactNumber: doc.contactNumber,
-            email: doc.email,
-            present: false // Default selected value
-        });
-        await attendance.save();
-    } catch (error) {
-        console.error('Error saving attendance document:', error);
-    }
-});
 
 module.exports = mongoose.model('StudentDetail', studentSchema);
 
@@ -138,6 +119,7 @@ module.exports = mongoose.model('StudentDetail', studentSchema);
 const { Schema } = mongoose;
 const parentSchema = require('./Parent');
 const localGuardianSchema = require('./LocalGuardian');
+const Attendance = require('./Attendance')
 
 const studentSchema = new Schema({
     studentID: {
@@ -227,6 +209,25 @@ const studentSchema = new Schema({
         required: [true, 'Local guardian information is required']
     }
 }, { timestamps: true });
+studentSchema.post('save', async function (doc) {
+    try {
+        const attendance = new Attendance({
+            studentID: doc.studentID,
+            name: doc.name,
+            dateOfBirth: doc.dateOfBirth,
+            class: doc.class,
+            gender: doc.gender,
+            aadharNumber: doc.aadharNumber,
+            fatherName: doc.parent.fatherName,
+            contactNumber: doc.contactNumber,
+            email: doc.email,
+            present: false // Default selected value
+        });
+        await attendance.save();
+    } catch (error) {
+        console.error('Error saving attendance document:', error);
+    }
+});
 
 module.exports = mongoose.model('StudentDetail', studentSchema);
 */}

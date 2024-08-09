@@ -101,18 +101,17 @@ router.post('/send', upload.single('file'), async (req, res) => {
 
 
 
-{/*router.get('/messages', async (req, res) => {
-    const { sender, receiver } = req.query;
-
+router.get('/messages', async (req, res) => {
     try {
-        const messages = await Chat.find({ sender, receiver })
-            .sort({ createdAt: 1 }); // Sorting by creation time
+        const { sender, receiver } = req.query;
+        const messages = await Chat.find({ sender, receiver }).sort({ time: -1 });
         res.json(messages);
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to fetch messages" });
     }
-});*/}
-router.get("/messages", async (req, res) => {
+});
+{/*router.get("/messages", async (req, res) => {
     const { sender, receiver } = req.query;
 
     console.log("Received request to /messages");
@@ -135,11 +134,24 @@ router.get("/messages", async (req, res) => {
         res.status(500).json({ error: "Failed to fetch messages" });
     }
 });
+*/}
 
 
 
 
 module.exports = router;
+
+{/*router.get('/messages', async (req, res) => {
+    const { sender, receiver } = req.query;
+
+    try {
+        const messages = await Chat.find({ sender, receiver })
+            .sort({ createdAt: 1 }); // Sorting by creation time
+        res.json(messages);
+    } catch (error) {
+        res.status(500).send('Server Error');
+    }
+});*/}
 
 {/*const express = require('express');
 const router = express.Router();

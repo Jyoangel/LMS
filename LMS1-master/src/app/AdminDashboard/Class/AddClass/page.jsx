@@ -23,11 +23,14 @@ export default function AddClass() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!classData.className) {
+      return; // Prevent submission if no class is selected
+    }
     try {
       await addClassData(classData);
       openModal();
     } catch (error) {
-      console.error('Failed to add class data', error);
+      console.error("Failed to add class data", error);
     }
   };
 
@@ -58,12 +61,15 @@ export default function AddClass() {
                 Select
               </option>
               {[...Array(10)].map((_, index) => (
-                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                <option key={index + 1} value={index + 1}>
+                  {index + 1}
+                </option>
               ))}
             </select>
           </div>
 
           <button
+            role="button"
             type="submit"
             className="w-[33%] bg-blue-400 text-white font-medium text-lg p-3 rounded-lg"
           >
@@ -80,4 +86,3 @@ export default function AddClass() {
     </>
   );
 }
-

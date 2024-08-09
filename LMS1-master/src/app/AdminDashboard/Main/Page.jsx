@@ -16,6 +16,7 @@ import Link from "next/link";
 import InteractiveGraph from "./components/InteractiveGraph";
 import { fetcheventData } from "../../../../api/api";
 import SchoolChart from './components/InteractiveGraph';
+import { fetchReportCardData } from "../../../../api/reportcardapi";
 
 async function getData() {
   const res = await fetch('http://localhost:5000/api/count/count', { cache: 'no-store' });
@@ -32,6 +33,8 @@ export default function Main() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [topStudents, setTopStudents] = useState([]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -46,6 +49,22 @@ export default function Main() {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    const fetchData = async () => {
+      try {
+        const data = await fetchReportCardData();
+        const filteredStudents = data.filter(student => student.percentage > 80);
+        setTopStudents(filteredStudents);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   useEffect(() => {
     async function fetchEvents() {

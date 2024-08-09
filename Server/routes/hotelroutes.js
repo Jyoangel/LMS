@@ -17,15 +17,17 @@ router.post('/add', async (req, res) => {
 });
 
 // Get all hotels
+// Get all hotels
 router.get('/get', async (req, res) => {
     try {
         const hotels = await Hotel.find({});
         const count = await getHotelCount();
         res.status(200).send({ hotels, count });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send({ message: 'Database error' }); // Include error message here
     }
 });
+
 
 // Get a hotel by ID
 router.get('/get/:id', async (req, res) => {

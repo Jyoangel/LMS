@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Class = require('../models/Class');
+const Class = require('../Models/class');
 
 const getClassCount = async () => {
     return await Class.countDocuments();

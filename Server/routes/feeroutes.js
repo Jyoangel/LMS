@@ -68,7 +68,8 @@ router.post('/add', async (req, res) => {
 
         // Prepare and save FeeNotice
         const feeNotice = new FeeNotice({
-            studentID,
+            fee: fee._id,
+
             message: 'Default message', // Replace with actual message
             remark: 'Default remark',   // Replace with actual remark
             dueAmount,
@@ -80,7 +81,7 @@ router.post('/add', async (req, res) => {
         res.status(201).json({ msg: 'Fee record created successfully', fee });
     } catch (err) {
         console.error('Error saving fee:', err.message);
-        res.status(500).send('Server error');
+        res.status(400).json({ msg: err.message }); // Adjust the status code and message
     }
 });
 
@@ -121,7 +122,7 @@ router.get('/get', async (req, res) => {
 });
 
 // Update total fee
-router.put('/update/:id', checkRole(['admin', 'teacher']), async (req, res) => {
+router.put('/update/:id', async (req, res) => {
     try {
         const { totalFee } = req.body;
 
@@ -136,9 +137,9 @@ router.put('/update/:id', checkRole(['admin', 'teacher']), async (req, res) => {
 
         await fee.save();
         res.status(200).json({ msg: 'Total fee updated successfully', fee });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    } catch (error) {
+        console.error('Error updating fee record:', error);
+        res.status(500).json({ msg: 'Failed to update fee record', error: error.message });
     }
 });
 
@@ -178,9 +179,9 @@ router.post('/sendNotice/:id', async (req, res) => {
         console.log(`Notice sent to ${fee.studentID.email}`);
 
         res.status(200).json({ msg: 'Notice sent successfully' });
-    } catch (err) {
-        console.error(`Error sending notice: ${err.message}`);
-        res.status(500).send('Server error');
+    } catch (error) {
+        console.error('Error sending fee notice:', error);
+        res.status(500).json({ msg: 'Failed to send fee notice', error: error.message });
     }
 });
 

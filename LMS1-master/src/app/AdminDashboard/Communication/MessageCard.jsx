@@ -32,7 +32,7 @@ export default function MessageCard({ onClose, selectedStudent }) {
     }
 
     try {
-      //await sendMessages(subject, message, selectedStudent);
+      await sendMessages(subject, message, selectedStudent);
       await sendSMS(message, selectedStudent); // Call API to send message
       setSuccess(true);
       onClose();

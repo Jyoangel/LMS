@@ -42,30 +42,6 @@ router.get('/get/:id', async (req, res) => {
     }
 });
 
-// Update Homework
-{/*router.put('/update/:id', async (req, res) => {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ['class', 'subjects', 'chapter', 'homework', 'submissionMethod', 'startDate', 'endDate', 'assignTo', 'attachments', 'description', 'homeworkDone', 'undoneHomework'];
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
-
-    if (!isValidOperation) {
-        return res.status(400).send({ error: 'Invalid updates!' });
-    }
-
-    try {
-        const homework = await Homework.findById(req.params.id);
-        if (!homework) {
-            return res.status(404).send();
-        }
-
-        updates.forEach((update) => homework[update] = req.body[update]);
-        await homework.save();
-        res.send(homework);
-    } catch (e) {
-        res.status(400).send(e);
-    }
-});
-*/}
 
 router.put('/update/:id', async (req, res) => {
     try {

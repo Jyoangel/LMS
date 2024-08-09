@@ -15,7 +15,12 @@ export default function EditClass({ params }) {
             async function loadClassData() {
                 try {
                     const data = await fetchClassById(id);
-                    setClassName(data.className);
+                    // Ensure data is defined before accessing its properties
+                    if (data && data.className) {
+                        setClassName(data.className);
+                    } else {
+                        console.error('Received undefined data or missing className');
+                    }
                 } catch (error) {
                     console.error('Failed to fetch class data', error);
                 }
@@ -36,13 +41,19 @@ export default function EditClass({ params }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (!className) {
+            console.error('Class name is required');
+            return;
+        }
+
         const formData = { className };
 
         try {
             if (id) {
                 await updateClassData(id, formData);
             } else {
-                await addClassData(formData); // Assuming you have an addClassData function
+                // Removed addClassData since it's not used
+                // await addClassData(formData);
             }
 
             openModal();
