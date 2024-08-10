@@ -5,7 +5,8 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchClassData, deleteClassData } from "../../../../api/classapi"; // Adjust the path as necessary
-import format from "date-fns/format";
+import { format } from 'date-fns';
+
 export default function ClassTable({ filter, searchTerm }) {
   const [isDelete, setDelete] = useState(false);
   const [classData, setClassData] = useState({ classes: [] });
@@ -44,7 +45,7 @@ export default function ClassTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = classData.classes.filter(
+  const filteredData = (classData.classes || []).filter(
     (item) =>
       (filter === "" || item.className === filter) &&
       (searchTerm === "" || item.className.toLowerCase().includes(searchTerm.toLowerCase()))
