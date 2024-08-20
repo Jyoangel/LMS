@@ -2,8 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CreateTimetable from '../ClassSchedule/CreateTimetable/[dayperiod]/page';
 import { addClassScheduleData } from '../../../../api/classScheduleapi';
-import { FaArrowLeftLong } from 'react-icons/fa6';
-import Successcard from '@/Components/Successcard';
+
 
 // Mock the addClassScheduleData function
 jest.mock('../../../../api/classScheduleapi', () => ({

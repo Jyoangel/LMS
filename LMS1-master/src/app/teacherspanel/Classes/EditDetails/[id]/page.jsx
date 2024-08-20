@@ -79,15 +79,12 @@ export default function EditDetails({ params }) {
 
                 {/* form */}
                 <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-                    {/* Student Details */}
                     <div className="flex flex-col gap-8">
                         <div className="w-full grid grid-cols-3 items-center gap-5">
-                            {/*  Class *  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Class *
-                                </label>
+                                <label htmlFor="class" className="text-lg font-normal text-black">Class *</label>
                                 <input
+                                    id="class"
                                     type="text"
                                     name="class"
                                     value={formData.class}
@@ -97,12 +94,10 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/* Subjects * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Subjects *
-                                </label>
+                                <label htmlFor="subjects" className="text-lg font-normal text-black">Subjects *</label>
                                 <input
+                                    id="subjects"
                                     type="text"
                                     name="subjects"
                                     value={formData.subjects}
@@ -112,12 +107,10 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/* Chapter * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Chapter *
-                                </label>
+                                <label htmlFor="chapter" className="text-lg font-normal text-black">Chapter *</label>
                                 <input
+                                    id="chapter"
                                     type="text"
                                     name="chapter"
                                     value={formData.chapter}
@@ -127,12 +120,10 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/*  Home Work * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Home Work *
-                                </label>
+                                <label htmlFor="homework" className="text-lg font-normal text-black">Home Work *</label>
                                 <input
+                                    id="homework"
                                     type="text"
                                     name="homework"
                                     value={formData.homework}
@@ -142,32 +133,27 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/* Submission Method *  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Submission Method *
-                                </label>
+                                <label htmlFor="submissionMethod" className="text-lg font-normal text-black">Submission Method *</label>
                                 <select
+                                    id="submissionMethod"
                                     name="submissionMethod"
                                     value={formData.submissionMethod}
                                     onChange={handleChange}
                                     className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                                    required
                                 >
-                                    <option value="" className="text-gray-400">
-                                        Select
-                                    </option>
+                                    <option value="" className="text-gray-400">Select</option>
                                     <option value="Online">Online</option>
                                     <option value="Offline">Offline</option>
                                 </select>
                             </div>
 
-                            {/*  Start Date *     */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Start Date *
-                                </label>
+                                <label htmlFor="startDate" className="text-lg font-normal text-black">Start Date *</label>
                                 <input
-                                    type="text"
+                                    id="startDate"
+                                    type="date"
                                     name="startDate"
                                     value={formData.startDate}
                                     onChange={handleChange}
@@ -175,13 +161,11 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/*  End Date *     */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    End Date *
-                                </label>
+                                <label htmlFor="endDate" className="text-lg font-normal text-black">End Date *</label>
                                 <input
-                                    type="text"
+                                    id="endDate"
+                                    type="date"
                                     name="endDate"
                                     value={formData.endDate}
                                     onChange={handleChange}
@@ -189,12 +173,10 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/* Assign To */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Assign To *
-                                </label>
+                                <label htmlFor="assignTo" className="text-lg font-normal text-black">Assign To *</label>
                                 <input
+                                    id="assignTo"
                                     type="text"
                                     name="assignTo"
                                     value={formData.assignTo}
@@ -204,29 +186,26 @@ export default function EditDetails({ params }) {
                                 />
                             </div>
 
-                            {/* Attachments  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Attachments *
-                                </label>
+                                <label htmlFor="attachments" className="text-lg font-normal text-black">Attachments *</label>
                                 <input
+                                    id="attachments"
                                     type="text"
                                     name="attachments"
                                     value={formData.attachments}
                                     onChange={handleChange}
                                     placeholder="Type here"
                                     className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                                    required
                                 />
                             </div>
                         </div>
                     </div>
 
-                    {/* Description* */}
                     <div className="flex flex-col gap-3 w-full">
-                        <label className="text-lg font-normal text-black">
-                            Description *
-                        </label>
+                        <label htmlFor="description" className="text-lg font-normal text-black">Description *</label>
                         <textarea
+                            id="description"
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
@@ -239,6 +218,7 @@ export default function EditDetails({ params }) {
                         <button
                             type="submit"
                             className="w-[33%] bg-blue-600 text-white font-medium text-lg p-3 rounded-lg"
+                            data-testid="Update"
                         >
                             Update
                         </button>

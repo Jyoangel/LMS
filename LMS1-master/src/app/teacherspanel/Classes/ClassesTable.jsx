@@ -6,7 +6,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchHomeWorkData, deleteHomeWorkData } from "../../../../api/homeworkapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function ClassesTable({ filter, searchTerm }) {
   const [homeworkData, setHomeworkData] = useState([]);
@@ -48,7 +48,7 @@ export default function ClassesTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = homeworkData.filter(
+  const filteredData = (homeworkData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

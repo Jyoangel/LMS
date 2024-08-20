@@ -38,7 +38,7 @@ export default function Library() {
         <div className="h-12 w-full flex flex-row items-center justify-between">
           <div className="flex flex-row gap-6">
             <h1 className="text-black text-lg font-medium">
-              Total Book:{totalCourses}
+              Total Book: {totalCourses}
             </h1>
             <h1 className="text-gray-500 text-sm">
               Amount:{" "}
@@ -74,13 +74,13 @@ export default function Library() {
                 <h1>Search</h1>
               </div>
               <div className="flex flex-row gap-1">
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center" aria-label="Previous Page">
                   <FaAngleLeft color="black" size={25} />
                 </button>
                 <button className="h-10 w-12 bg-white border border-gray-300 rounded-md text-xl">
                   1
                 </button>
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center ">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center " aria-label="Next Page">
                   <FaAngleRight color="black" size={25} />
                 </button>
               </div>

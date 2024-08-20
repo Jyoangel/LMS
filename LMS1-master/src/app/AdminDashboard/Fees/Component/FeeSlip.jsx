@@ -6,7 +6,7 @@ import { RxCrossCircled } from "react-icons/rx";
 import Image from "next/image";
 import logo from "./logo.png";
 import { fetchFeeRecordById } from "../../../../../api/api";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function FeeSlip({ onClose, feeId }) {
   const [feeDetails, setFeeDetails] = useState(null);
@@ -52,14 +52,14 @@ export default function FeeSlip({ onClose, feeId }) {
           ref={noticeRef}
           className="h-[750px] w-[700px] border border-blue-500 bg-white rounded-lg flex flex-col gap-3 p-5"
         >
-          <div className="flex flex-row items-center justify-between ">
+          <div className="flex flex-row items-center justify-between " data-testid="feeslip-outside-area">
             <h1 className="text-black text-sm font-semibold">Fees Slip</h1>
-            <button onClick={onClose} className="cursor-pointer">
+            <button role="button" onClick={onClose} className="cursor-pointer">
               <RxCrossCircled size={20} color="gray" />
             </button>
           </div>
-          <div className="flex flex-row gap-5  pb-5">
-            <Image src={logo} className="h-[80px] w-[80px]" />
+          <div className="flex flex-row gap-5  pb-5" data-testid="feeslip-notice-area">
+            <Image src={logo} alt="img" className="h-[80px] w-[80px]" />
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <h1 className="text-black text-lg font-semibold uppercase">

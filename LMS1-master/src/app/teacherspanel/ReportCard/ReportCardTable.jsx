@@ -1,11 +1,11 @@
 "use client";
-"use client";
+
 import { useEffect, useState } from "react";
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Image from "next/image";
 import group from "./group.png";
 import { fetchReportCardData, fetchAdmitCardData, deleteReportCardData, deleteAdmitCardData } from "../../../../api/reportcardapi";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import Link from "next/link";
 import FinalReportcard from "../../teacherspanel/ReportCard/FinalReportCard/[id]/page";
 import FinalAdmitcard from "../../teacherspanel/ReportCard/AdmitCard/[id]/FinalAdmicard";

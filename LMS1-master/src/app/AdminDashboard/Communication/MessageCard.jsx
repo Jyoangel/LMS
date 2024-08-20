@@ -58,7 +58,7 @@ export default function MessageCard({ onClose, selectedStudent }) {
             <h1 className="text-black text-sm font-semibold">Subject</h1>
             <input
               type="text"
-              placeholder="Type here"
+              placeholder="Enter subject here"
               className="h-10 w-full text-black border border-gray-300 rounded-lg p-2"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
@@ -68,7 +68,7 @@ export default function MessageCard({ onClose, selectedStudent }) {
             <h1 className="text-black text-sm font-semibold">Message</h1>
             <textarea
               rows={4}
-              placeholder="Type here"
+              placeholder="Enter message here"
               className="w-full text-black border border-gray-300 rounded-lg p-2"
               value={message}
               onChange={(e) => setMessage(e.target.value)}

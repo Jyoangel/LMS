@@ -1,15 +1,11 @@
 "use client"
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 import AssignmentStatus from "./components/AssignmentStatus";
 import ClassSchedule from "./components/ClassSchedule";
 import ColorCard from "./components/ColorCard";
 import CourseProgress from "./components/CourseProgess";
 import EventCard from "./components/EventCard";
 import HomeWork from "./components/HomeWork";
-import UpcomingDeadline from "./components/UpcomingDeadline";
-import graph from "./graph.png";
-import img1 from "./img/img1.png";
 import staffs from "./img/staffs.png";
 import student from "./img/student.png";
 import teachers from "./img/teachers.png";
@@ -21,7 +17,7 @@ import { fetchHomeWorkData } from '../../../../api/homeworkapi';
 import { fetchAssignmentData } from '../../../../api/assignmentapi';
 import { fetchClassScheduleData } from '../../../../api/classScheduleapi';
 
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 
 export default function Dashboard() {

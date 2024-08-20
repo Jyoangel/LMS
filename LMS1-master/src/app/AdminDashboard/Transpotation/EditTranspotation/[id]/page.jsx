@@ -10,7 +10,6 @@ export default function EditTranspotation({ params }) {
     const { id } = params;
     const [isSelectOpen, setisSelectOpen] = useState(false);
     const [formData, setFormData] = useState({
-
         studentName: "",
         class: "",
         rollNo: "",
@@ -22,7 +21,6 @@ export default function EditTranspotation({ params }) {
     });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
 
     useEffect(() => {
         async function getData() {
@@ -92,10 +90,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Student Name */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="studentName" className="text-lg font-normal text-black">
                                 Student Name *
                             </label>
                             <input
+                                id="studentName"
                                 name="studentName"
                                 value={formData.studentName}
                                 onChange={handleInputChange}
@@ -104,10 +103,12 @@ export default function EditTranspotation({ params }) {
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
                         </div>
+
                         {/* Class */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">Class*</label>
+                            <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                             <select
+                                id="class"
                                 name="class"
                                 value={formData.class}
                                 onChange={handleInputChange}
@@ -122,14 +123,13 @@ export default function EditTranspotation({ params }) {
                             </select>
                         </div>
 
-
-
                         {/* Roll No */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="rollNo" className="text-lg font-normal text-black">
                                 Roll No *
                             </label>
                             <input
+                                id="rollNo"
                                 name="rollNo"
                                 value={formData.rollNo}
                                 onChange={handleInputChange}
@@ -141,10 +141,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Father Name */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="fatherName" className="text-lg font-normal text-black">
                                 Father Name *
                             </label>
                             <input
+                                id="fatherName"
                                 name="fatherName"
                                 value={formData.fatherName}
                                 onChange={handleInputChange}
@@ -156,10 +157,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Father Contact Number */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="fatherContactNumber" className="text-lg font-normal text-black">
                                 Father Contact Number *
                             </label>
                             <input
+                                id="fatherContactNumber"
                                 name="fatherContactNumber"
                                 value={formData.fatherContactNumber}
                                 onChange={handleInputChange}
@@ -171,10 +173,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Pickup Location */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="pickupLocation" className="text-lg font-normal text-black">
                                 Pickup Location *
                             </label>
                             <input
+                                id="pickupLocation"
                                 name="pickupLocation"
                                 value={formData.pickupLocation}
                                 onChange={handleInputChange}
@@ -186,10 +189,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Drop Location */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="dropLocation" className="text-lg font-normal text-black">
                                 Drop Location *
                             </label>
                             <input
+                                id="dropLocation"
                                 name="dropLocation"
                                 value={formData.dropLocation}
                                 onChange={handleInputChange}
@@ -201,10 +205,11 @@ export default function EditTranspotation({ params }) {
 
                         {/* Transportation Fee */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="transportationFee" className="text-lg font-normal text-black">
                                 Transportation Fee *
                             </label>
                             <input
+                                id="transportationFee"
                                 name="transportationFee"
                                 value={formData.transportationFee}
                                 onChange={handleInputChange}

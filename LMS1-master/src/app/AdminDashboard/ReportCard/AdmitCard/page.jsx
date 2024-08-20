@@ -1,14 +1,13 @@
 "use client";
 
-
 import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
-//import FinalAdmitcard from "../AdmitCard/[id]/FinalAdmicard";
+
 import { addAdmitCardData } from "../../../../../api/reportcardapi"; // Adjust this import
 
 export default function AdmitCard() {
-  const [isSelectOpen, setisSelectOpen] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [formData, setFormData] = useState({
     examination_roll_number: "",
@@ -26,11 +25,11 @@ export default function AdmitCard() {
 
   const openModal = (id) => {
     setSelectedId(id);
-    setisSelectOpen(true);
+    setIsSelectOpen(true);
   };
 
   const closeModal = () => {
-    setisSelectOpen(false);
+    setIsSelectOpen(false);
     setSelectedId(null);
   };
 
@@ -71,7 +70,6 @@ export default function AdmitCard() {
     }
   };
 
-
   return (
     <>
       <div className="h-screen w-full flex flex-col px-5 py-10 gap-10">
@@ -85,16 +83,17 @@ export default function AdmitCard() {
         </div>
 
         {/* form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-10" data-testid="form">
           {/* Student Details */}
           <div className="flex flex-col gap-8">
             <div className="w-full grid grid-cols-3 items-center gap-5">
               {/* Examination Roll Number */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
-                  Examination RollNo*
+                <label htmlFor="examination_roll_number" className="text-lg font-normal text-black">
+                  Examination Roll No*
                 </label>
                 <input
+                  id="examination_roll_number"
                   type="text"
                   name="examination_roll_number"
                   value={formData.examination_roll_number}
@@ -106,10 +105,11 @@ export default function AdmitCard() {
 
               {/* School Name */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="school_name" className="text-lg font-normal text-black">
                   School Name*
                 </label>
                 <input
+                  id="school_name"
                   type="text"
                   name="school_name"
                   value={formData.school_name}
@@ -121,10 +121,11 @@ export default function AdmitCard() {
 
               {/* Session */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="session" className="text-lg font-normal text-black">
                   Session*
                 </label>
                 <input
+                  id="session"
                   type="text"
                   name="session"
                   value={formData.session}
@@ -136,10 +137,11 @@ export default function AdmitCard() {
 
               {/* Examination */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="examination" className="text-lg font-normal text-black">
                   Examination*
                 </label>
                 <input
+                  id="examination"
                   type="text"
                   name="examination"
                   value={formData.examination}
@@ -151,10 +153,11 @@ export default function AdmitCard() {
 
               {/* Student Name */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="student_name" className="text-lg font-normal text-black">
                   Student Name*
                 </label>
                 <input
+                  id="student_name"
                   type="text"
                   name="student_name"
                   value={formData.student_name}
@@ -166,8 +169,9 @@ export default function AdmitCard() {
 
               {/* Class */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Class*</label>
+                <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                 <input
+                  id="class"
                   type="text"
                   name="class"
                   value={formData.class}
@@ -179,10 +183,11 @@ export default function AdmitCard() {
 
               {/* Start Date */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="startdate" className="text-lg font-normal text-black">
                   Start Date*
                 </label>
                 <input
+                  id="startdate"
                   type="date"
                   name="startdate"
                   value={formData.startdate}
@@ -193,10 +198,11 @@ export default function AdmitCard() {
 
               {/* End Date */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="enddate" className="text-lg font-normal text-black">
                   End Date*
                 </label>
                 <input
+                  id="enddate"
                   type="date"
                   name="enddate"
                   value={formData.enddate}
@@ -207,10 +213,11 @@ export default function AdmitCard() {
 
               {/* Exam Starting Time */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="examstarting_time" className="text-lg font-normal text-black">
                   Exam Starting Time*
                 </label>
                 <input
+                  id="examstarting_time"
                   type="text"
                   name="examstarting_time"
                   value={formData.examstarting_time}
@@ -222,10 +229,11 @@ export default function AdmitCard() {
 
               {/* Exam Ending Time */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="examending_time" className="text-lg font-normal text-black">
                   Exam Ending Time*
                 </label>
                 <input
+                  id="examending_time"
                   type="text"
                   name="examending_time"
                   value={formData.examending_time}
@@ -241,8 +249,9 @@ export default function AdmitCard() {
               <div key={index} className="w-full grid grid-cols-3 items-center gap-5">
                 {/* Subject */}
                 <div className="flex flex-col gap-3 w-full">
-                  <label className="text-lg font-normal text-black">Subject*</label>
+                  <label htmlFor={`subject_${index}`} className="text-lg font-normal text-black">Subject*</label>
                   <input
+                    id={`subject_${index}`}
                     type="text"
                     name="subject"
                     value={subject.subject}
@@ -254,13 +263,15 @@ export default function AdmitCard() {
 
                 {/* Examination Date */}
                 <div className="flex flex-col gap-3 w-full">
-                  <label className="text-lg font-normal text-black">Examination Date*</label>
+                  <label htmlFor={`examination_date_${index}`} className="text-lg font-normal text-black">
+                    Examination Date*
+                  </label>
                   <input
+                    id={`examination_date_${index}`}
                     type="date"
                     name="examination_date"
                     value={subject.examination_date}
                     onChange={(e) => handleSubjectChange(index, e)}
-                    placeholder="Type here"
                     className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                   />
                 </div>
@@ -270,23 +281,24 @@ export default function AdmitCard() {
             <button
               type="button"
               onClick={addSubjectField}
-              className="w-[33%] bg-green-600 text-white font-medium text-lg p-3 rounded-lg"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
             >
               Add Subject
             </button>
           </div>
 
-          <button
-            type="submit"
-            className="w-[33%] bg-blue-600 text-white font-medium text-lg p-3 rounded-lg"
-          >
-            Generate Admit Card
-          </button>
+          <div className="w-full flex justify-end">
+            <button
+              role="button"
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
 
-      {/* Modal 
-      {isSelectOpen && <FinalAdmitcard params={{ id: selectedId }} onClose={closeModal} />}*/}
     </>
   );
 }

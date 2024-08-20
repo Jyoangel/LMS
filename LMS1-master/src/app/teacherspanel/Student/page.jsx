@@ -1,11 +1,10 @@
 "use client";
-"use client";
+
 import { useState, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
-import ConfirmationCard from "../components/ConfirmationCard";
 import StudentTable from "./StudentTable";
 import { fetchCountData } from "../../../../api/api";
 
@@ -61,13 +60,13 @@ export default function Student() {
                 />
               </div>
               <div className="flex flex-row gap-1">
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center" aria-label="left">
                   <FaAngleLeft color="black" size={25} />
                 </button>
                 <button className="h-10 w-12 bg-white border border-gray-300 rounded-md text-xl">
                   1
                 </button>
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center" aria-label="right">
                   <FaAngleRight color="black" size={25} />
                 </button>
               </div>

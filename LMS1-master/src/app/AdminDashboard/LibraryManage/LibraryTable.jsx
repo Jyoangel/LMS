@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { fetchLibraryData, deletelibraryData } from "../../../../api/libraryapi";
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
@@ -44,7 +44,7 @@ export default function LibraryTable({ filter, searchTerm }) {
   }, []);
 
   // Apply filter and search term to data
-  const filteredData = libraryData.filter(
+  const filteredData = (libraryData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

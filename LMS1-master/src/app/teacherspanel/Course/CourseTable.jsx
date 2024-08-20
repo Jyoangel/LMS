@@ -4,7 +4,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchCourseData, deleteCourseData } from "../../../../api/courseapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function CourseTable({ filter, searchTerm }) {
   const [data, setData] = useState({ courses: [] });
@@ -52,7 +52,7 @@ export default function CourseTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = data.courses.filter(
+  const filteredData = (data.courses || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

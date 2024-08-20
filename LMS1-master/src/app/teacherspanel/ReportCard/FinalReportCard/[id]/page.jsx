@@ -2,10 +2,10 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Image from "next/image";
-import logo from "../../AdmitCard/logo.png";
+import logo from "../AdmitCard/logo.png";
 
 import { fetchReportCardById } from "../../../../../../api/reportcardapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function FinalReportcard({ onClose, params }) {
     const { id } = params;

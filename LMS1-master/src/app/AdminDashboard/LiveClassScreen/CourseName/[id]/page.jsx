@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { fetchCourseById } from "../../../../../../api/courseapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 
 

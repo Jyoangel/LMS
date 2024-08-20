@@ -6,7 +6,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchExamData, deleteExamData } from "../../../../api/examapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function ExamTable({ filter, searchTerm }) {
   const [examData, setExamData] = useState([]);
@@ -50,7 +50,7 @@ export default function ExamTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = examData.filter(
+  const filteredData = (examData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

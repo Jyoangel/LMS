@@ -1,4 +1,3 @@
-"use client";
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,7 +5,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { addHomeworkData } from "../../../../../api/homeworkapi";
 
 export default function AddHomeWork() {
-    const [isSelectOpen, setisSelectOpen] = useState(false);
+    const [isSelectOpen, setIsSelectOpen] = useState(false);
     const [formData, setFormData] = useState({
         class: '',
         subjects: '',
@@ -21,11 +20,11 @@ export default function AddHomeWork() {
     });
 
     const openModal = () => {
-        setisSelectOpen(true);
+        setIsSelectOpen(true);
     };
 
     const closeModal = () => {
-        setisSelectOpen(false);
+        setIsSelectOpen(false);
     };
 
     const handleChange = (e) => {
@@ -40,49 +39,12 @@ export default function AddHomeWork() {
         e.preventDefault();
         try {
             await addHomeworkData(formData);
-
             openModal();
         } catch (error) {
-            console.error("Failed to add exam data:", error);
+            console.error("Failed to add homework data:", error);
             // Handle error, e.g., show an error message to the user
         }
     };
-    {/*
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Convert dates to YYYY-MM-DD format
-    const [startDay, startMonth, startYear] = formData.startDate.split("/");
-    const [endDay, endMonth, endYear] = formData.endDate.split("/");
-
-    const formattedFormData = {
-      ...formData,
-      startDate: `${startYear}-${startMonth}-${startDay}`,
-      endDate: `${endYear}-${endMonth}-${endDay}`
-    };
-
-    console.log("Formatted Form Data before submission:", formattedFormData); // Log formatted formData
-
-    try {
-      await addHomeworkData(formattedFormData);
-      openModal();
-      setFormData({
-        class: '',
-        subjects: '',
-        chapter: '',
-        homework: '',
-        submissionMethod: '',
-        startDate: '',
-        endDate: '',
-        assignTo: '',
-        attachments: '',
-        description: ''
-      });
-    } catch (error) {
-      console.error("Failed to add homework data:", error);
-    }
-  };
-  */}
 
     return (
         <>
@@ -96,18 +58,13 @@ export default function AddHomeWork() {
                     </Link>
                 </div>
 
-                {/* form */}
-
                 <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-                    {/* Student Details */}
                     <div className="flex flex-col gap-8">
                         <div className="w-full grid grid-cols-3 items-center gap-5">
-                            {/*  Class *  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Class *
-                                </label>
+                                <label htmlFor="class" className="text-lg font-normal text-black">Class *</label>
                                 <input
+                                    id="class"
                                     type="text"
                                     name="class"
                                     value={formData.class}
@@ -117,12 +74,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/* Subjects * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Subjects *
-                                </label>
+                                <label htmlFor="subjects" className="text-lg font-normal text-black">Subjects *</label>
                                 <input
+                                    id="subjects"
                                     type="text"
                                     name="subjects"
                                     value={formData.subjects}
@@ -132,12 +87,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/* Chapter * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Chapter *
-                                </label>
+                                <label htmlFor="chapter" className="text-lg font-normal text-black">Chapter *</label>
                                 <input
+                                    id="chapter"
                                     type="text"
                                     name="chapter"
                                     value={formData.chapter}
@@ -147,12 +100,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/*  Home Work * */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Home Work *
-                                </label>
+                                <label htmlFor="homework" className="text-lg font-normal text-black">Home Work *</label>
                                 <input
+                                    id="homework"
                                     type="text"
                                     name="homework"
                                     value={formData.homework}
@@ -162,32 +113,26 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/* Submission Method *  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Submission Method*
-                                </label>
+                                <label htmlFor="submissionMethod" className="text-lg font-normal text-black">Submission Method *</label>
                                 <select
+                                    id="submissionMethod"
                                     name="submissionMethod"
                                     value={formData.submissionMethod}
                                     onChange={handleChange}
                                     className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                                     required
                                 >
-                                    <option value="" className="text-gray-400">
-                                        Select
-                                    </option>
+                                    <option value="" className="text-gray-400">Select</option>
                                     <option value="Online">Online</option>
                                     <option value="Offline">Offline</option>
                                 </select>
                             </div>
 
-                            {/*  Start Date *     */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Start Date *
-                                </label>
+                                <label htmlFor="startDate" className="text-lg font-normal text-black">Start Date *</label>
                                 <input
+                                    id="startDate"
                                     type="date"
                                     name="startDate"
                                     value={formData.startDate}
@@ -196,12 +141,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/*  End Date *     */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    End Date *
-                                </label>
+                                <label htmlFor="endDate" className="text-lg font-normal text-black">End Date *</label>
                                 <input
+                                    id="endDate"
                                     type="date"
                                     name="endDate"
                                     value={formData.endDate}
@@ -210,12 +153,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/* Assign To */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Assign To*
-                                </label>
+                                <label htmlFor="assignTo" className="text-lg font-normal text-black">Assign To *</label>
                                 <input
+                                    id="assignTo"
                                     type="text"
                                     name="assignTo"
                                     value={formData.assignTo}
@@ -225,12 +166,10 @@ export default function AddHomeWork() {
                                 />
                             </div>
 
-                            {/* Attachments  */}
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Attachments*
-                                </label>
+                                <label htmlFor="attachments" className="text-lg font-normal text-black">Attachments *</label>
                                 <input
+                                    id="attachments"
                                     type="text"
                                     name="attachments"
                                     value={formData.attachments}
@@ -243,12 +182,10 @@ export default function AddHomeWork() {
                         </div>
                     </div>
 
-                    {/* Description* */}
                     <div className="flex flex-col gap-3 w-full">
-                        <label className="text-lg font-normal text-black">
-                            Description*
-                        </label>
+                        <label htmlFor="description" className="text-lg font-normal text-black">Description *</label>
                         <textarea
+                            id="description"
                             name="description"
                             value={formData.description}
                             onChange={handleChange}

@@ -8,7 +8,158 @@ import { useState, useEffect } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import FeeNotice from "../../Component/FeeNotice/[id]/FeeNotice";
 import { fetchFeeRecordById } from "../../../../../../api/api";
-import format from "date-fns/format";
+import { format } from "date-fns";
+import Successcard from '../../../../../Components/Successcard';
+
+export default function FeeDetails({ params }) {
+  const { studentID } = params;
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [studentData, setStudentData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (studentID) {
+      const fetchData = async () => {
+        try {
+          const data = await fetchFeeRecordById(studentID);
+          setStudentData(data);
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [studentID]);
+
+  const openNotice = () => {
+    setIsNoticeOpen(true);
+  };
+
+  const closeNotice = () => {
+    setIsNoticeOpen(false);
+  };
+
+  if (loading) {
+    return <div data-testid="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div data-testid="error">Error: {error}</div>;
+  }
+
+  return (
+    <>
+      <div className="h-screen w-full flex flex-col p-5 gap-10">
+        {/* buttons */}
+        <div className="flex w-full justify-between items-center">
+          <Link href={"/AdminDashboard/Fees"}>
+            <button className="flex items-center justify-center gap-2">
+              <FaArrowLeftLong className="h-10 w-10 bg-gray-100 rounded-full p-2" />
+              <h1 data-testid="back-button" className="text-lg font-semibold">Back</h1>
+            </button>
+          </Link>
+
+          <div className="flex gap-3 items-center justify-center">
+            <div className="flex items-center justify-center gap-1">
+              <button
+                data-testid="fee-notice-button"
+                className="text-blue-400 text-lg font-medium underline"
+                onClick={openNotice}
+              >
+                Fee Notice
+              </button>
+              {isNoticeOpen && (
+                <FeeNotice
+                  studentID={studentID}
+                  onClose={closeNotice}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* success message */}
+        {success && (
+          <div className="mt-5 w-full flex justify-center">
+            <Successcard onClose={() => setSuccess(false)} para={"Fee notice sent successfully!"} />
+          </div>
+        )}
+
+        {/* student details */}
+        <div className="w-full flex flex-col rounded-t-xl overflow-hidden">
+          <div className="w-full h-12 px-5 flex items-center bg-blue-200">
+            <h1 className="text-blue-600 font-semibold ">
+              {studentData?.studentID.name}
+            </h1>
+          </div>
+
+          <div className="p-5 w-full h-auto flex flex-col gap-10 border border-gray-300 rounded-b-lg">
+            {/* student details */}
+            <div className="flex flex-col gap-2 w-full">
+              <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
+                <h1 className="text-gray-400 font-normal text-lg">Student Id</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Name</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Class</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Date of Birth</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Gender</h1>
+              </div>
+              <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
+                <h1 data-testid="student-id" className="text-black font-medium text-lg">
+                  {studentData?.studentID.studentID}
+                </h1>
+                <h1 data-testid="student-name" className="text-black font-medium text-lg">
+                  {studentData?.studentID.name}
+                </h1>
+                <h1 data-testid="student-class" className="text-black font-medium text-lg">
+                  {studentData?.studentID.class}
+                </h1>
+                <h1 data-testid="student-dob" className="text-black font-medium text-lg">
+                  {format(new Date(studentData?.studentID.dateOfBirth), "yyyy-MM-dd")}
+                </h1>
+                <h1 data-testid="student-gender" className="text-black font-medium text-lg">
+                  {studentData?.studentID.gender}
+                </h1>
+              </div>
+            </div>
+
+            {/* additional details */}
+            <div className="flex flex-col gap-2 w-full">
+              <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
+                <h1 className="text-gray-400 font-normal text-lg">Aadhar Number</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Father Name</h1>
+                <h1 className="text-gray-400 font-normal text-lg">Contact Number</h1>
+              </div>
+              <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
+                <h1 data-testid="student-aadhar" className="text-black font-medium text-lg">
+                  {studentData?.studentID.aadharNumber}
+                </h1>
+                <h1 data-testid="student-father-name" className="text-black font-medium text-lg">
+                  {studentData?.studentID.parent.fatherName}
+                </h1>
+                <h1 data-testid="student-contact" className="text-black font-medium text-lg">
+                  {studentData?.studentID.contactNumber}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+
+{/*
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import FeeNotice from "../../Component/FeeNotice/[id]/FeeNotice";
+import { fetchFeeRecordById } from "../../../../../../api/api";
+import { format } from "date-fns";
 
 export default function FeeDetails({ params }) {
   const { studentID } = params;
@@ -55,7 +206,7 @@ export default function FeeDetails({ params }) {
   return (
     <>
       <div className="h-screen w-full flex flex-col p-5 gap-10">
-        {/* buttons */}
+        {/* buttons *
         <div className="flex w-full justify-between items-center">
           <Link href={"/AdminDashboard/Fees"}>
             <button className="flex items-center justify-center gap-2">
@@ -82,14 +233,14 @@ export default function FeeDetails({ params }) {
           </div>
         </div>
 
-        {/* student details */}
+        {/* student details *
         <div className="w-full flex flex-col rounded-t-xl overflow-hidden">
           <div className="w-full h-12 px-5 flex items-center bg-blue-200">
             <h1 className="text-blue-600 font-semibold ">{studentData?.studentID.name}</h1>
           </div>
 
           <div className="p-5 w-full h-auto flex flex-col gap-10 border border-gray-300 rounded-b-lg">
-            {/* student details */}
+            {/* student details *
             <div className="flex flex-col gap-2 w-full">
               <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
                 <h1 className="text-gray-400 font-normal text-lg">Student Id</h1>
@@ -107,7 +258,7 @@ export default function FeeDetails({ params }) {
               </div>
             </div>
 
-            {/* additional details */}
+            {/* additional details *
             <div className="flex flex-col gap-2 w-full">
               <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
                 <h1 className="text-gray-400 font-normal text-lg">Aadhar Number</h1>

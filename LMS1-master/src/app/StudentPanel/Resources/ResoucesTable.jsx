@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import download from "./download.png";
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { fetchLibraryData } from "../../../../api/libraryapi";
 
 
@@ -32,7 +32,7 @@ export default function ResourcesTable({ filter, searchTerm }) {
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())))
   );
 
   return (

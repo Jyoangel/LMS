@@ -8,7 +8,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchCourseData, deleteCourseData } from "../../../../api/courseapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function CourseTable({ filter, searchTerm }) {
   const [data, setData] = useState({ courses: [] });
@@ -56,7 +56,7 @@ export default function CourseTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = data.courses.filter(
+  const filteredData = (data.courses || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||
@@ -96,16 +96,16 @@ export default function CourseTable({ filter, searchTerm }) {
                     {item.courseName}
                   </Link>
                 </td>
-                <td className="py-4 px-6 text-left ">{item.courseCode}</td>
-
+                <td className="py-4 px-6 text-left">{item.courseCode}</td>
                 <td className="py-4 px-6 text-left">{item.primaryInstructorname}</td>
                 <td className="py-4 px-6 text-left">{format(new Date(item.schedule.startDate), "yyyy-MM-dd")}</td>
                 <td className="py-4 px-6 text-left">{format(new Date(item.schedule.endDate), "yyyy-MM-dd")}</td>
                 <td className="py-4 px-6 text-left">{item.schedule.classTime}</td>
                 <td className="py-4 px-6 text-left">{item.schedule.classDays.join(', ')}</td>
-
-                <td className={`py-4 px-6 text-left flex gap-2  `}>
-                  <Image src={download} />
+                <td className="py-4 px-6 text-left flex gap-2">
+                  <button onClick={() => openDelete(item._id)}>
+                    <Image src={download} alt="Download" />
+                  </button>
                 </td>
               </tr>
             ))}
@@ -123,6 +123,7 @@ export default function CourseTable({ filter, searchTerm }) {
     </>
   );
 }
+
 {/*
 const courseData = [
   {

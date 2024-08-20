@@ -5,7 +5,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { fetchAssignmentData, deleteAssignmentData } from "../../../../api/assignmentapi";
 
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function AssignmentTable({ filter, searchTerm }) {
   const [isDelete, setDelete] = useState(false);
@@ -53,7 +53,7 @@ export default function AssignmentTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = assignmentData.assignments.filter(
+  const filteredData = (assignmentData.assignments || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

@@ -31,7 +31,7 @@ export default function PaymentEdit({ onClose }) {
         >
           <div className="flex flex-row items-center justify-between">
             <h1 className="text-black text-sm font-semibold">Edit</h1>
-            <button onClick={onClose}>
+            <button role="button" onClick={onClose}>
               <RxCrossCircled color="gray" size={20} />
             </button>
           </div>

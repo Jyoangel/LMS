@@ -474,7 +474,7 @@ export default function Chats() {
             )}
           </div>
         </div>
-        <div className="h-auto w-full bg-blue-200 flex flex-col gap-5 py-10 px-5 overflow-y-scroll no-scrollbar">
+        <div className="h-auto w-full bg-blue-200 flex flex-col gap-5 py-10 px-5 overflow-y-scroll no-scrollbar" data-testid="messages">
 
           {messages.map((msg, index) => (
             //console.log('Message:', msg);
@@ -516,6 +516,7 @@ export default function Chats() {
               placeholder="Type a message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              data-testid="input"
             />
             <VscDeviceCamera size={30} className="text-gray-400 cursor-pointer" onClick={openCamera} />
             <div className="rounded-full bg-white h-14 border border-gray-300 px-14 relative">
@@ -531,7 +532,7 @@ export default function Chats() {
 
               </div>
             </div>
-            <FiSend size={30} className="text-blue-500 cursor-pointer" onClick={handleSendMessage} />
+            <FiSend size={30} className="text-blue-500 cursor-pointer " data-testid="send-button" onClick={handleSendMessage} />
           </div>
           {audioURL && (
             <audio controls>

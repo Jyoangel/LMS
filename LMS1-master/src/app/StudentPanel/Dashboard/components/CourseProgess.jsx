@@ -5,7 +5,7 @@ export default function CourseProgress() {
   return (
     <>
       <div className="py-5 w-full border-2 border-blue-300 rounded-lg bg-white flex flex-row gap-5   items-center justify-center px-10">
-        <Image src={progress} className="h-16 w-16" />
+        <Image src={progress} alt="img" className="h-16 w-16" />
         <div className="w-full flex flex-col gap-2">
           <h1 className="text-sm font-medium">Class Progress</h1>
 

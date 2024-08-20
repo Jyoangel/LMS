@@ -3,7 +3,6 @@
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { updateCourseData, fetchCourseById } from "../../../../../../api/courseapi"; // Adjust the import based on your file structure
 

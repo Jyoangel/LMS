@@ -3,7 +3,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchStaffData, deleteStaffData } from "../../../../../api/staffapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function TeacherManagementTable({ filter, searchTerm }) {
   const [data, setData] = useState({ staff: [] });

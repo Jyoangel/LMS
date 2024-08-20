@@ -124,8 +124,9 @@ export default function StudentDetails() {
             <h1 className="text-lg font-semibold">Student Details</h1>
             <div className="w-full grid grid-cols-3 items-center gap-5">
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Student ID*</label>
+                <label htmlFor="studentID" className="text-lg font-normal text-black">Student ID*</label>
                 <input
+                  id="studentID"
                   type="text"
                   placeholder="Type here"
                   name="studentID"
@@ -135,8 +136,9 @@ export default function StudentDetails() {
                 />
               </div>
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Form Number*</label>
+                <label htmlFor="formNumber" className="text-lg font-normal text-black">Form Number*</label>
                 <input
+                  id="formNumber"
                   type="text"
                   placeholder="Type here"
                   name="formNumber"
@@ -148,10 +150,11 @@ export default function StudentDetails() {
 
               {/* Admission Number**/}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="admissionNumber" className="text-lg font-normal text-black">
                   Admission Number*
                 </label>
                 <input
+                  id="admissionNumber"
                   type="text"
                   placeholder="Type here"
                   name="admissionNumber"
@@ -163,8 +166,9 @@ export default function StudentDetails() {
 
               {/* Name*/}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Name*</label>
+                <label htmlFor="name" className="text-lg font-normal text-black">Name*</label>
                 <input
+                  id="name"
                   type="text"
                   placeholder="Type here"
                   name="name"
@@ -176,8 +180,9 @@ export default function StudentDetails() {
 
               {/* Class */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Class*</label>
+                <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                 <select
+                  id="class"
                   name="class"
                   value={formData.class}
                   onChange={handleChange}
@@ -193,8 +198,9 @@ export default function StudentDetails() {
               </div>
 
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Admission Type*</label>
+                <label htmlFor="admissionType" className="text-lg font-normal text-black">Admission Type*</label>
                 <input
+                  id="admissionType"
                   type="text"
                   placeholder="Type here"
                   name="admissionType"
@@ -206,10 +212,11 @@ export default function StudentDetails() {
 
               {/* Date of Birth */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="dateofBirth" className="text-lg font-normal text-black">
                   Date of Birth*
                 </label>
                 <input
+                  id="dateofBirth"
                   type="date"
                   placeholder="Type here"
                   name="dateOfBirth"
@@ -221,8 +228,9 @@ export default function StudentDetails() {
 
               {/* Gender */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Gender*</label>
+                <label htmlFor="gender" className="text-lg font-normal text-black">Gender*</label>
                 <select
+                  id="gender"
                   type="text"
                   placeholder="Type here"
                   name="gender"
@@ -241,8 +249,9 @@ export default function StudentDetails() {
 
               {/* Nationality */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Nationality*</label>
+                <label htmlFor="nationality" className="text-lg font-normal text-black">Nationality*</label>
                 <select
+                  id="nationality"
                   type="text"
                   placeholder="Type here"
                   name="nationality"
@@ -263,10 +272,11 @@ export default function StudentDetails() {
               {/* Mother Tongue */}
               {/* Mother Tongue */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="motherTounge" className="text-lg font-normal text-black">
                   Mother Tongue*
                 </label>
                 <select
+                  id="motherTounge"
                   type="text"
                   placeholder="Type here"
                   name="motherTongue"
@@ -285,8 +295,9 @@ export default function StudentDetails() {
 
               {/* Religion */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Religion*</label>
+                <label htmlFor="religion" className="text-lg font-normal text-black">Religion*</label>
                 <select
+                  id="religion"
                   type="text"
                   placeholder="Type here"
                   name="religion"
@@ -306,8 +317,9 @@ export default function StudentDetails() {
 
               {/* Caste */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Caste*</label>
+                <label htmlFor="caste" className="text-lg font-normal text-black">Caste*</label>
                 <select
+                  id="caste"
                   type="text"
                   placeholder="Type here"
                   name="caste"
@@ -327,10 +339,11 @@ export default function StudentDetails() {
 
               {/* Blood Group */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="bloodGroup" className="text-lg font-normal text-black">
                   Blood Group*
                 </label>
                 <select
+                  id="bloodGroup"
                   type="text"
                   placeholder="Type here"
                   name="bloodGroup"
@@ -354,10 +367,11 @@ export default function StudentDetails() {
 
               {/* Aadhar Number */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="aadharNumber" className="text-lg font-normal text-black">
                   Aadhar Number*
                 </label>
                 <input
+                  id="aadharNumber"
                   type="text"
                   placeholder="Type here"
                   name="aadharNumber"
@@ -369,10 +383,11 @@ export default function StudentDetails() {
 
               {/* Contact Number */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="contactNumber" className="text-lg font-normal text-black">
                   Contact Number*
                 </label>
                 <input
+                  id="contactNumber"
                   type="text"
                   placeholder="Type here"
                   name="contactNumber"

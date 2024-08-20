@@ -77,8 +77,11 @@ export default function UpdateLiveClasses({ params }) {
                     <div className="w-full grid grid-cols-3 items-center gap-8">
                         {/* live classes topic */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Live Classes Topic *</label>
+                            <label htmlFor="topic" className="text-lg font-normal text-black">
+                                Live Classes Topic *
+                            </label>
                             <input
+                                id="topic"
                                 type="text"
                                 name="topic"
                                 placeholder="Type here"
@@ -90,8 +93,11 @@ export default function UpdateLiveClasses({ params }) {
 
                         {/* section */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Section*</label>
+                            <label htmlFor="section" className="text-lg font-normal text-black">
+                                Section *
+                            </label>
                             <input
+                                id="section"
                                 name="section"
                                 placeholder="Type here"
                                 value={liveclassData.section}
@@ -102,8 +108,11 @@ export default function UpdateLiveClasses({ params }) {
 
                         {/* Live Room */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Live Room*</label>
+                            <label htmlFor="liveRoom" className="text-lg font-normal text-black">
+                                Live Room *
+                            </label>
                             <input
+                                id="liveRoom"
                                 name="liveRoom"
                                 placeholder="Type here"
                                 value={liveclassData.liveRoom}
@@ -114,8 +123,11 @@ export default function UpdateLiveClasses({ params }) {
 
                         {/* Date */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Date*</label>
+                            <label htmlFor="date" className="text-lg font-normal text-black">
+                                Date *
+                            </label>
                             <input
+                                id="date"
                                 type="date"
                                 name="date"
                                 value={liveclassData.date}
@@ -124,10 +136,13 @@ export default function UpdateLiveClasses({ params }) {
                             />
                         </div>
 
-                        {/* time */}
+                        {/* Time */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Time*</label>
+                            <label htmlFor="time" className="text-lg font-normal text-black">
+                                Time *
+                            </label>
                             <input
+                                id="time"
                                 type="time"
                                 name="time"
                                 value={liveclassData.time}
@@ -136,10 +151,13 @@ export default function UpdateLiveClasses({ params }) {
                             />
                         </div>
 
-                        {/* duration */}
+                        {/* Duration */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Duration*</label>
+                            <label htmlFor="duration" className="text-lg font-normal text-black">
+                                Duration *
+                            </label>
                             <input
+                                id="duration"
                                 type="text"
                                 name="duration"
                                 placeholder="Type here"
@@ -151,8 +169,11 @@ export default function UpdateLiveClasses({ params }) {
 
                         {/* Assign To */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Assign To*</label>
+                            <label htmlFor="assignTo" className="text-lg font-normal text-black">
+                                Assign To *
+                            </label>
                             <input
+                                id="assignTo"
                                 type="text"
                                 name="assignTo"
                                 placeholder="Type here"
@@ -165,8 +186,11 @@ export default function UpdateLiveClasses({ params }) {
 
                     {/* Note to the students */}
                     <div className="flex flex-col gap-2 w-full">
-                        <label className="text-lg font-normal text-black">Note to the students **</label>
+                        <label htmlFor="noteToStudents" className="text-lg font-normal text-black">
+                            Note to the students **
+                        </label>
                         <textarea
+                            id="noteToStudents"
                             name="noteToStudents"
                             placeholder="Type here"
                             value={liveclassData.noteToStudents}
@@ -183,7 +207,7 @@ export default function UpdateLiveClasses({ params }) {
                     </button>
 
                     {isSelectOpen && (
-                        <Successcard onClose={closeModal} para={" Live class updated successfully!"} />
+                        <Successcard onClose={closeModal} para={"Live class updated successfully!"} />
                     )}
                 </form>
             </div>

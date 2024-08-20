@@ -1,19 +1,17 @@
 "use client";
 
-
-
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import download from "./download.png";
 import { fetchHomeWorkData, } from "../../../../api/homeworkapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 
 
 export default function HomeworkTable({ filter, searchTerm }) {
   const [homeworkData, setHomeworkData] = useState([]);
-  const [isDelete, setDelete] = useState(false);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -28,19 +26,13 @@ export default function HomeworkTable({ filter, searchTerm }) {
     loadData();
   }, []);
 
-  const openDelete = () => {
-    setDelete(true);
-  };
 
-  const closeDelete = () => {
-    setDelete(false);
-  };
 
-  const filteredData = homeworkData.filter(
+  const filteredData = (homeworkData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())))
   );
 
   return (

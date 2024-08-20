@@ -58,9 +58,12 @@ export default function AddLibrary() {
         <div className="w-full grid grid-cols-3 items-center gap-8">
           {/* title */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Title *</label>
+            <label htmlFor="title" className="text-lg font-normal text-black">
+              Title *
+            </label>
             <input
               type="text"
+              id="title"
               name="title"
               placeholder="Type here"
               value={formData.title}
@@ -71,48 +74,60 @@ export default function AddLibrary() {
 
           {/* subject */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Subject*</label>
+            <label htmlFor="subject" className="text-lg font-normal text-black">
+              Subject*
+            </label>
             <input
+              id="subject"
               name="subject"
               placeholder="Type here"
               value={formData.subject}
               onChange={handleChange}
               className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
             />
-
           </div>
 
           {/* class */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Class*</label>
+            <label htmlFor="class" className="text-lg font-normal text-black">
+              Class*
+            </label>
             <input
+              id="class"
               name="class"
               placeholder="Type here"
               value={formData.class}
               onChange={handleChange}
               className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
             />
-
           </div>
 
           {/* type */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Type*</label>
+            <label htmlFor="type" className="text-lg font-normal text-black">
+              Type*
+            </label>
             <input
+              id="type"
               name="type"
               placeholder="Type here"
               value={formData.type}
               onChange={handleChange}
               className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
             />
-
           </div>
 
           {/* author Name */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Author Name*</label>
+            <label
+              htmlFor="authorName"
+              className="text-lg font-normal text-black"
+            >
+              Author Name*
+            </label>
             <input
               type="text"
+              id="authorName"
               name="authorName"
               placeholder="Type here"
               value={formData.authorName}
@@ -123,9 +138,15 @@ export default function AddLibrary() {
 
           {/* uploaded by */}
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-lg font-normal text-black">Uploaded By*</label>
+            <label
+              htmlFor="uploadedBy"
+              className="text-lg font-normal text-black"
+            >
+              Uploaded By*
+            </label>
             <input
               type="text"
+              id="uploadedBy"
               name="uploadedBy"
               placeholder="Type here"
               value={formData.uploadedBy}
@@ -137,8 +158,14 @@ export default function AddLibrary() {
 
         {/* description */}
         <div className="flex flex-col gap-2 w-full">
-          <label className="text-lg font-normal text-black">Description *</label>
+          <label
+            htmlFor="description"
+            className="text-lg font-normal text-black"
+          >
+            Description *
+          </label>
           <textarea
+            id="description"
             name="description"
             placeholder="Type here"
             value={formData.description}

@@ -1,7 +1,4 @@
 "use client";
-
-
-
 import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -95,21 +92,22 @@ export default function AddReportCard() {
           <div className="grid grid-cols-2 gap-8">
             {/* Type */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Type*</label>
+              <label htmlFor="type" className="text-lg font-normal text-black">Type*</label>
               <input
+                id="type"
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md py-3 px-5 outline-none"
                 required
               />
-
             </div>
 
             {/* Name */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Name*</label>
+              <label htmlFor="name" className="text-lg font-normal text-black">Name*</label>
               <input
+                id="name"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -122,8 +120,9 @@ export default function AddReportCard() {
 
             {/* Father's Name */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Father Name*</label>
+              <label htmlFor="fatherName" className="text-lg font-normal text-black">Father Name*</label>
               <input
+                id="fatherName"
                 type="text"
                 name="fatherName"
                 value={formData.fatherName}
@@ -136,8 +135,9 @@ export default function AddReportCard() {
 
             {/* Session */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Session*</label>
+              <label htmlFor="session" className="text-lg font-normal text-black">Session*</label>
               <input
+                id="session"
                 type="text"
                 name="session"
                 value={formData.session}
@@ -150,8 +150,9 @@ export default function AddReportCard() {
 
             {/* Roll Number */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Roll Number*</label>
+              <label htmlFor="rollNumber" className="text-lg font-normal text-black">Roll Number*</label>
               <input
+                id="rollNumber"
                 type="text"
                 name="rollNumber"
                 value={formData.rollNumber}
@@ -164,8 +165,9 @@ export default function AddReportCard() {
 
             {/* Class */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Class*</label>
+              <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
               <input
+                id="class"
                 type="text"
                 name="class"
                 value={formData.class}
@@ -178,8 +180,9 @@ export default function AddReportCard() {
 
             {/* Date of Birth */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Date of Birth*</label>
+              <label htmlFor="dateOfBirth" className="text-lg font-normal text-black">Date of Birth*</label>
               <input
+                id="dateOfBirth"
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth}
@@ -191,8 +194,9 @@ export default function AddReportCard() {
 
             {/* Number of Subjects */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Number Of Subjects*</label>
+              <label htmlFor="numberOfSubjects" className="text-lg font-normal text-black">Number Of Subjects*</label>
               <select
+                id="numberOfSubjects"
                 name="numberOfSubjects"
                 value={formData.numberOfSubjects}
                 onChange={handleNumberOfSubjectsChange}
@@ -213,8 +217,9 @@ export default function AddReportCard() {
           <div className="grid grid-cols-2 gap-8">
             {formData.subjects.map((subject, index) => (
               <div key={index} className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Subject Name*</label>
+                <label htmlFor={`subjectName${index}`} className="text-lg font-normal text-black">Subject Name*</label>
                 <input
+                  id={`subjectName${index}`}
                   type="text"
                   name="subjectName"
                   value={subject.subjectName}
@@ -223,8 +228,9 @@ export default function AddReportCard() {
                   placeholder="Type here"
                   required
                 />
-                <label className="text-lg font-normal text-black">Marks*</label>
+                <label htmlFor={`marks${index}`} className="text-lg font-normal text-black">Marks*</label>
                 <input
+                  id={`marks${index}`}
                   type="number"
                   name="marks"
                   value={subject.marks}
@@ -240,46 +246,49 @@ export default function AddReportCard() {
           {/* Class Teacher */}
           <div className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Class Teacher*</label>
+              <label htmlFor="classTeacher" className="text-lg font-normal text-black">Class Teacher*</label>
               <input
+                id="classTeacher"
                 type="text"
                 name="classTeacher"
                 value={formData.classTeacher}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md py-3 px-5 outline-none"
-                placeholder="Add Signature"
+                placeholder="Type here"
                 required
               />
             </div>
 
-            {/* Principal Signature */}
+            {/* Principle Signature */}
             <div className="flex flex-col gap-3">
-              <label className="text-lg font-normal text-black">Principal Signature*</label>
+              <label htmlFor="principleSignature" className="text-lg font-normal text-black">Principle Signature*</label>
               <input
+                id="principleSignature"
                 type="text"
                 name="principleSignature"
                 value={formData.principleSignature}
                 onChange={handleChange}
                 className="border border-gray-300 rounded-md py-3 px-5 outline-none"
-                placeholder="Add Signature"
+                placeholder="Type here"
                 required
               />
             </div>
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-3 px-5 rounded-md"
-          >
-            Submit
-          </button>
+          <div className="flex justify-end">
+            <button
+              role="button"
+              type="submit"
+              className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-md hover:bg-blue-600"
+            >
+              Submit
+            </button>
+          </div>
         </form>
 
         {/* Success Modal */}
-        {isSelectOpen && (
-          <Successcard closeModal={closeModal} />
-        )}
+        <Successcard closeModal={closeModal} isOpen={isSelectOpen} />
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { fetchAssignmentData, } from "../../../../api/assignmentapi";
 import { LiaFileDownloadSolid } from "react-icons/lia";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function AssignmentTable({ filter, searchTerm }) {
   const [isDelete, setDelete] = useState(false);
@@ -52,7 +52,8 @@ export default function AssignmentTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = assignmentData.assignments.filter(
+
+  const filteredData = (assignmentData.assignments || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

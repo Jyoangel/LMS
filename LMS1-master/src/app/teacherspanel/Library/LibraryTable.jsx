@@ -1,11 +1,8 @@
 "use client";
 
-
-
 import { useState, useEffect } from "react";
-import format from "date-fns/format";
+import { format } from "date-fns";
 import { fetchLibraryData } from "../../../../api/libraryapi";
-// Function to fetch library data from API
 
 
 export default function LibraryTable({ filter, searchTerm }) {
@@ -25,7 +22,7 @@ export default function LibraryTable({ filter, searchTerm }) {
   }, []);
 
   // Apply filter and search term to data
-  const filteredData = libraryData.filter(
+  const filteredData = (libraryData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

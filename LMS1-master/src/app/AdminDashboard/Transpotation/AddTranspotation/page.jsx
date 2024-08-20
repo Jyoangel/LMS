@@ -55,21 +55,23 @@ export default function AddTranspotation() {
           <div className="w-full grid grid-cols-3 items-center gap-8">
             {/* Student Name */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Student Name *</label>
+              <label htmlFor="studentName" className="text-lg font-normal text-black">Student Name *</label>
               <input
+                id="studentName"
                 type="text"
                 name="studentName"
                 value={formData.studentName}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter student name"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Class */}
             <div className="flex flex-col gap-3 w-full">
-              <label className="text-lg font-normal text-black">Class*</label>
+              <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
               <select
+                id="class"
                 name="class"
                 value={formData.class}
                 onChange={handleChange}
@@ -86,78 +88,84 @@ export default function AddTranspotation() {
 
             {/* Roll No */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Roll No *</label>
+              <label htmlFor="rollNo" className="text-lg font-normal text-black">Roll No *</label>
               <input
+                id="rollNo"
                 type="text"
                 name="rollNo"
                 value={formData.rollNo}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter roll number"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Father Name */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Father Name *</label>
+              <label htmlFor="fatherName" className="text-lg font-normal text-black">Father Name *</label>
               <input
+                id="fatherName"
                 type="text"
                 name="fatherName"
                 value={formData.fatherName}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter father's name"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Father Contact Number */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Father Contact Number *</label>
+              <label htmlFor="fatherContactNumber" className="text-lg font-normal text-black">Father Contact Number *</label>
               <input
+                id="fatherContactNumber"
                 type="text"
                 name="fatherContactNumber"
                 value={formData.fatherContactNumber}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter contact number"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Pickup Location */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Pickup Location *</label>
+              <label htmlFor="pickupLocation" className="text-lg font-normal text-black">Pickup Location *</label>
               <input
+                id="pickupLocation"
                 type="text"
                 name="pickupLocation"
                 value={formData.pickupLocation}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter pickup location"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Drop Location */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Drop Location *</label>
+              <label htmlFor="dropLocation" className="text-lg font-normal text-black">Drop Location *</label>
               <input
+                id="dropLocation"
                 type="text"
                 name="dropLocation"
                 value={formData.dropLocation}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter drop location"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>
 
             {/* Transportation Fee */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Transportation Fee *</label>
+              <label htmlFor="transportationFee" className="text-lg font-normal text-black">Transportation Fee *</label>
               <input
+                id="transportationFee"
                 type="text"
                 name="transportationFee"
                 value={formData.transportationFee}
                 onChange={handleChange}
-                placeholder="Type here"
+                placeholder="Enter transportation fee"
                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
               />
             </div>

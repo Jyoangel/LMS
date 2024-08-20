@@ -36,10 +36,10 @@ export default function ExamDetails({ params }) {
     }, [id]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, files } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: type === "file" ? files[0] : value,
         }));
     };
 
@@ -70,9 +70,10 @@ export default function ExamDetails({ params }) {
                     <div className="flex flex-col gap-8">
                         <div className="w-full grid grid-cols-3 items-center gap-5">
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Type*</label>
+                                <label htmlFor="type" className="text-lg font-normal text-black">Type*</label>
                                 <input
                                     type="text"
+                                    id="type"
                                     name="type"
                                     value={formData.type}
                                     onChange={handleChange}
@@ -81,11 +82,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">
-                                    Exam Title*
-                                </label>
+                                <label htmlFor="examTitle" className="text-lg font-normal text-black">Exam Title*</label>
                                 <input
                                     type="text"
+                                    id="examTitle"
                                     name="examTitle"
                                     value={formData.examTitle}
                                     onChange={handleChange}
@@ -94,9 +94,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Subject*</label>
+                                <label htmlFor="subject" className="text-lg font-normal text-black">Subject*</label>
                                 <input
                                     type="text"
+                                    id="subject"
                                     name="subject"
                                     value={formData.subject}
                                     onChange={handleChange}
@@ -105,9 +106,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Date*</label>
+                                <label htmlFor="date" className="text-lg font-normal text-black">Date*</label>
                                 <input
                                     type="date"
+                                    id="date"
                                     name="date"
                                     value={formData.date}
                                     onChange={handleChange}
@@ -116,9 +118,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Start Time*</label>
+                                <label htmlFor="startTime" className="text-lg font-normal text-black">Start Time*</label>
                                 <input
                                     type="text"
+                                    id="startTime"
                                     name="startTime"
                                     value={formData.startTime}
                                     onChange={handleChange}
@@ -126,9 +129,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Duration*</label>
+                                <label htmlFor="duration" className="text-lg font-normal text-black">Duration*</label>
                                 <input
                                     type="text"
+                                    id="duration"
                                     name="duration"
                                     value={formData.duration}
                                     onChange={handleChange}
@@ -137,9 +141,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Instruction*</label>
+                                <label htmlFor="instruction" className="text-lg font-normal text-black">Instruction*</label>
                                 <input
                                     type="text"
+                                    id="instruction"
                                     name="instruction"
                                     value={formData.instruction}
                                     onChange={handleChange}
@@ -148,9 +153,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Total Marks*</label>
+                                <label htmlFor="totalMarks" className="text-lg font-normal text-black">Total Marks*</label>
                                 <input
                                     type="text"
+                                    id="totalMarks"
                                     name="totalMarks"
                                     value={formData.totalMarks}
                                     onChange={handleChange}
@@ -159,9 +165,10 @@ export default function ExamDetails({ params }) {
                                 />
                             </div>
                             <div className="flex flex-col gap-3 w-full">
-                                <label className="text-lg font-normal text-black">Passing Marks*</label>
+                                <label htmlFor="passingMarks" className="text-lg font-normal text-black">Passing Marks*</label>
                                 <input
                                     type="text"
+                                    id="passingMarks"
                                     name="passingMarks"
                                     value={formData.passingMarks}
                                     onChange={handleChange}
@@ -173,12 +180,12 @@ export default function ExamDetails({ params }) {
                     </div>
 
                     <div className="flex flex-col gap-3 w-full">
-                        <label className="text-lg font-normal text-black">Upload Question Paper*</label>
+                        <label htmlFor="uploadQuestionPaper" className="text-lg font-normal text-black">Upload Question Paper*</label>
                         <input
                             type="file"
+                            id="uploadQuestionPaper"
                             name="uploadQuestionPaper"
                             onChange={handleChange}
-                            placeholder="Upload"
                             className="h-20 border border-gray-300 bg-gray-200 rounded-md w-full py-3 text-blue-500 px-5 outline-none"
                         />
                     </div>

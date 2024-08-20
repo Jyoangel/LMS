@@ -25,7 +25,15 @@ export default function EditLibrary({ params }) {
             async function fetchData() {
                 try {
                     const data = await fetchLibraryById(id);
-                    setFormData(data);
+                    setFormData({
+                        title: data.title || "",
+                        subject: data.subject || "",
+                        class: data.class || "",
+                        type: data.type || "",
+                        authorName: data.authorName || "",
+                        uploadedBy: data.uploadedBy || "",
+                        description: data.description || "",
+                    });
                 } catch (error) {
                     console.error("Failed to fetch library data:", error);
                 }
@@ -74,11 +82,12 @@ export default function EditLibrary({ params }) {
                     <div className="w-full grid grid-cols-3 items-center gap-8">
                         {/* title */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Title *</label>
+                            <label htmlFor="title" className="text-lg font-normal text-black">Title *</label>
                             <input
                                 type="text"
+                                id="title"
                                 name="title"
-                                value={formData.title}
+                                value={formData?.title || ""}
                                 onChange={handleChange}
                                 placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -87,52 +96,51 @@ export default function EditLibrary({ params }) {
 
                         {/* subject */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Subject*</label>
+                            <label htmlFor="subject" className="text-lg font-normal text-black">Subject*</label>
                             <input
+                                id="subject"
                                 name="subject"
                                 placeholder="Type here"
-                                value={formData.subject}
+                                value={formData?.subject || ""}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
-
                         </div>
 
                         {/* class */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Class*</label>
+                            <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                             <input
+                                id="class"
                                 name="class"
                                 placeholder="Type here"
-                                value={formData.class}
+                                value={formData?.class || ""}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
-
                         </div>
 
                         {/* type */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Type*</label>
+                            <label htmlFor="type" className="text-lg font-normal text-black">Type*</label>
                             <input
+                                id="type"
                                 name="type"
                                 placeholder="Type here"
-                                value={formData.type}
+                                value={formData?.type || ""}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
-
                         </div>
 
                         {/* author Name */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
-                                Author Name*
-                            </label>
+                            <label htmlFor="authorName" className="text-lg font-normal text-black">Author Name*</label>
                             <input
                                 type="text"
+                                id="authorName"
                                 name="authorName"
-                                value={formData.authorName}
+                                value={formData?.authorName || ""}
                                 onChange={handleChange}
                                 placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -141,13 +149,12 @@ export default function EditLibrary({ params }) {
 
                         {/* uploaded by */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
-                                Uploaded By*
-                            </label>
+                            <label htmlFor="uploadedBy" className="text-lg font-normal text-black">Uploaded By*</label>
                             <input
                                 type="text"
+                                id="uploadedBy"
                                 name="uploadedBy"
-                                value={formData.uploadedBy}
+                                value={formData?.uploadedBy || ""}
                                 onChange={handleChange}
                                 placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -157,12 +164,11 @@ export default function EditLibrary({ params }) {
 
                     {/* description */}
                     <div className="flex flex-col gap-2 w-full">
-                        <label className="text-lg font-normal text-black">
-                            Description *
-                        </label>
+                        <label htmlFor="description" className="text-lg font-normal text-black">Description *</label>
                         <textarea
+                            id="description"
                             name="description"
-                            value={formData.description}
+                            value={formData?.description || ""}
                             onChange={handleChange}
                             placeholder="Type here"
                             className="h-20 border border-gray-300 rounded-md w-full py-3 px-5 outline-none"

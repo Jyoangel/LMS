@@ -7,7 +7,7 @@ import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import logo from "./logo.png";
 import { fetchReportCardById } from "../../../../../../api/reportcardapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function FinalReportCard({ params }) {
     const { id } = params;

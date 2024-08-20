@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Timetable from '../ClassSchedule/Timetable'; // Adjust the import path as needed
 import { fetchClassScheduleData } from '../../../../api/classScheduleapi';

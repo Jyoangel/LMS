@@ -1,14 +1,10 @@
 "use client";
 
-
-
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchHotelData, deleteHotelData } from "../../../../api/hotelapi";
-import format from "date-fns/format";
-
-
+import { format } from "date-fns";
 
 export default function HotelTable({ filter, searchTerm }) {
   const [hotelData, setHotelData] = useState([]);
@@ -48,11 +44,11 @@ export default function HotelTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = hotelData.filter(
+  const filteredData = (hotelData || []).filter(
     (item) =>
-      (filter === "" || item.class === filter) &&
+      (filter === "" || item.floor === filter) &&
       (searchTerm === "" ||
-        item.TypeofRoom.toLowerCase().includes(searchTerm.toLowerCase()))
+        item.typeOfRoom.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -78,18 +74,18 @@ export default function HotelTable({ filter, searchTerm }) {
               >
                 <td className="py-4 px-6 text-left">{index + 1}</td>
                 <td className="py-4 px-6 text-left text-blue-600 underline">
-                  <Link href={"/AdminDashboard/LiveClassScreen/CourseName"}>
+                  <Link href={`/AdminDashboard/HotelManagement/EditHotel/${item._id}`}>
                     {item.typeOfRoom}
                   </Link>
                 </td>
-                <td className="py-4 px-6 text-left ">{item.floor}</td>
+                <td className="py-4 px-6 text-left">{item.floor}</td>
                 <td className="py-4 px-6 text-left">{item.zone}</td>
-                <td className="py-4 px-6 text-left">{format(new Date(item.date), "yyyy-MM-dd")}|{item.time}</td>
+                <td className="py-4 px-6 text-left">
+                  {format(new Date(item.date), "yyyy-MM-dd")} | {item.time}
+                </td>
                 <td className="py-4 px-6 text-left flex gap-2">
                   <Link href={`/AdminDashboard/HotelManagement/EditHotel/${item._id}`}>
-                    <button className="text-blue-600">
-                      Edit
-                    </button>
+                    <button className="text-blue-600">Edit</button>
                   </Link>
                   <h1 className="text-gray-400">|</h1>
                   <button onClick={() => openDelete(item.id)} className="text-red-600">
@@ -112,6 +108,7 @@ export default function HotelTable({ filter, searchTerm }) {
     </>
   );
 }
+
 
 
 

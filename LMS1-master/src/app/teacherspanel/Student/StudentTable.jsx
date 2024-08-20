@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchStudentData } from "../../../../api/api";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function StudentTable() {
   const [studentData, setStudentData] = useState([]);

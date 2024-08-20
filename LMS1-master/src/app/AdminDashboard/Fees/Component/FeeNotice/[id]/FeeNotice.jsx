@@ -1,7 +1,5 @@
 "use client"
 
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { RxCrossCircled } from "react-icons/rx";
 import Image from "next/image";
@@ -62,7 +60,7 @@ export default function FeeNotice({ studentID, onClose }) {
         >
           <div className="flex flex-row items-center justify-between ">
             <h1 className="text-black text-sm font-semibold">Fees Notice</h1>
-            <button onClick={onClose} className="cursor-pointer">
+            <button role="button" onClick={onClose} className="cursor-pointer">
               <RxCrossCircled size={20} color="gray" />
             </button>
           </div>
@@ -140,7 +138,7 @@ export default function FeeNotice({ studentID, onClose }) {
           </form>
           {success && (
             <div className="mt-5 w-full flex justify-center">
-              <Successcard onClose={closeModal} para={"Fee notice sent successfully!"} />
+              <Successcard onClose={onClose} para={"Fee notice sent successfully!"} />
             </div>
           )}
           {error && (

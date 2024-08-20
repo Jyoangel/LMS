@@ -1,21 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
 import CourseTable from "./CourseTable";
+import { fetchCourseData } from "../../../../api/courseapi";
+
 
 export default function Course() {
   const [filter, setFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalCourses, setTotalCourses] = useState(0);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = await fetchCourseData();
+        // Update your component state with data
+        setTotalCourses(data.count);
+      } catch (error) {
+        // Handle errors
+        console.error("Failed to fetch courses data:", error);
+      }
+    };
+
+    getData();
+  }, []);
+
   return (
     <>
       <div className="h-screen w-full flex flex-col gap-6 p-5">
         {/* total no */}
         <div className="w-full flex items-center justify-between">
-          <h1 className="text-base font-medium">Total Courses: 10</h1>
+          <h1 className="text-base font-medium">Total Course: {totalCourses}</h1>
           <div className="flex items-center justify-center gap-5"></div>
         </div>
 
@@ -39,13 +58,13 @@ export default function Course() {
                 <h1>Search</h1>
               </div>
               <div className="flex flex-row gap-1">
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center" aria-label="left">
                   <FaAngleLeft color="black" size={25} />
                 </button>
                 <button className="h-10 w-12 bg-white border border-gray-300 rounded-md text-xl">
                   1
                 </button>
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center ">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center " aria-label="right">
                   <FaAngleRight color="black" size={25} />
                 </button>
               </div>

@@ -72,8 +72,9 @@ export default function EditHotel({ params }) {
                     <div className="w-full grid grid-cols-3 items-center gap-8">
                         {/* type of room */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Type of Room*</label>
+                            <label htmlFor="typeOfRoom" className="text-lg font-normal text-black">Type of Room*</label>
                             <select
+                                id="typeOfRoom"
                                 value={typeOfRoom}
                                 onChange={(e) => setTypeOfRoom(e.target.value)}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -87,8 +88,9 @@ export default function EditHotel({ params }) {
 
                         {/* Floor */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Floor*</label>
+                            <label htmlFor="floor" className="text-lg font-normal text-black">Floor*</label>
                             <select
+                                id="floor"
                                 value={floor}
                                 onChange={(e) => setFloor(e.target.value)}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -102,8 +104,9 @@ export default function EditHotel({ params }) {
 
                         {/* Zone */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Zone*</label>
+                            <label htmlFor="zone" className="text-lg font-normal text-black">Zone*</label>
                             <select
+                                id="zone"
                                 value={zone}
                                 onChange={(e) => setZone(e.target.value)}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -118,8 +121,9 @@ export default function EditHotel({ params }) {
 
                         {/* Price */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Price*</label>
+                            <label htmlFor="price" className="text-lg font-normal text-black">Price*</label>
                             <input
+                                id="price"
                                 type="text"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
@@ -146,5 +150,3 @@ export default function EditHotel({ params }) {
         </>
     );
 }
-
-// api/h

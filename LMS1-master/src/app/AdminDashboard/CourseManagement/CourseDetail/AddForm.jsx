@@ -11,10 +11,11 @@ const AddForm = () => {
                     <div className="w-full grid grid-cols-3 items-center gap-5">
                         {/* Course Name* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="courseName" className="text-lg font-normal text-black">
                                 Course Name*
                             </label>
                             <input
+                                id="courseName"
                                 name="courseName"
                                 type="text"
                                 placeholder="Type here"
@@ -24,10 +25,11 @@ const AddForm = () => {
 
                         {/* Course Code* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="courseCode" className="text-lg font-normal text-black">
                                 Course Code*
                             </label>
                             <input
+                                id="courseCode"
                                 name="courseCode"
                                 type="text"
                                 placeholder="Type here"
@@ -37,11 +39,12 @@ const AddForm = () => {
 
                         {/* Instructor Name* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="primaryInstructorName" className="text-lg font-normal text-black">
                                 Instructor Name*
                             </label>
                             <input
-                                name="primaryInstructorname"
+                                id="primaryInstructorName"
+                                name="primaryInstructorName"
                                 type="text"
                                 placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
@@ -50,10 +53,11 @@ const AddForm = () => {
 
                         {/* Instructor Email* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="instructorEmail" className="text-lg font-normal text-black">
                                 Instructor Email*
                             </label>
                             <input
+                                id="instructorEmail"
                                 type="email"
                                 name="instructorEmail"
                                 placeholder="Type here"
@@ -63,36 +67,37 @@ const AddForm = () => {
 
                         {/* Start Date* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="startDate" className="text-lg font-normal text-black">
                                 Start Date*
                             </label>
                             <input
+                                id="startDate"
                                 name="startDate"
                                 type="date"
-                                placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
                         </div>
 
                         {/* End Date* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="endDate" className="text-lg font-normal text-black">
                                 End Date*
                             </label>
                             <input
+                                id="endDate"
                                 name="endDate"
                                 type="date"
-                                placeholder="Type here"
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
                         </div>
 
                         {/* Class Days* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="classDays" className="text-lg font-normal text-black">
                                 Class Days*
                             </label>
                             <input
+                                id="classDays"
                                 name="classDays"
                                 type="text"
                                 placeholder="Type here"
@@ -102,10 +107,11 @@ const AddForm = () => {
 
                         {/* Class Time* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="classTime" className="text-lg font-normal text-black">
                                 Class Time*
                             </label>
                             <input
+                                id="classTime"
                                 name="classTime"
                                 type="text"
                                 placeholder="Type here"
@@ -115,10 +121,11 @@ const AddForm = () => {
 
                         {/* Course Objective* */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="courseObjectives" className="text-lg font-normal text-black">
                                 Course Objective*
                             </label>
                             <input
+                                id="courseObjectives"
                                 name="courseObjectives"
                                 type="text"
                                 placeholder="Type here"
@@ -128,10 +135,11 @@ const AddForm = () => {
 
                         {/* Supplementary Materials */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="supplementaryMaterials" className="text-lg font-normal text-black">
                                 Supplementary Materials
                             </label>
                             <input
+                                id="supplementaryMaterials"
                                 name="supplementaryMaterials"
                                 type="text"
                                 placeholder="Type here"
@@ -141,10 +149,11 @@ const AddForm = () => {
 
                         {/* Online Resources */}
                         <div className="flex flex-col gap-3 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label htmlFor="onlineResources" className="text-lg font-normal text-black">
                                 Online Resources
                             </label>
                             <input
+                                id="onlineResources"
                                 name="onlineResources"
                                 type="text"
                                 placeholder="Type here"
@@ -156,12 +165,12 @@ const AddForm = () => {
 
                 {/* Course Description* */}
                 <div className="flex flex-col gap-3 w-full">
-                    <label className="text-lg font-normal text-black">
+                    <label htmlFor="courseDescription" className="text-lg font-normal text-black">
                         Course Description*
                     </label>
                     <textarea
+                        id="courseDescription"
                         name="courseDescription"
-                        type="text"
                         placeholder="Type here"
                         className="h-20 border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                     ></textarea>

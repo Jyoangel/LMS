@@ -39,7 +39,7 @@ export default function UpperNavbar() {
           />
         )}
         <h1 className="text-xl font-medium">{user ? user.nickname : 'name'}</h1>
-        <IoIosArrowDown size={25} onClick={toggleDropdown} className="cursor-pointer" />
+        <IoIosArrowDown size={25} onClick={toggleDropdown} className="cursor-pointer" data-testid="dropdown-icon" />
         {dropdownVisible && (
           <div
             className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"

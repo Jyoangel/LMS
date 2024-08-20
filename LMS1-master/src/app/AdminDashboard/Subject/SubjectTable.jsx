@@ -1,14 +1,11 @@
 "use client";
 
-
-
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { fetchSubjectData, deleteSubjectData } from "../../../../api/subjectapi";
-import format from "date-fns/format";
-
+import { format } from 'date-fns';  // Ensure correct import
 
 export default function SubjectTable({ filter, searchTerm }) {
   const [subjects, setSubjects] = useState([]);
@@ -79,30 +76,29 @@ export default function SubjectTable({ filter, searchTerm }) {
             <tbody className="text-gray-600 text-sm font-light">
               {filteredData.map((item, index) => (
                 <tr
-                  key={index}
-                  className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                    }`}
+                  key={item._id}
+                  className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
                 >
                   <td className="py-4 px-6 text-left">{index + 1}</td>
                   <td className="py-4 px-6 text-left text-blue-600 underline">
-                    <Link href={"/AdminDashboard/LiveClassScreen/CourseName"}>
+                    <Link href={`/AdminDashboard/LiveClassScreen/CourseName`}>
                       {item.subject}
                     </Link>
                   </td>
-                  <td className="py-4 px-6 text-left ">{item.class}</td>
-                  <td className="py-4 px-6 text-left ">
-                    {format(new Date(item.date), "yyyy-MM-dd")}|{item.time}
+                  <td className="py-4 px-6 text-left">{item.class}</td>
+                  <td className="py-4 px-6 text-left">
+                    {format(new Date(item.date), "yyyy-MM-dd")} | {item.time}
                   </td>
-                  <td className={`py-4 px-6 text-left flex gap-2  `}>
+                  <td className={`py-4 px-6 text-left flex gap-2`}>
                     <Link href={`/AdminDashboard/Subject/EditSubject/${item._id}`}>
-                      <button className="text-blue-600">
-                        Edit
-                      </button>{" "}
+                      <button className="text-blue-600">Edit</button>
                     </Link>
                     <h1 className="text-gray-400">|</h1>
                     <button
+                      role="button"
                       onClick={() => openDelete(item._id)}
                       className="text-red-600"
+                      aria-label="Delete"
                     >
                       Delete
                     </button>

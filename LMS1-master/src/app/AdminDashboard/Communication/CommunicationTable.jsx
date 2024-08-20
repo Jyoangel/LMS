@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchStudentData, deleteStudentData, selectStudent } from "../../../../api/api"; // Replace with your actual API functions
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function CommunicationTable({ filter, searchTerm, setSelectedStudent }) {
   const [data, setData] = useState({ students: [] });
@@ -79,7 +79,7 @@ export default function CommunicationTable({ filter, searchTerm, setSelectedStud
           <thead className="bg-blue-200 h-14 py-10">
             <tr className="text-gray-700 text-sm font-normal leading-normal">
               <th className="py-4 px-6 text-left">
-                <input type="checkbox" />
+                <input type="checkbox" aria-label="Select All" />
                 Sr. No
               </th>
               <th className="py-4 px-6 text-left">Student Id</th>
@@ -104,6 +104,7 @@ export default function CommunicationTable({ filter, searchTerm, setSelectedStud
                   <input
                     type="checkbox"
                     checked={item.selected} // Set checked state based on item.selected
+                    aria-label={`Select student ${index + 1}`}
                     onChange={(e) => handleSelectStudent(item.studentID, e.target.checked)}
                   />
                   {index + 1}

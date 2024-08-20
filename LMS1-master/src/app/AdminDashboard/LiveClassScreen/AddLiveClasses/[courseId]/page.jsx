@@ -1,5 +1,3 @@
-
-
 "use client";
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
@@ -65,10 +63,13 @@ export default function AddLiveClasses({ params }) {
                     <div className="w-full grid grid-cols-3 items-center gap-8">
                         {/* live classes topic */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label
+                                htmlFor="topic"
+                                className="text-lg font-normal text-black">
                                 Live Classes Topic *
                             </label>
                             <input
+                                id="topic"
                                 type="text"
                                 name="topic"
                                 placeholder="Type here"
@@ -80,36 +81,43 @@ export default function AddLiveClasses({ params }) {
 
                         {/* section */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Section*</label>
+                            <label
+                                htmlFor="section"
+                                className="text-lg font-normal text-black">Section*</label>
                             <input
+                                id="section"
                                 name="section"
                                 placeholder="Type here"
                                 value={liveclassData.section}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
-
                         </div>
 
                         {/* Live Room */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label
+                                htmlFor="liveRoom"
+                                className="text-lg font-normal text-black">
                                 Live Room*
                             </label>
                             <input
+                                id="liveRoom"
                                 name="liveRoom"
                                 placeholder="Type here"
                                 value={liveclassData.liveRoom}
                                 onChange={handleChange}
                                 className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                             />
-
                         </div>
 
                         {/* Date */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Date*</label>
+                            <label
+                                htmlFor="date"
+                                className="text-lg font-normal text-black">Date*</label>
                             <input
+                                id="date"
                                 type="date"
                                 name="date"
                                 value={liveclassData.date}
@@ -120,8 +128,11 @@ export default function AddLiveClasses({ params }) {
 
                         {/* time */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Time*</label>
+                            <label
+                                htmlFor="time"
+                                className="text-lg font-normal text-black">Time*</label>
                             <input
+                                id="time"
                                 type="time"
                                 name="time"
                                 value={liveclassData.time}
@@ -132,10 +143,13 @@ export default function AddLiveClasses({ params }) {
 
                         {/* duration */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label
+                                htmlFor="duration"
+                                className="text-lg font-normal text-black">
                                 Duration*
                             </label>
                             <input
+                                id="duration"
                                 type="text"
                                 name="duration"
                                 placeholder="Type here"
@@ -146,10 +160,13 @@ export default function AddLiveClasses({ params }) {
                         </div>
 
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">
+                            <label
+                                htmlFor="assignTo"
+                                className="text-lg font-normal text-black">
                                 Assign To*
                             </label>
                             <input
+                                id="assignTo"
                                 type="text"
                                 name="assignTo"
                                 placeholder="Type here"
@@ -162,10 +179,13 @@ export default function AddLiveClasses({ params }) {
 
                     {/* Note to the students * */}
                     <div className="flex flex-col gap-2 w-full">
-                        <label className="text-lg font-normal text-black">
+                        <label
+                            htmlFor="noteToStudents"
+                            className="text-lg font-normal text-black">
                             Note to the students **
                         </label>
                         <textarea
+                            id="noteToStudents"
                             name="noteToStudents"
                             placeholder="Type here"
                             value={liveclassData.noteToStudents}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { fetchSubjectById, updateSubjectData } from "../../../../../../api/subjectapi"; // Adjust the path as needed
-import { useRouter } from "next/router";
+
 
 export default function EditSubject({ params }) {
     const [isSelectOpen, setisSelectOpen] = useState(false);
@@ -77,8 +77,9 @@ export default function EditSubject({ params }) {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-10">
                     {/* Class */}
                     <div className="flex flex-col gap-3 w-full">
-                        <label className="text-lg font-normal text-black">Class*</label>
+                        <label htmlFor="classSelect" className="text-lg font-normal text-black">Class*</label>
                         <select
+                            id="classSelect"
                             name="class"
                             value={formData.class}
                             onChange={handleInputChange}
@@ -95,8 +96,9 @@ export default function EditSubject({ params }) {
                     <div className="w-full flex flex-row items-center gap-8">
                         {/* subject */}
                         <div className="flex flex-col gap-2 w-full">
-                            <label className="text-lg font-normal text-black">Subject *</label>
+                            <label htmlFor="subjectInput" className="text-lg font-normal text-black">Subject *</label>
                             <input
+                                id="subjectInput"
                                 type="text"
                                 name="subject"
                                 value={formData.subject}

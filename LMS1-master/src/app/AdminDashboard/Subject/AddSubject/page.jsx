@@ -54,8 +54,9 @@ export default function AddLibrary() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-10">
           {/* Class */}
           <div className="flex flex-col gap-3 w-full">
-            <label className="text-lg font-normal text-black">Class*</label>
+            <label htmlFor="class-select" className="text-lg font-normal text-black">Class*</label>
             <select
+              id="class-select"
               name="class"
               value={formData.class}
               onChange={handleInputChange}
@@ -73,8 +74,9 @@ export default function AddLibrary() {
           <div className="w-full flex flex-row items-center gap-8">
             {/* subject */}
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-lg font-normal text-black">Subject *</label>
+              <label htmlFor="subject-input" className="text-lg font-normal text-black">Subject *</label>
               <input
+                id="subject-input"
                 type="text"
                 name="subject"
                 value={formData.subject}

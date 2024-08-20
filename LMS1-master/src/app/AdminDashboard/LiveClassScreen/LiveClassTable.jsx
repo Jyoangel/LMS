@@ -4,7 +4,7 @@ import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { fetchCourseData, deleteCourseData } from "../../../../api/courseapi";
 import { deleteLiveClassData } from "../../../../api/liveclassapi"; // Assuming path to your deleteLiveClassData function
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function CourseManagementTable({ filter = "", searchTerm = "" }) {
   const [data, setData] = useState({ courses: [] });

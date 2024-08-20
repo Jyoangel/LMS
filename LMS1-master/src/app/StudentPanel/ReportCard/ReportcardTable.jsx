@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { fetchReportCardData } from "../../../../api/reportcardapi";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function ReportCardTable() {
   const [studentData, setStudentData] = useState([]);

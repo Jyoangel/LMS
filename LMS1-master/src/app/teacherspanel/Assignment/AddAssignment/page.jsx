@@ -76,11 +76,12 @@ export default function AddAssignment() {
             <div className="w-full grid grid-cols-3 items-center gap-5">
               {/* Assignment Code */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="assignmentCode" className="text-lg font-normal text-black">
                   Assignment Code*
                 </label>
                 <input
                   type="text"
+                  id="assignmentCode"
                   name="assignmentCode"
                   value={formData.assignmentCode}
                   onChange={handleChange}
@@ -92,11 +93,12 @@ export default function AddAssignment() {
 
               {/* Assignment Title */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="assignmentTitle" className="text-lg font-normal text-black">
                   Assignment Title*
                 </label>
                 <input
                   type="text"
+                  id="assignmentTitle"
                   name="assignmentTitle"
                   value={formData.assignmentTitle}
                   onChange={handleChange}
@@ -108,11 +110,12 @@ export default function AddAssignment() {
 
               {/* Due Date */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="dueDate" className="text-lg font-normal text-black">
                   Due Date*
                 </label>
                 <input
                   type="date"
+                  id="dueDate"
                   name="dueDate"
                   value={formData.dueDate}
                   onChange={handleChange}
@@ -124,11 +127,12 @@ export default function AddAssignment() {
 
               {/* Attachments */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="attachments" className="text-lg font-normal text-black">
                   Attachments*
                 </label>
                 <input
                   type="text"
+                  id="attachments"
                   name="attachments"
                   value={formData.attachments}
                   onChange={handleChange}
@@ -140,10 +144,11 @@ export default function AddAssignment() {
 
               {/* Submission Method */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="submissionMethod" className="text-lg font-normal text-black">
                   Submission Method*
                 </label>
                 <select
+                  id="submissionMethod"
                   name="submissionMethod"
                   value={formData.submissionMethod}
                   onChange={handleChange}
@@ -160,9 +165,12 @@ export default function AddAssignment() {
 
               {/* Marks */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Marks*</label>
+                <label htmlFor="marks" className="text-lg font-normal text-black">
+                  Marks*
+                </label>
                 <input
                   type="text"
+                  id="marks"
                   name="marks"
                   value={formData.marks}
                   onChange={handleChange}
@@ -174,11 +182,12 @@ export default function AddAssignment() {
 
               {/* Additional Instruction */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="additionalInstruction" className="text-lg font-normal text-black">
                   Additional Instruction*
                 </label>
                 <input
                   type="text"
+                  id="additionalInstruction"
                   name="additionalInstruction"
                   value={formData.additionalInstruction}
                   onChange={handleChange}
@@ -190,8 +199,9 @@ export default function AddAssignment() {
 
               {/* Class */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">Class*</label>
+                <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                 <select
+                  id="class"
                   name="class"
                   value={formData.class}
                   onChange={handleChange}
@@ -209,10 +219,11 @@ export default function AddAssignment() {
 
               {/* Assign To */}
               <div className="flex flex-col gap-3 w-full">
-                <label className="text-lg font-normal text-black">
+                <label htmlFor="assignTo" className="text-lg font-normal text-black">
                   Assign To*
                 </label>
                 <select
+                  id="assignTo"
                   name="assignTo"
                   value={formData.assignTo}
                   onChange={handleChange}
@@ -232,10 +243,11 @@ export default function AddAssignment() {
 
           {/* Course Description */}
           <div className="flex flex-col gap-3 w-full">
-            <label className="text-lg font-normal text-black">
+            <label htmlFor="courseDescription" className="text-lg font-normal text-black">
               Course Description*
             </label>
             <textarea
+              id="courseDescription"
               name="courseDescription"
               value={formData.courseDescription}
               onChange={handleChange}
@@ -247,9 +259,10 @@ export default function AddAssignment() {
 
           {/* Created By */}
           <div className="flex flex-col gap-3 w-full">
-            <label className="text-lg font-normal text-black">Created By*</label>
+            <label htmlFor="createdBy" className="text-lg font-normal text-black">Created By*</label>
             <input
               type="text"
+              id="createdBy"
               name="createdBy"
               value={formData.createdBy}
               onChange={handleChange}
@@ -259,13 +272,12 @@ export default function AddAssignment() {
             />
           </div>
 
-          {/* Submit Button */}
-          <div className="flex gap-5 pb-10">
+          <div className="w-full mt-10 flex justify-end">
             <button
               type="submit"
-              className="w-[33%] bg-blue-600 text-white font-medium text-lg p-3 rounded-lg"
+              className="bg-[#034488] text-white w-44 py-4 rounded-md text-center"
             >
-              Save
+              Add Assignment
             </button>
             <button
               type="button"
@@ -289,16 +301,15 @@ export default function AddAssignment() {
               Cancel
             </button>
           </div>
-          {isSelectOpen && (
-            <Successcard
-              onClose={closeModal}
-              para={"Assignment Created successfully!"}
-            />
-          )}
         </form>
+
+        {isSelectOpen && (
+          <Successcard
+            message={"Assignment has been added successfully!"}
+            closeModal={closeModal}
+          />
+        )}
       </div>
     </>
   );
 }
-
-

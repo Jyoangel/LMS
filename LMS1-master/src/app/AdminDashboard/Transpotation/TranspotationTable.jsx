@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -49,7 +47,7 @@ export default function TranspotationTable({ filter, searchTerm }) {
     }
   };
 
-  const filteredData = transpotationData.filter(
+  const filteredData = (transpotationData || []).filter(
     (item) =>
       (filter === "" || item.class === filter) &&
       (searchTerm === "" ||

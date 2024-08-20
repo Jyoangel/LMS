@@ -53,13 +53,13 @@ export default function Exam() {
                 <h1>Search</h1>
               </div>
               <div className="flex flex-row gap-1">
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center" aria-label="left">
                   <FaAngleLeft color="black" size={25} />
                 </button>
                 <button className="h-10 w-12 bg-white border border-gray-300 rounded-md text-xl">
                   1
                 </button>
-                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center ">
+                <button className="h-10 w-12 bg-gray-300 rounded-md flex items-center justify-center " aria-label="right">
                   <FaAngleRight color="black" size={25} />
                 </button>
               </div>
