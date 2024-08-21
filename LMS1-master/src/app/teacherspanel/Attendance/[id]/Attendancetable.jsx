@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAttendanceData, updateAttendance } from '../../../../../api/attendanceapi';
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 export default function Attendancetable() {
   const [attendanceData, setAttendanceData] = useState([]);

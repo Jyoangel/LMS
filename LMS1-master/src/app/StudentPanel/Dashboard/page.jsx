@@ -262,7 +262,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            {selectedStudent && <InteractiveGraph studentData={studentData} selectedStudent={selectedStudent} />}
+            {/* {selectedStudent && <InteractiveGraph studentData={studentData} selectedStudent={selectedStudent} />} */}
           </div>
         </div>
 
@@ -299,7 +299,7 @@ export default function Dashboard() {
               </select>
             </div>
           </div>
-          <AttendanceChart attendanceData={attendanceData} selectedStudent={selectedAttendanceStudent} />
+          {/* <AttendanceChart attendanceData={attendanceData} selectedStudent={selectedAttendanceStudent} /> */}
         </div>
       </div>
     </>

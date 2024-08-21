@@ -26,7 +26,7 @@ export default function Sidenavbar() {
     <>
       <div className="h-auto  w-[280px] flex flex-col shadow-xl">
         <div className="p-5">
-          <Image src={logo} />
+          <Image src={logo} alt="logo" />
         </div>
 
         <Link href={"/StudentPanel/Dashboard"}>
@@ -39,7 +39,7 @@ export default function Sidenavbar() {
           >
             <Image
               src={dashboard}
-              alt="homework"
+              alt="dashboard"
               className={`h-6 w-6 ${isSelected === 1 ? "invert-0" : "invert "}`}
             />
             <h1 className="">Dashboard</h1>

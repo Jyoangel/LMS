@@ -1,6 +1,82 @@
 // components/Calendar.js
 "use client";
+import React, { useState, useEffect } from "react";
+import { Calendar, Badge } from "antd";
+import dayjs from "dayjs";
+import { useUser } from '@auth0/nextjs-auth0/client';
 
+const AttendanceCalendar = () => {
+  const [attendance, setAttendance] = useState({});
+  const { user, isLoading } = useUser(); // Use Auth0 hook to get user info
+  const today = dayjs().format("YYYY-MM-DD");
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      // Redirect to login if not authenticated
+      window.location.href = '/api/auth/login';
+    }
+  }, [user, isLoading]);
+
+  const handleAttendanceToggle = (dateKey) => {
+    if (dateKey !== today) {
+      alert("You can only mark attendance for today.");
+      return;
+    }
+
+    // Disable toggling if already marked as "Present"
+    if (attendance[dateKey] === "Present") {
+      return;
+    }
+
+    setAttendance((prevAttendance) => ({
+      ...prevAttendance,
+      [dateKey]: "Present",
+    }));
+  };
+
+  const dateCellRender = (value) => {
+    const dateKey = value.format("YYYY-MM-DD");
+    const attendanceStatus = attendance[dateKey];
+
+    let statusText;
+    let statusColor;
+
+    if (attendanceStatus === "Present") {
+      statusText = "Present";
+      statusColor = "green";
+    } else {
+      statusText = "Mark Attendance";
+      statusColor = "blue";
+    }
+
+    return (
+      <div
+        onClick={() => handleAttendanceToggle(dateKey)}
+        data-testid={`calendar-cell-${dateKey}`} // Added data-testid
+        style={{
+          cursor: dateKey === today && attendanceStatus !== "Present" ? "pointer" : "default",
+          textAlign: "center",
+          padding: "5px",
+          borderRadius: "4px",
+          backgroundColor: statusColor === "green" ? "#f6ffed" : "#e6f7ff",
+          opacity: attendanceStatus === "Present" ? 0.6 : 1, // Indicate disabled state
+        }}
+      >
+        <Badge status={statusColor} text={statusText} />
+      </div>
+    );
+  };
+
+  return (
+    <div className="calendar-container" style={{ padding: "20px" }}>
+      <Calendar dateCellRender={dateCellRender} />
+    </div>
+  );
+};
+
+export default AttendanceCalendar;
+
+{/*
 import React, { useState, useEffect } from "react";
 import { Calendar, Badge } from "antd";
 import dayjs from "dayjs";

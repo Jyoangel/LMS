@@ -5,9 +5,6 @@ import Image from "next/image";
 import ColorCard from "./components/ColorCard";
 import EventCard from "./components/EventCard";
 import StudentCard from "./components/StudentCard";
-import img1 from "./img/img1.png";
-import img2 from "./img/img2.png";
-import graph from "./graph.png";
 import total from "./total.png";
 import struggling from "./struggling.png";
 import excellent from "./excellent.png";
@@ -189,16 +186,20 @@ export default function Dashboard() {
         <div className="flex flex-col gap-3 w-full">
           <h1 className="text-black text-xl font-bold">Upcoming School Events</h1>
           <div className="flex flex-row gap-3">
-            {events.map((event) => (
-              <EventCard
-                key={event._id}
-                name={event.eventName}
-                date={new Date(event.eventDate).toLocaleDateString()}
-                time={event.eventTime}
-                description={event.description}
-                organizer={event.organizerName}
-              />
-            ))}
+            {Array.isArray(events) && events.length > 0 ? (
+              events.map((event) => (
+                <EventCard
+                  key={event._id}
+                  name={event.eventName}
+                  date={new Date(event.eventDate).toLocaleDateString()}
+                  time={event.eventTime}
+                  description={event.description}
+                  organizer={event.organizerName}
+                />
+              ))
+            ) : (
+              <p>No upcoming events available.</p> // Fallback message when no events are available
+            )}
           </div>
         </div>
 
@@ -220,7 +221,7 @@ export default function Dashboard() {
           </div>
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Overview</h1>
-            <InteractiveGraph chartId="schoolOverviewChart" chartData={schoolOverviewData} />
+            {/* <InteractiveGraph chartId="schoolOverviewChart" chartData={schoolOverviewData} /> */}
           </div>
         </div>
 
@@ -254,21 +255,21 @@ export default function Dashboard() {
             <div className="h-[400px] w-full bg-blue-300 flex flex-col gap-10 items-center justify-center rounded-lg">
               <div className="flex flex-row gap-5 items-center justify-center">
                 <div className="h-[165px] w-[160px] flex flex-col gap-3 bg-white rounded-lg items-center justify-center border border-blue-500">
-                  <Image src={total} />
+                  <Image src={total} alt="total" />
                   <h1 className="text-black text-lg font-semibold">
                     Total Students
                   </h1>
                   <h1 className="text-black text-xl font-bold">60</h1>
                 </div>
                 <div className="h-[165px] w-[160px] flex flex-col gap-3 bg-white rounded-lg items-center justify-center border border-blue-500">
-                  <Image src={struggling} />
+                  <Image src={struggling} alt="total" />
                   <h1 className="text-black text-lg font-semibold">
                     Total Students
                   </h1>
                   <h1 className="text-black text-xl font-bold">40</h1>
                 </div>
                 <div className="h-[165px] w-[160px] flex flex-col gap-3 bg-white rounded-lg items-center justify-center border border-blue-500">
-                  <Image src={excellent} />
+                  <Image src={excellent} alt="total" />
                   <h1 className="text-black text-lg font-semibold">
                     Total Students
                   </h1>
@@ -276,7 +277,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="h-[110px] w-[525px] border border-blue-500 rounded-lg bg-white flex flex-row gap-5">
-                <Image src={progress} className="h-20 w-20" />
+                <Image src={progress} alt="total" className="h-20 w-20" />
                 <div className="flex flex-col">
                   <h1>Class Progress</h1>
                   <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
@@ -294,7 +295,7 @@ export default function Dashboard() {
               <h1>Top 3 Excellent Student</h1>
               <div className="flex flex-row justify-between w-full">
                 <div className="flex flex-row gap-5">
-                  <Image src={excellent} />
+                  <Image src={excellent} alt="total" />
 
                   <div className="flex flex-col">
                     <h1>Jay Kumar Rajak</h1>
@@ -309,7 +310,7 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-row justify-between w-full">
                 <div className="flex flex-row gap-5">
-                  <Image src={excellent} />
+                  <Image src={excellent} alt="total" />
 
                   <div className="flex flex-col">
                     <h1>Jay Kumar Rajak</h1>
@@ -324,7 +325,7 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-row justify-between w-full">
                 <div className="flex flex-row gap-5">
-                  <Image src={excellent} />
+                  <Image src={excellent} alt="total" />
 
                   <div className="flex flex-col">
                     <h1>Jay Kumar Rajak</h1>

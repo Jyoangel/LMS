@@ -6,7 +6,7 @@ import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 import { fetchStudentById } from "../../../../../../api/api";
-import format from "date-fns/format";
+import { format } from "date-fns";
 
 
 
