@@ -215,7 +215,7 @@ export default function CourseDetails() {
 
           <div className="flex gap-5 pb-10">
             <button
-              onsubmit={event.preventDefault()}
+
               onClick={openModal}
               className="w-[33%] bg-blue-600 text-white font-medium text-lg p-3 rounded-lg"
             >

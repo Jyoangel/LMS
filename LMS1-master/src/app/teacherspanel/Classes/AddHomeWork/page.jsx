@@ -1,3 +1,4 @@
+"use client"
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
 import { useState } from "react";

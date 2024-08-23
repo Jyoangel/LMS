@@ -172,7 +172,7 @@ export default function Dashboard() {
               {Error && <p className="text-red-500">{Error}</p>}
               {classSchedules.map((schedule) => (
                 <ClassSchedule
-                  key={schedule.id} // assuming each schedule has a unique id
+                  key={schedule._id} // assuming each schedule has a unique id
                   subject={schedule.subject}
                   startTime={schedule.startTime}
                   endTime={schedule.endTime}
@@ -262,7 +262,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            {/* {selectedStudent && <InteractiveGraph studentData={studentData} selectedStudent={selectedStudent} />} */}
+            {selectedStudent && <InteractiveGraph studentData={studentData} selectedStudent={selectedStudent} />}
           </div>
         </div>
 
@@ -299,7 +299,7 @@ export default function Dashboard() {
               </select>
             </div>
           </div>
-          {/* <AttendanceChart attendanceData={attendanceData} selectedStudent={selectedAttendanceStudent} /> */}
+          <AttendanceChart attendanceData={attendanceData} selectedStudent={selectedAttendanceStudent} />
         </div>
       </div>
     </>

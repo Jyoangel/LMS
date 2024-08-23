@@ -9,8 +9,8 @@ export default function CourseProgress() {
         <div className="w-full flex flex-col gap-2">
           <h1 className="text-sm font-medium">Class Progress</h1>
 
-          <div class="w-full bg-blue-100 rounded-full h-4 dark:bg-gray-700">
-            <div class="bg-blue-600 h-4 rounded-full w-[30%]"></div>
+          <div className="w-full bg-blue-100 rounded-full h-4 dark:bg-gray-700">
+            <div className="bg-blue-600 h-4 rounded-full w-[30%]"></div>
           </div>
 
           <h1 className="text-md font-medium">30% of the proress</h1>

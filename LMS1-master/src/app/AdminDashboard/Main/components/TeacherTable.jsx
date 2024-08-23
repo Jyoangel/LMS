@@ -15,8 +15,8 @@ export default function TeacherTable() {
     async function fetchData() {
       try {
         const data = await fetchPaymentTeacherData();
-        setTeacherList(data.teachers);
-        setPaymentList(data.payments);
+        setTeacherList(data.teachers || []);
+        setPaymentList(data.payments || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -53,7 +53,7 @@ export default function TeacherTable() {
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {teacherList.map((teacher, index) => (
+          {(Array.isArray(teacherList) ? teacherList : []).map((teacher, index) => (
             <tr
               key={teacher._id}
               className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}

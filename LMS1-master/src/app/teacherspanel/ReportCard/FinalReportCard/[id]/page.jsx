@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import Image from "next/image";
-import logo from "../AdmitCard/logo.png";
+import logo from "../../AdmitCard/logo.png";
 
 import { fetchReportCardById } from "../../../../../../api/reportcardapi";
 import { format } from "date-fns";

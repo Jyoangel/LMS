@@ -221,7 +221,7 @@ export default function Dashboard() {
           </div>
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Overview</h1>
-            {/* <InteractiveGraph chartId="schoolOverviewChart" chartData={schoolOverviewData} /> */}
+            <InteractiveGraph chartId="schoolOverviewChart" chartData={schoolOverviewData} />
           </div>
         </div>
 
@@ -280,8 +280,8 @@ export default function Dashboard() {
                 <Image src={progress} alt="total" className="h-20 w-20" />
                 <div className="flex flex-col">
                   <h1>Class Progress</h1>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                    <div class="bg-blue-600 h-2.5 rounded-full w-full"></div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div className="bg-blue-600 h-2.5 rounded-full w-full"></div>
                   </div>
                   <h1>30% of the proress</h1>
                 </div>
