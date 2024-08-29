@@ -95,7 +95,7 @@ export default function FeeNotice2({ onClose, feeId }) {
             <p className="text-gray-500 text-sm font-semibold">
               Months:{" "}
               <span className="text-black text-md font-medium" data-testid="months">
-                {feeRecord.months.join(", ")}
+                {feeRecord.dueMonths.join(", ")}
               </span>
             </p>
           </div>

@@ -101,6 +101,26 @@ export async function fetchCountData() {
     return res.json();
 }
 
+//Fee api
+
+//Add Fee
+
+export async function addFeeData(FeeData) {
+    const res = await fetch('http://localhost:5000/api/fees/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(FeeData),
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to add Fee data');
+    }
+
+    return res.json();
+}
+
 //Fee Data for student 
 
 export async function fetchFeeData() {
@@ -133,9 +153,48 @@ export async function fetchFeeRecordById(id) {
     }
 }
 
-export const sendFeeNotice = async (id, noticeData) => {
+//fee Month
+// api.js
+export async function fetchFeeRecordByMonth(studentID, month) {
+    console.log(`Fetching fee record for studentID: ${studentID} and month: ${month}`);
+
     try {
-        const response = await fetch(`http://localhost:5000/api/fees/sendNotice/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/fees/get/${studentID}/${month}`);
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+            throw new Error(`Error fetching fee record: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Fee record data:', data);
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch fee record:', error);
+        throw error;
+    }
+}
+
+export async function updateFeeRecordByMonth(studentID, month, updatedData) {
+    try {
+        const res = await fetch(`http://localhost:5000/api/fees/updateByMonth/${studentID}/${month}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData),
+        });
+        if (!res.ok) {
+            throw new Error('Failed to update fee data');
+        }
+    } catch (error) {
+        console.error("Error updating fee data:", error);
+        throw error;
+    }
+}
+
+
+export const sendFeeNotice = async (studentID, noticeData) => {
+    try {
+        const response = await fetch(`http://localhost:5000/api/fees/sendNotice/${studentID}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

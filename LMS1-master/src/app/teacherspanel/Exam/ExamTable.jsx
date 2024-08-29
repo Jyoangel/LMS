@@ -17,7 +17,7 @@ export default function ExamTable({ filter, searchTerm }) {
     const loadExamData = async () => {
       try {
         const data = await fetchExamData();
-        setExamData(data.exam);
+        setExamData(data.exams);
       } catch (error) {
         console.error("Failed to fetch exam data:", error);
         // Handle error, e.g., show an error message to the user
@@ -93,7 +93,7 @@ export default function ExamTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{item.startTime}</td>
                 <td className="py-4 px-6 text-left">{item.totalMarks}</td>
                 <td className="py-4 px-6 text-left">{item.passingMarks}</td>
-                <td className="py-4 px-6 text-left">{item.createdBy}</td>
+                <td className="py-4 px-6 text-left">kamlesh Kumar</td>
 
                 <td className={`py-4 px-6 text-left flex gap-2  `}>
                   <Link href={`/teacherspanel/Exam/EditExam/${item._id}`}>

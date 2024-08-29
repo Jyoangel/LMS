@@ -123,7 +123,7 @@ router.get('/get', async (req, res) => {
 });
 
 // Get a single student by ID
-router.get('/get/:studentID', async (req, res) => {
+{/*router.get('/get/:studentID', async (req, res) => {
     try {
         const student = await StudentDetail.findOne({ studentID: req.params.studentID });
         if (!student) {
@@ -132,6 +132,21 @@ router.get('/get/:studentID', async (req, res) => {
         res.status(200).json(student);
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
+    }
+});*/}
+router.get('/get/:id', async (req, res) => {
+    const _id = req.params.id;
+
+    try {
+        const teacher = await StudentDetail.findById(_id);
+
+        if (!teacher) {
+            return res.status(404).json('Student not found');
+        }
+
+        res.status(200).json(teacher);
+    } catch (error) {
+        res.status(500).json(error);
     }
 });
 

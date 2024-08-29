@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const attendanceSchema = new mongoose.Schema({
-    studentId: {
+    studentID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'StudentDetail',
         required: true
@@ -18,8 +18,8 @@ const attendanceSchema = new mongoose.Schema({
 });
 
 // Define a static method to fetch attendance with populated student details
-attendanceSchema.statics.findWithStudentDetails = async function() {
-    return this.find().populate('studentId').exec();
+attendanceSchema.statics.findWithStudentDetails = async function () {
+    return this.find().populate('studentID').exec();
 };
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);

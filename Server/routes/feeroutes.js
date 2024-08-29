@@ -29,17 +29,17 @@ const sendEmail = (to, subject, text) => {
 };
 
 // Create a fee record
-router.post('/add', async (req, res) => {
+{/*outer.post('/add', async (req, res) => {
     try {
         const {
-            studentID, totalFee, monthlyFee, festiveFee, feeMonth, registrationNo, number, schoolEmail, session,
+            studentID, feePaid, otherFee, feeMonth,
             paymentMode, referenceNo, bankName, remark, receiptBy
         } = req.body;
 
         console.log('Received new fee data:', req.body);
 
         // Calculate paidAmount based on MonthlyFee and festiveFee
-        const paidAmount = monthlyFee + (festiveFee || 0);
+        const paidAmount = feePaid + (otherFee || 0);
 
         // Calculate due amount and determine status
         const dueAmount = totalFee - paidAmount;
@@ -84,8 +84,95 @@ router.post('/add', async (req, res) => {
         res.status(400).json({ msg: err.message }); // Adjust the status code and message
     }
 });
+*/}
+
+router.post('/add', async (req, res) => {
+    try {
+        const {
+            studentID,
+            feePaid,
+            otherFee = 0, // default to 0 if not provided
+            feeMonth,
+            paymentMode,
+            referenceNo,
+            bankName,
+            remark,
+            receiptBy
+        } = req.body;
+
+        console.log('Received new fee data:', req.body);
+
+        // Fetch the student details to get totalFee and monthlyFee
+        const student = await Student.findById(studentID);
+
+        if (!student) {
+            return res.status(404).json({ msg: 'Student not found' });
+        }
+
+        const { totalFee, monthlyFee } = student; // Extract totalFee and monthlyFee from student
+
+        // Calculate paidAmount based on feePaid and otherFee
+        const paidAmount = feePaid + otherFee;
+
+        // Calculate dueAmount for this month
+        const dueAmount = monthlyFee - paidAmount;
+
+        // Calculate totalDues (remaining balance) for the student
+        const totalPaid = await Fee.aggregate([
+            { $match: { studentID: student._id } },
+            { $group: { _id: null, totalPaidAmount: { $sum: "$paidAmount" } } }
+        ]);
+
+        // const totalPaid = await Fee.aggregate([
+        //     { $match: { studentID: student._id } },
+        //     { $group: { _id: null, totalPaidAmount: { $sum: "$paidAmount" } } }
+        // ]);
+
+        totalDues = student.totalFee - (totalPaid[0]?.totalPaidAmount || 0) - paidAmount;
+        // Determine status based on dueAmount
+        const status = totalDues > 0 ? 'Due' : 'Paid';
+
+        // Create a new Fee record
+        const newFee = new Fee({
+            studentID,
+            feePaid,
+            otherFee,
+            paidAmount,
+            total: paidAmount,  // Total for this transaction
+            dueAmount,
+            totalDues,          // Due amount for this transaction
+            feeMonth,
+            status,
+            paymentMode,
+            referenceNo,
+            bankName,
+            remark,
+            receiptBy
+        });
+
+        const fee = await newFee.save();
+        console.log('Saved fee:', fee);
+
+        // Prepare and save FeeNotice
+        const feeNotice = new FeeNotice({
+            fee: fee._id,
+            message: 'Default message',  // Replace with actual message
+            remark: 'Default remark',    // Replace with actual remark
+            dueAmount: totalDues,        // Total due amount across months
+            months: feeMonth             // Month(s) related to this fee
+        });
+
+        await feeNotice.save();
+
+        res.status(201).json({ msg: 'Fee record created successfully', fee });
+    } catch (err) {
+        console.error('Error saving fee:', err.message);
+        res.status(400).json({ msg: err.message });
+    }
+});
 
 // Get fee record by ID
+{/*
 router.get('/get/:id', async (req, res) => {
     const id = req.params.id;
     console.log(`Fetching fee record for id: ${id}`);
@@ -102,6 +189,51 @@ router.get('/get/:id', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+*/}
+
+router.get('/get/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log(`Fetching fee record for id: ${id}`);
+
+    try {
+        // Fetch the specific fee record by ID and populate student details
+        const fee = await Fee.findById(id).populate('studentID', 'studentID name class dateOfBirth gender aadharNumber email parent.fatherName contactNumber address');
+
+        if (!fee) {
+            console.log(`Fee record not found for id: ${id}`);
+            return res.status(404).json({ msg: 'Fee record not found' });
+        }
+
+        // Fetch all fee records for this student
+        const allFees = await Fee.find({ studentID: fee.studentID._id });
+
+        // Extract all feeMonths from the records
+        const paidMonths = allFees.map(f => f.feeMonth); // Get all the months where a fee record exists
+
+        // Define all months of the year
+        const allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Calculate the due months by finding the months not in the paidMonths array
+        const dueMonths = allMonths.filter(month => !paidMonths.includes(month));
+
+        // Add dueMonths to the response object
+        const response = {
+            ...fee.toObject(), // Convert mongoose document to plain object
+            dueMonths // Attach the calculated due months
+        };
+
+        console.log(`Fee record found with due months: ${response.dueMonths}`);
+        res.json(response);
+
+    } catch (err) {
+        console.error(`Error fetching fee record: ${err.message}`);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+
 
 // Get all fee records
 router.get('/get', async (req, res) => {
@@ -120,6 +252,33 @@ router.get('/get', async (req, res) => {
         res.status(500).send('Server error');
     }
 });
+
+// Assuming you're using Express.js or a similar framework
+router.get('/get/:studentID/:month', async (req, res) => {
+    const { studentID, month } = req.params;
+
+    console.log(`Received request for studentID: ${studentID} and month: ${month}`);
+
+    try {
+        // Debugging output for query
+        console.log(`Querying database with studentID: ${studentID} and feeMonth: ${month}`);
+
+        const fee = await Fee.findOne({ studentID, feeMonth: month });
+
+        // Debugging output for result
+        if (!fee) {
+            console.log(`No fee record found for studentID: ${studentID} and month: ${month}`);
+            return res.status(404).json({ message: 'Fee record not found' });
+        }
+
+        console.log(`Fee record found:`, fee);
+        res.json(fee);
+    } catch (error) {
+        console.error('Error fetching fee record:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 // Update total fee
 router.put('/update/:id', async (req, res) => {
@@ -143,15 +302,38 @@ router.put('/update/:id', async (req, res) => {
     }
 });
 
-// Send notice route
-// Send notice route
-router.post('/sendNotice/:id', async (req, res) => {
-    const { message, remark, dueAmount, months } = req.body;
-    const feeID = req.params.id;
+
+router.put('/updateByMonth/:studentID/:month', async (req, res) => {
+    const { studentID, month } = req.params;
+    const updatedData = req.body;
 
     try {
-        // Fetch fee details
-        const fee = await Fee.findById(feeID).populate('studentID', 'email');
+        // Find the fee record by studentID and month, and update it
+        const feeRecord = await Fee.findOneAndUpdate(
+            { studentID: studentID, feeMonth: month }, // Match studentID and feeMonth
+            { $set: updatedData }, // Update with the new data
+            { new: true } // Return the updated document
+        );
+
+        if (!feeRecord) {
+            return res.status(404).json({ message: 'Fee record not found' });
+        }
+
+        res.json({ message: 'Fee record updated successfully', feeRecord });
+    } catch (error) {
+        console.error("Error updating fee record:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+// Send notice route
+router.post('/sendNotice/:studentID', async (req, res) => {
+    const { message, remark, dueAmount, months } = req.body;
+    const studentID = req.params.studentID; // Correctly access studentID
+
+    try {
+        // Fetch fee details using studentID
+        const fee = await Fee.findOne({ studentID }).populate('studentID', 'email');
         if (!fee) {
             return res.status(404).json({ msg: 'Fee record not found' });
         }

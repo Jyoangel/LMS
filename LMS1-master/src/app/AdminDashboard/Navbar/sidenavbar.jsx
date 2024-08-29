@@ -32,9 +32,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(1);
             }}
-            className={` ${
-              isSelected === 1 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 1 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={dashboard}
@@ -48,9 +47,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(7);
             }}
-            className={` ${
-              isSelected === 7 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 7 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={fees}
@@ -65,9 +63,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(2);
             }}
-            className={` ${
-              isSelected === 2 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 2 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={communication}
@@ -82,9 +79,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(3);
             }}
-            className={` ${
-              isSelected === 3 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 3 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={liveclasses}
@@ -99,9 +95,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(4);
             }}
-            className={` ${
-              isSelected === 4 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 4 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={calender}
@@ -116,9 +111,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(5);
             }}
-            className={` ${
-              isSelected === 5 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 5 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={payment}
@@ -132,9 +126,8 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(6);
             }}
-            className={` ${
-              isSelected === 6 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 6 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={hotelmanagement}
@@ -148,15 +141,13 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(10);
             }}
-            className={` ${
-              isSelected === 10 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 10 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={enquiry}
-              className={`h-6 w-6 ${
-                isSelected === 10 ? "invert" : "invert-0 "
-              }`}
+              className={`h-6 w-6 ${isSelected === 10 ? "invert" : "invert-0 "
+                }`}
             />
             <h1 className="">Enquiry</h1>
           </button>
@@ -167,15 +158,13 @@ export default function sidenavbar() {
             onClick={() => {
               handleSelect(11);
             }}
-            className={` ${
-              isSelected === 11 ? "bg-blue-600 text-white" : " text-black"
-            } h-[50px] w-full  px-5 py-3 flex gap-3`}
+            className={` ${isSelected === 11 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
           >
             <Image
               src={configuration}
-              className={`h-6 w-6 ${
-                isSelected === 11 ? "invert" : "invert-0 "
-              }`}
+              className={`h-6 w-6 ${isSelected === 11 ? "invert" : "invert-0 "
+                }`}
             />
             <h1 className="">Configuration</h1>
           </button>

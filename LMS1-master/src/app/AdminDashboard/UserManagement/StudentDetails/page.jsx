@@ -34,6 +34,8 @@ export default function StudentDetails() {
     contactNumber: '',
     email: '',
     address: '',
+    totalFee: "",
+    session: "",
     parent: {
       fatherName: '',
       fatherContactNumber: '',
@@ -409,8 +411,45 @@ export default function StudentDetails() {
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
+              {/* Total Fee */}
+              <div className="flex flex-col gap-3 w-full">
+                <label
+                  htmlFor="totalFee"
+                  className="text-lg font-normal text-black">
+                  Total Fee *
+                </label>
+                <input
+                  id="totalFee"
+                  type="number"
+                  name="totalFee"
+                  placeholder="Enter total fee"
+                  value={formData.totalFee}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+              {/* Session */}
+              <div className="flex flex-col gap-3 w-full">
+                <label
+                  htmlFor="session"
+                  className="text-lg font-normal text-black">
+                  Session *
+                </label>
+                <input
+                  id="session"
+                  type="text"
+                  name="session"
+                  placeholder="Enter session"
+                  value={formData.session}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
             </div>
           </div>
+
+
+
 
           {/* Address */}
           <div className="flex flex-col gap-3 w-full col-span-3">

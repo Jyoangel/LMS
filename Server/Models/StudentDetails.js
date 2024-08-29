@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const parentSchema = require('./Parent');
 const localGuardianSchema = require('./LocalGuardian');
-const Communication = require('./Communication'); // Import Communication model
+const Communication = require('./Communication');
+const Attendance = require('./Attendance') // Import Communication model
 
 
 const studentSchema = new Schema({
@@ -81,6 +82,19 @@ const studentSchema = new Schema({
         type: String,
         required: [true, 'Address is required']
     },
+    totalFee: {
+        type: Number,
+        required: true
+    },
+    monthlyFee: {
+        type: Number,
+        default: function () {
+            return this.totalFee / 12;
+        }
+    },
+    session: {
+        type: String
+    },
     parent: {
         type: parentSchema,
         required: [true, 'Parent information is required']
@@ -88,6 +102,18 @@ const studentSchema = new Schema({
     localGuardian: {
         type: localGuardianSchema,
         required: [true, 'Local guardian information is required']
+    },
+    entryDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    entryTime: {
+        type: String,
+        required: true,
+        default: function () {
+            return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        }
     }
 }, { timestamps: true });
 
@@ -109,6 +135,26 @@ studentSchema.post('save', async function (doc) {
         await communication.save();
     } catch (error) {
         console.error('Error saving communication document:', error);
+    }
+});
+
+studentSchema.post('save', async function (doc) {
+    try {
+        const attendance = new Attendance({
+            studentID: doc.studentID,
+            name: doc.name,
+            dateOfBirth: doc.dateOfBirth,
+            class: doc.class,
+            gender: doc.gender,
+            aadharNumber: doc.aadharNumber,
+            fatherName: doc.parent.fatherName,
+            contactNumber: doc.contactNumber,
+            email: doc.email,
+            present: false // Default selected value
+        });
+        await attendance.save();
+    } catch (error) {
+        console.error('Error saving attendance document:', error);
     }
 });
 
