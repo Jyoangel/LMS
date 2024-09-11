@@ -1,9 +1,10 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { fetchLibraryData } from "../../../../api/libraryapi";
-
+import download from "./download.png";
+import Image from "next/image";
 
 export default function LibraryTable({ filter, searchTerm }) {
   const [libraryData, setLibraryData] = useState([]);
@@ -61,8 +62,12 @@ export default function LibraryTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{format(new Date(item.dateAdded), "yyyy-MM-dd")}</td>
                 <td className="py-4 px-6 text-left">{item.authorName}</td>
                 <td className="py-4 px-6 text-left w-56">{item.description}</td>
-                <td className="py-4 px-6 text-left">
-                  <button className="text-blue-500 underline">Edit</button>
+                <td className="py-4 px-6 text-left flex gap-2">
+                  <Link href={`http://localhost:5000/api/library/${item.uploadBookPdf}`} target="_blank">
+                    <Image src={download} alt="Download PDF" />
+                  </Link>
+
+
                 </td>
               </tr>
             ))}

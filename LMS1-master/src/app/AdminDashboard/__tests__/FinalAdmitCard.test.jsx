@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import FinalAdmitcard from '../ReportCard/AdmitCard/[id]/FinalAdmitcard';
+import FinalAdmitcard from '../ReportCard/AdmitCard/FinalAdmitcard/[studentID]/page';
 import { fetchAdmitCardById } from '../../../../api/reportcardapi';
 import React from 'react';
 

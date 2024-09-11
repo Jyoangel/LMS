@@ -38,11 +38,40 @@ export default function AddLiveClasses({ params }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Basic validation
+        for (const key in liveclassData) {
+            if (liveclassData[key] === null || liveclassData[key] === "") {
+                alert("All fields are required.");
+                return;
+            }
+        }
+
+        // Additional validation for date and time
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD format
+        if (!datePattern.test(liveclassData.date)) {
+            alert("Date must be in the format YYYY-MM-DD.");
+            return;
+        }
+
+        const timePattern = /^\d{2}:\d{2}$/; // HH:MM format
+        if (!timePattern.test(liveclassData.time)) {
+            alert("Time must be in the format HH:MM.");
+            return;
+        }
+
+        // Additional validation for duration
+        if (isNaN(liveclassData.duration) || liveclassData.duration <= 0) {
+            alert("Duration must be a positive number.");
+            return;
+        }
+
         try {
             await addLiveClassData(liveclassData);
             openModal();
         } catch (error) {
             console.error("Failed to add live class data:", error);
+            alert("Failed to add live class data. Please try again.");
         }
     };
 
@@ -204,6 +233,7 @@ export default function AddLiveClasses({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={" Live class added successfully!"}
+                            url={"/AdminDashboard/LiveClassScreen/CourseName"}
                         />
                     )}
                 </form>

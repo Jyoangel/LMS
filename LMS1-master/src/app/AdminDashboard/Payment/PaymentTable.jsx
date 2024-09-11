@@ -1,5 +1,115 @@
 "use client";
 
+
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { fetchTeacherData } from "../../../../api/teacherapi";
+import { format } from "date-fns";
+import Payment from "./TeacherPayment/[teacherId]/page";
+
+export default function PaymentTable({ filter, searchTerm }) {
+  const [data, setData] = useState({ teachers: [] });
+  const [isNoticeOpen, setIsNoticeOpen] = useState(false);
+  const [selectedTeacherId, setSelectedTeacherId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+
+  const openNotice = (teacherId) => {
+    setSelectedTeacherId(teacherId);
+    setIsNoticeOpen(true);
+  };
+
+  const closeNotice = () => {
+    setIsNoticeOpen(false);
+  };
+
+  const loadItems = async () => {
+    try {
+      const data = await fetchTeacherData();
+      setData(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadItems();
+  }, []);
+
+  const filteredData = data.teachers.filter(
+    (item) =>
+      (filter === "" || item.class === filter) &&
+      (searchTerm === "" || item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return (
+    <>
+      <div className="w-full">
+        <table className="w-full bg-white">
+          <thead className="bg-blue-200 h-14 py-10">
+            <tr className="text-gray-700 text-sm font-normal leading-normal">
+              <th className="py-4 px-6 text-left">Sr. No</th>
+              <th className="py-4 px-6 text-left">Teacher Id</th>
+              <th className="py-4 px-6 text-left">Name</th>
+              <th className="py-4 px-6 text-left">Subject Taught</th>
+              <th className="py-4 px-6 text-left">DOB</th>
+              <th className="py-4 px-6 text-left">Assign Class</th>
+              <th className="py-4 px-6 text-left">Aadhar No</th>
+              <th className="py-4 px-6 text-left">Father Name</th>
+              <th className="py-4 px-6 text-left">Contact No</th>
+              <th className="py-4 px-6 text-left">Salary</th>
+              <th className="py-4 px-6 text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-600 text-sm font-light">
+            {filteredData.map((item, index) => (
+              <tr
+                key={index}
+                className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                  }`}
+              >
+                <td className="py-4 px-6 text-left">{index + 1}</td>
+                <td className="py-4 px-6 text-left">{item.teacherID}</td>
+                <td className="py-4 px-6 text-left text-blue-600 underline">
+                  <Link href={`/AdminDashboard/Fees/FeeDetails/`}>{item.name}</Link>
+                </td>
+                <td className="py-4 px-6 text-left">{item.subjectTaught}</td>
+                <td className="py-4 px-6 text-left">{format(new Date(item.dateOfBirth), "yyyy-MM-dd")}</td>
+                <td className="py-4 px-6 text-left">{item.assignedClass}</td>
+                <td className="py-4 px-6 text-left">{item.aadharNumber}</td>
+                <td className="py-4 px-6 text-left">{item.parent?.fatherName}</td>
+                <td className="py-4 px-6 text-left">{item.contactNumber}</td>
+                <td className="py-4 px-6 text-left">{item.salary}</td>
+                <td>
+                  <button onClick={() => openNotice(item._id)} className="py-4 px-6 text-left text-blue-500 underline">
+                    Pay
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {isNoticeOpen && <Payment teacherId={selectedTeacherId} onClose={closeNotice} />}
+
+
+    </>
+  );
+}
+
+{/*
 import { useState, useEffect } from "react";
 import PaymentEdit from "./PaymentEdit";
 import { fetchPaymentTeacherData } from "../../../../api/teacherapi"; // Adjust the path as per your file structure
@@ -105,3 +215,4 @@ export default function PaymentTable({ filter, searchTerm }) {
     </>
   );
 }
+*/}

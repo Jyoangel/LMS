@@ -12,6 +12,10 @@ const homeworkSchema = new mongoose.Schema({
     attachments: { type: String, required: true },
     description: { type: String, required: true },
     homeworkDone: { type: Number, default: 0 },
+    uploadHomework: {
+        type: String,  // assuming this is a URL or file path
+        required: true
+    },
     undoneHomework: { type: Number, default: function () { return this.assignTo; } }
 });
 

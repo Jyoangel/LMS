@@ -71,13 +71,18 @@ io.on('connection', (socket) => {
     console.log(`User ${userId} registered with socket ID ${socket.id}`);
   });
 
-  socket.on('sendMessage', async (messageData) => {
-    try {
-      console.log('Message data:', messageData);
-      socket.broadcast.emit('receiveMessage', messageData);
-    } catch (err) {
-      console.error('Error saving message:', err);
-    }
+  // socket.on('sendMessage', async (messageData) => {
+  //   try {
+  //     console.log('Message data:', messageData);
+  //     socket.broadcast.emit('receiveMessage', messageData);
+  //   } catch (err) {
+  //     console.error('Error saving message:', err);
+  //   }
+  // });
+
+  socket.on('sendMessage', (message) => {
+    console.log(message);
+    socket.broadcast.emit('receiveMessage', message);
   });
 
   socket.on('call', (data) => {
@@ -152,6 +157,8 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+//app.use('/uploads', express.static('uploads'));
+
 
 app.get("/", (req, res) => {
   res.send("PhonePe Integration APIs!");

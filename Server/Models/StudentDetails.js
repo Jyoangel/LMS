@@ -141,15 +141,7 @@ studentSchema.post('save', async function (doc) {
 studentSchema.post('save', async function (doc) {
     try {
         const attendance = new Attendance({
-            studentID: doc.studentID,
-            name: doc.name,
-            dateOfBirth: doc.dateOfBirth,
-            class: doc.class,
-            gender: doc.gender,
-            aadharNumber: doc.aadharNumber,
-            fatherName: doc.parent.fatherName,
-            contactNumber: doc.contactNumber,
-            email: doc.email,
+            studentId: doc._id,
             present: false // Default selected value
         });
         await attendance.save();
@@ -158,6 +150,21 @@ studentSchema.post('save', async function (doc) {
     }
 });
 
+
+// Pre-remove middleware to delete related documents from Communication and Attendance schemas
+studentSchema.pre('remove', async function (next) {
+    try {
+        // Remove the related communication document
+        await Communication.deleteOne({ studentID: this.studentID });
+
+        // Remove the related attendance document
+        await Attendance.deleteOne({ studentId: this._id });
+
+        next();
+    } catch (error) {
+        next(error); // Pass error to the next middleware
+    }
+});
 module.exports = mongoose.model('StudentDetail', studentSchema);
 
 

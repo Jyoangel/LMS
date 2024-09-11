@@ -1,5 +1,183 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import Successcard from "@/Components/Successcard";
+import { addReportCardData } from "../../../../../../api/reportcardapi";
+import { fetchAdmitCardById } from "../../../../../../api/reportcardapi";
+
+export default function AddReportCard({ params }) {
+  const { admitCardId } = params;
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [admitCard, setAdmitCard] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");// To store AdmitCard data
+  const [formData, setFormData] = useState({
+    //type: "",
+    marks: {},
+    classTeacher: "",
+    admitCardId: admitCardId
+  });
+
+  // Fetch AdmitCard data by ID when component mounts
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const admitCardData = await fetchAdmitCardById(admitCardId);
+        console.log(admitCardData); // Fetch AdmitCard data
+        setAdmitCard(admitCardData); // Set fetched AdmitCard data to state
+      } catch (error) {
+        console.error("Failed to fetch admit card:", error);
+      }
+    }
+
+    fetchData();
+  }, [admitCardId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleMarksChange = (subjectName, e) => {
+    const { value } = e.target;
+    setFormData({
+      ...formData,
+      marks: {
+        ...formData.marks,
+        [subjectName]: value,
+      },
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    try {
+      // Add admitCardId to formData before submission
+      const reportCardData = {
+        admitCardId,
+        ...formData,
+      };
+
+      // Call your API function to add report card data
+      const response = await addReportCardData(reportCardData);
+      console.log("Report card data added:", response); // Optional: Handle success message or redirect
+
+      // Optionally, open success modal or handle success state
+      openModal();
+    } catch (error) {
+      // Check if the error is a duplicate report card error
+      if (error.response && error.response.status === 400) {
+        // Status 409 represents conflict (duplicate data)
+        alert("Report Card already exists for this admit card."); // You can replace this with a modal if needed
+      } else {
+        console.error("Failed to add report card data:", error);
+        // Handle other errors
+      }
+    }
+  };
+
+  const openModal = () => {
+    setIsSelectOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsSelectOpen(false);
+  };
+
+  return (
+    <>
+      <div className="h-screen w-full flex flex-col px-5 py-10 gap-10">
+        <div className="w-full">
+          <Link href={"/AdminDashboard/ReportCard"}>
+            <button className="flex items-center justify-center gap-3">
+              <FaArrowLeftLong className="h-10 w-10 bg-gray-100 rounded-full p-2" />
+              <h1 className="text-lg font-semibold">Back</h1>
+            </button>
+          </Link>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+
+
+
+          {/* Marks - Render dynamically based on AdmitCard subjects */}
+          {admitCard && (
+            <div className="grid grid-cols-2 gap-8">
+              {admitCard.examsubjects.map((subject, index) => (
+                <div key={index} className="flex flex-col gap-3">
+                  <label
+                    htmlFor={`marks-${subject.subject}`}
+                    className="text-lg font-normal text-black"
+                  >
+                    {subject.subject} Marks*
+                  </label>
+                  <input
+                    id={`marks-${subject.subject}`}
+                    type="number"
+                    name={subject.subject}
+                    value={formData.marks[subject.subject] || ""}
+                    onChange={(e) => handleMarksChange(subject.subject, e)}
+                    className="border border-gray-300 rounded-md py-3 px-5 outline-none"
+                    required
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Class Teacher */}
+          <div className="flex flex-col gap-3">
+            <label htmlFor="classTeacher" className="text-lg font-normal text-black">
+              Class Teacher*
+            </label>
+            <input
+              id="classTeacher"
+              type="text"
+              name="classTeacher"
+              value={formData.classTeacher}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md py-3 px-5 outline-none"
+              placeholder="Type here"
+              required
+            />
+          </div>
+
+
+
+
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <button
+              role="button"
+              type="submit"
+              className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-md hover:bg-blue-600"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+
+        {/* Success Modal */}
+        {isSelectOpen && (
+          <Successcard
+            para={"Report Card sent Successfully"}
+            onClose={closeModal}
+            url={"/AdminDashboard/ReportCard"}
+          />
+        )}
+      </div>
+    </>
+  );
+}
+
+{/*
+  import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Successcard from "@/Components/Successcard";
@@ -86,11 +264,11 @@ export default function AddReportCard() {
           </Link>
         </div>
 
-        {/* Form */}
+        {/* Form *
         <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-          {/* Student Details */}
+          {/* Student Details *
           <div className="grid grid-cols-2 gap-8">
-            {/* Type */}
+            {/* Type *
             <div className="flex flex-col gap-3">
               <label htmlFor="type" className="text-lg font-normal text-black">Type*</label>
               <input
@@ -103,7 +281,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Name */}
+            {/* Name *
             <div className="flex flex-col gap-3">
               <label htmlFor="name" className="text-lg font-normal text-black">Name*</label>
               <input
@@ -118,7 +296,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Father's Name */}
+            {/* Father's Name *
             <div className="flex flex-col gap-3">
               <label htmlFor="fatherName" className="text-lg font-normal text-black">Father Name*</label>
               <input
@@ -133,7 +311,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Session */}
+            {/* Session *
             <div className="flex flex-col gap-3">
               <label htmlFor="session" className="text-lg font-normal text-black">Session*</label>
               <input
@@ -148,7 +326,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Roll Number */}
+            {/* Roll Number *
             <div className="flex flex-col gap-3">
               <label htmlFor="rollNumber" className="text-lg font-normal text-black">Roll Number*</label>
               <input
@@ -163,7 +341,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Class */}
+            {/* Class *
             <div className="flex flex-col gap-3">
               <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
               <input
@@ -178,7 +356,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Date of Birth */}
+            {/* Date of Birth *
             <div className="flex flex-col gap-3">
               <label htmlFor="dateOfBirth" className="text-lg font-normal text-black">Date of Birth*</label>
               <input
@@ -192,7 +370,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Number of Subjects */}
+            {/* Number of Subjects *
             <div className="flex flex-col gap-3">
               <label htmlFor="numberOfSubjects" className="text-lg font-normal text-black">Number Of Subjects*</label>
               <select
@@ -213,7 +391,7 @@ export default function AddReportCard() {
             </div>
           </div>
 
-          {/* Subjects */}
+          {/* Subjects *
           <div className="grid grid-cols-2 gap-8">
             {formData.subjects.map((subject, index) => (
               <div key={index} className="flex flex-col gap-3 w-full">
@@ -243,7 +421,7 @@ export default function AddReportCard() {
             ))}
           </div>
 
-          {/* Class Teacher */}
+          {/* Class Teacher *
           <div className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-3">
               <label htmlFor="classTeacher" className="text-lg font-normal text-black">Class Teacher*</label>
@@ -259,7 +437,7 @@ export default function AddReportCard() {
               />
             </div>
 
-            {/* Principle Signature */}
+            {/* Principle Signature *
             <div className="flex flex-col gap-3">
               <label htmlFor="principleSignature" className="text-lg font-normal text-black">Principle Signature*</label>
               <input
@@ -275,7 +453,7 @@ export default function AddReportCard() {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button *
           <div className="flex justify-end">
             <button
               role="button"
@@ -287,8 +465,13 @@ export default function AddReportCard() {
           </div>
         </form>
 
-        {/* Success Modal */}
-        <Successcard closeModal={closeModal} isOpen={isSelectOpen} />
+        {/* Success Modal *
+        {isSelectOpen && (
+          <Successcard
+            para={"Report Card send Successfully"}
+            onClose={closeModal}
+          />
+        )}
       </div>
     </>
   );

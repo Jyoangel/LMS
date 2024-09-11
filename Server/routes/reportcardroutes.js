@@ -7,7 +7,7 @@ const ReportCard = require('../Models/Reportcard');
 
 
 // Route to create a new ReportCard
-router.post('/add', async (req, res) => {
+{/*router.post('/add', async (req, res) => {
     try {
         const reportCard = new ReportCard(req.body);
         await reportCard.save();
@@ -15,6 +15,113 @@ router.post('/add', async (req, res) => {
         console.log(reportCard)
     } catch (err) {
         res.status(400).send(err);
+    }
+});
+*/}
+router.post('/add', async (req, res) => {
+    try {
+        const { admitCardId, marks, classTeacher, principleSignature } = req.body;
+
+        // Check for missing fields
+        if (!admitCardId || !marks || !classTeacher) {
+            return res.status(400).json({
+                error: 'Missing required fields: reportCardId, marks, and classTeacher are required',
+            });
+        }
+
+        // Check if a report card already exists for this reportCardId
+        const existingReportCard = await ReportCard.findOne({ admitCardId });
+        if (existingReportCard) {
+            return res.status(400).json({
+                error: 'A report card has already been created for this report card',
+            });
+        }
+
+        // Create the report card using the static method
+        const reportCard = await ReportCard.createFromAdmitCard(admitCardId, {
+            marks, // Marks for each subject provided in the request
+            classTeacher,
+            principleSignature, // Optional, will use default if not provided
+        });
+
+        // Return the created report card as a response
+        res.status(201).json({
+            message: 'Report card created successfully',
+            reportCard,
+        });
+    } catch (error) {
+        console.error('Error creating report card:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+// router.post('/add', async (req, res) => {
+//     try {
+//         const { studentID, marks, classTeacher, principleSignature } = req.body;
+
+//         // Check for missing fields
+//         if (!studentID || !marks || !classTeacher) {
+//             return res.status(400).json({
+//                 error: 'Missing required fields: studentID, marks, and classTeacher are required',
+//             });
+//         }
+
+//         // Check if an report card exists for this studentID
+//         const reportCard = await reportCard.findOne({ studentID });
+//         if (!reportCard) {
+//             return res.status(404).json({
+//                 error: `report card not found for student ID ${studentID}`,
+//             });
+//         }
+
+//         // Check if a report card already exists for this report card
+//         const existingReportCard = await ReportCard.findOne({ reportCardId: reportCard._id });
+//         if (existingReportCard) {
+//             return res.status(400).json({
+//                 error: 'A report card has already been created for this report card',
+//             });
+//         }
+
+//         // Create the report card using the static method
+//         const reportCard = await ReportCard.createFromStudentID(studentID, {
+//             marks, // Marks for each subject provided in the request
+//             classTeacher,
+//             principleSignature, // Optional, will use default if not provided
+//         });
+
+//         // Return the created report card as a response
+//         res.status(201).json({
+//             message: 'Report card created successfully',
+//             reportCard,
+//         });
+//     } catch (error) {
+//         console.error('Error creating report card:', error);
+//         res.status(500).json({ error: error.message });
+//     }
+// });
+
+//get report card using report card
+router.get('/reportcard/:reportCardId', async (req, res) => {
+    try {
+        const { reportCardId } = req.params;
+
+        // Find the report card using reportCardId
+        const reportCard = await ReportCard.findOne({ reportCardId });
+        if (!reportCard) {
+            return res.status(404).json({
+                error: 'Report card not found for the provided report card ID',
+            });
+        }
+
+        // Return the report card as a response
+        res.status(200).json({
+            message: 'Report card fetched successfully',
+            reportCard,
+        });
+    } catch (error) {
+        console.error('Error fetching report card:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
@@ -67,5 +174,32 @@ router.delete('/delete/:id', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
+router.get('/gets/:studentID', async (req, res) => {
+    try {
+        const studentID = req.params.studentID; // Get studentID from URL params
+        console.log(`Received studentID: ${studentID}`);
+
+        if (!studentID) {
+            return res.status(400).json({ message: 'Student ID is required' });
+        }
+
+        // Fetch the report card and populate the student details using studentID
+        const reportCard = await ReportCard.findOne({ studentID })
+            .populate('studentID', 'name class parent.fatherName dateOfBirth session');
+
+        console.log(`report card with student details: ${reportCard}`);
+
+        if (!reportCard) {
+            return res.status(404).json({ message: `report card for student ID ${studentID} not found` });
+        }
+
+        res.status(200).json(reportCard);
+    } catch (error) {
+        console.error('Error fetching report card:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+});
+
 
 module.exports = router;

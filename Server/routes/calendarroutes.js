@@ -4,9 +4,9 @@ const Calendar = require('../Models/Calendar');
 
 // Add new calendar event
 router.post('/add', async (req, res) => {
-    const { type, title, date, startTime, endTime, duration } = req.body;
+    const { type, title, date, startTime, endTime, duration, description } = req.body;
     try {
-        const newEvent = new Calendar({ type, title, date, startTime, endTime, duration });
+        const newEvent = new Calendar({ type, title, date, startTime, endTime, duration, description });
         const savedEvent = await newEvent.save();
         res.status(201).json(savedEvent);
     } catch (error) {

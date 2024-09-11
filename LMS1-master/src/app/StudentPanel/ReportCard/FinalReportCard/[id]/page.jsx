@@ -56,7 +56,7 @@ export default function FinalReportCard({ params }) {
         <>
             <div className="min-h-screen p-5">
                 <div className="flex flex-col sm:flex-row items-center justify-between w-full mb-6">
-                    <Link href={"/StudentPanel/Result"}>
+                    <Link href={"/StudentPanel/ReportCard"}>
                         <button className="flex items-center justify-center gap-3 mb-4 sm:mb-0">
                             <FaArrowLeftLong className="h-10 w-10 bg-gray-100 rounded-full p-2" />
                             <h1 className="text-lg font-semibold">Back</h1>

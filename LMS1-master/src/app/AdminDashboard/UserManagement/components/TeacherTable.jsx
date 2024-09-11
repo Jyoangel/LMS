@@ -99,7 +99,7 @@ export default function TeacherManagementTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{item.contactNumber}</td>
                 <td className="py-4 px-6 text-left flex gap-2">
                   <button className="text-blue-600">
-                    <Link href={`/AdminDashboard/UserManagement/UpdateDetails/${item.studentID}`}>
+                    <Link href={`/AdminDashboard/UserManagement/UpdateTeacher/${item._id}`}>
                       Edit
                     </Link>
                   </button>

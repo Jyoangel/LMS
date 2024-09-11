@@ -103,9 +103,11 @@ export default function CourseTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{item.schedule.classTime}</td>
                 <td className="py-4 px-6 text-left">{item.schedule.classDays.join(', ')}</td>
                 <td className="py-4 px-6 text-left flex gap-2">
-                  <button onClick={() => openDelete(item._id)}>
-                    <Image src={download} alt="Download" />
-                  </button>
+                  <Link href={`http://localhost:5000/api/course/${item.uploadCourse}`} target="_blank">
+                    <button >
+                      <Image src={download} alt="Download" />
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}

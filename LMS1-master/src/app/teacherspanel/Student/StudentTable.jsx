@@ -68,7 +68,7 @@ export default function StudentTable() {
               </td>
               <td className="py-4 px-6 text-left">{item.studentID}</td>
               <td className="py-4 px-6 text-left text-blue-600 underline">
-                <Link href={`/teacherspanel/Attendance/StudentAtdDetails/${item.studentID}`}>
+                <Link href={`/teacherspanel/Attendance/StudentAtdDetails/${item._id}`}>
                   {item.name}
                 </Link>
               </td>

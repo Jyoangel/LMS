@@ -26,6 +26,10 @@ const assignmentSchema = new mongoose.Schema({
     date: { type: Date, default: () => new Date() },
     time: { type: String, default: getCurrentTime },
     createdBy: { type: String, required: true },
+    uploadAssignment: {
+        type: String,  // assuming this is a URL or file path
+        required: true
+    }
 });
 
 const Assignment = mongoose.model('Assignment', assignmentSchema);

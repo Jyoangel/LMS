@@ -14,10 +14,9 @@ function EditAdmitCard({ params }) {
     const [formData, setFormData] = useState({
         examination_roll_number: "",
         school_name: "",
-        session: "",
+
         examination: "",
-        student_name: "",
-        class: "",
+
         startdate: "",
         enddate: "",
         examstarting_time: "",
@@ -83,7 +82,7 @@ function EditAdmitCard({ params }) {
         <>
             <div className="h-screen w-full flex flex-col px-5 py-10 gap-10">
                 <div className="w-full">
-                    <Link href="/AdminDashboard/AdmitCard">
+                    <Link href="/teacherspanel/ReportCard">
                         <button className="flex items-center justify-center gap-3">
                             <FaArrowLeft className="h-10 w-10 bg-gray-100 rounded-full p-2" />
                             <h1 className="text-lg font-semibold">Back</h1>
@@ -129,20 +128,7 @@ function EditAdmitCard({ params }) {
                             </div>
 
                             {/* Session */}
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="session" className="text-lg font-normal text-black">
-                                    Session*
-                                </label>
-                                <input
-                                    id="session"
-                                    type="text"
-                                    name="session"
-                                    value={formData.session}
-                                    onChange={handleChange}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                />
-                            </div>
+
 
                             {/* Examination */}
                             <div className="flex flex-col gap-3 w-full">
@@ -160,35 +146,7 @@ function EditAdmitCard({ params }) {
                                 />
                             </div>
 
-                            {/* Student Name */}
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="student_name" className="text-lg font-normal text-black">
-                                    Student Name*
-                                </label>
-                                <input
-                                    id="student_name"
-                                    type="text"
-                                    name="student_name"
-                                    value={formData.student_name}
-                                    onChange={handleChange}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                />
-                            </div>
 
-                            {/* Class */}
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
-                                <input
-                                    id="class"
-                                    type="text"
-                                    name="class"
-                                    value={formData.class}
-                                    onChange={handleChange}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                />
-                            </div>
 
                             {/* Start Date */}
                             <div className="flex flex-col gap-3 w-full">

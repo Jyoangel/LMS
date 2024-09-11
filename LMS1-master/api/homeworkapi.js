@@ -8,17 +8,14 @@ export async function fetchHomeWorkData() {
     return res.json();
 }
 
-export async function addHomeworkData(homeworkData) {
+export async function addHomeworkData(formData) {
     const res = await fetch('http://localhost:5000/api/homework/add', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(homeworkData),
+        body: formData, // Use FormData object here
     });
 
     if (!res.ok) {
-        throw new Error('Failed to add homework data');
+        throw new Error('Failed to add Library data');
     }
 
     return res.json();

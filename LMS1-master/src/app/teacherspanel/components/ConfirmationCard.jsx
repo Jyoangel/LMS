@@ -2,16 +2,10 @@
 import Successcard from "@/Components/Successcard";
 import { useEffect, useRef, useState } from "react";
 
-export default function ConfirmationCard({ onClose, para }) {
+export default function ConfirmationCard({ onClose, onConfirm, para }) {
   const [isDelete, setDelete] = useState(false);
 
-  const openDelete = () => {
-    setDelete(true);
-  };
 
-  const closeDelete = () => {
-    setDelete(false);
-  };
 
   const successRef = useRef();
 
@@ -42,7 +36,7 @@ export default function ConfirmationCard({ onClose, para }) {
           <h1 className="text-sm font-normal">{para}</h1>
           <div className="flex items-center justify-center gap-3">
             <button
-              onClick={openDelete}
+              onClick={onConfirm}
               className="mt-4 bg-blue-600 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
             >
               Yes

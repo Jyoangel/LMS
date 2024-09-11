@@ -19,6 +19,7 @@ export default function AddAssignment() {
     assignTo: "",
     courseDescription: "",
     createdBy: "",
+    uploadAssignment: null, // Initialize with null
   });
 
   const openModal = () => {
@@ -30,14 +31,45 @@ export default function AddAssignment() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, files } = e.target;
+    if (type === 'file') {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    const requiredFields = [
+      'assignmentCode',
+      'assignmentTitle',
+      'dueDate',
+      'submissionMethod',
+      'marks',
+      'class',
+      'assignTo',
+      'courseDescription',
+      'createdBy'
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field] || (field === 'uploadAssignment' && !formData[field])) {
+        alert(`Please fill out the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+        return;
+      }
+    }
+
+    // Create FormData object
+    const formDataToSend = new FormData();
+    for (const [key, value] of Object.entries(formData)) {
+      formDataToSend.append(key, value);
+    }
+
     try {
-      await addAssignmentData(formData);
+      await addAssignmentData(formDataToSend);
       setFormData({
         assignmentCode: "",
         assignmentTitle: "",
@@ -50,12 +82,15 @@ export default function AddAssignment() {
         assignTo: "",
         courseDescription: "",
         createdBy: "",
+        uploadAssignment: null // Clear file input after submission
       });
       openModal();
     } catch (error) {
       console.error('Failed to add assignment data:', error);
+      alert('Failed to add assignment data. Please try again.');
     }
   };
+
 
   return (
     <>
@@ -71,9 +106,10 @@ export default function AddAssignment() {
 
         {/* form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-          {/* Student Details */}
+          {/* Assignment Details */}
           <div className="flex flex-col gap-8">
             <div className="w-full grid grid-cols-3 items-center gap-5">
+              {/* Existing fields ... */}
               {/* Assignment Code */}
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="assignmentCode" className="text-lg font-normal text-black">
@@ -238,8 +274,14 @@ export default function AddAssignment() {
                   <option value="Roll 30 -60 ">Roll 30-60</option>
                 </select>
               </div>
+
+
+
+
             </div>
           </div>
+
+
 
           {/* Course Description */}
           <div className="flex flex-col gap-3 w-full">
@@ -272,6 +314,21 @@ export default function AddAssignment() {
             />
           </div>
 
+          {/* Upload Assignment */}
+          <div className="flex flex-col gap-3 w-full">
+            <label htmlFor="uploadAssignment" className="text-lg font-normal text-black">
+              Upload Assignment*
+            </label>
+            <input
+              type="file"
+              id="uploadAssignment"
+              name="uploadAssignment"
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+              required
+            />
+          </div>
+
           <div className="w-full mt-10 flex justify-end">
             <button
               type="submit"
@@ -294,6 +351,7 @@ export default function AddAssignment() {
                   assignTo: "",
                   courseDescription: "",
                   createdBy: "",
+                  uploadAssignment: null, // Reset file input
                 })
               }
               className="w-44 text-black border border-gray-400 font-medium text-lg p-2"
@@ -307,9 +365,12 @@ export default function AddAssignment() {
           <Successcard
             message={"Assignment has been added successfully!"}
             closeModal={closeModal}
+            url={"/teacherspanel/Assignment"}
           />
         )}
       </div>
     </>
   );
 }
+
+

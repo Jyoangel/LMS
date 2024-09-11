@@ -23,7 +23,9 @@ export default function CourseDetail() {
     supplementaryMaterials: '',
     onlineResources: '',
     courseDescription: '',
+    uploadCourse: null,
   });
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,38 +35,24 @@ export default function CourseDetail() {
     });
   };
 
+
+
   const handleScheduleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'classDays') {
-      const daysArray = value.split(',').map(day => day.trim());
-      setCourseData({
-        ...courseData,
-        schedule: {
-          ...courseData.schedule,
-          [name]: daysArray
-        }
-      });
-    } else if (name === 'classTime') {
-      const time = value.replace(/(\d+):(\d+)\s*(AM|PM)/i, (_, h, m, a) => {
-        const hour = a.toLowerCase() === 'pm' ? (parseInt(h) % 12) + 12 : parseInt(h) % 12;
-        return `${hour.toString().padStart(2, '0')}:${m.padStart(2, '0')}`;
-      });
-      setCourseData({
-        ...courseData,
-        schedule: {
-          ...courseData.schedule,
-          [name]: time
-        }
-      });
-    } else {
-      setCourseData({
-        ...courseData,
-        schedule: {
-          ...courseData.schedule,
-          [name]: value
-        }
-      });
-    }
+    setCourseData((prevData) => ({
+      ...prevData,
+      schedule: {
+        ...prevData.schedule,
+        [name]: value
+      }
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setCourseData({
+      ...courseData,
+      uploadCourse: e.target.files[0], // Update file input to handle files
+    });
   };
 
   const openModal = () => {
@@ -77,12 +65,38 @@ export default function CourseDetail() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Course Data:', courseData);  // Log course data for debugging
+    console.log('Course Data:', courseData);
+
+    // Client-side validation (optional)
+    if (!courseData.courseName || !courseData.courseCode || !courseData.primaryInstructorname || !courseData.instructorEmail || !courseData.schedule.startDate || !courseData.schedule.endDate || !courseData.courseDescription) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('courseName', courseData.courseName);
+    formData.append('courseCode', courseData.courseCode);
+    formData.append('primaryInstructorname', courseData.primaryInstructorname);
+    formData.append('instructorEmail', courseData.instructorEmail);
+    formData.append('schedule[startDate]', courseData.schedule.startDate);
+    formData.append('schedule[endDate]', courseData.schedule.endDate);
+    formData.append('schedule[classDays]', JSON.stringify(courseData.schedule.classDays));
+    formData.append('schedule[classTime]', courseData.schedule.classTime);
+    formData.append('courseObjectives', courseData.courseObjectives);
+    formData.append('supplementaryMaterials', courseData.supplementaryMaterials);
+    formData.append('onlineResources', courseData.onlineResources);
+    formData.append('courseDescription', courseData.courseDescription);
+
+    // If there's a file to upload
+    if (courseData.uploadCourse) {
+      formData.append("uploadCourse", courseData.uploadCourse);
+    }
 
     try {
-      await addCourseData(courseData);
+      await addCourseData(formData);
       console.log('Course created successfully');
-      // Reset form data
+
+      // Reset form data and file input
       setCourseData({
         courseName: '',
         courseCode: '',
@@ -98,14 +112,16 @@ export default function CourseDetail() {
         supplementaryMaterials: '',
         onlineResources: '',
         courseDescription: '',
+        uploadCourse: null
       });
+
       openModal();
-      // You can add code here to refresh the course list in CourseManagementTable if needed
     } catch (error) {
-      console.error('Error creating course:', error);
-      // Handle error (e.g., show error message)
+      // Handle and display the error message
+      alert(`Error: ${error.message}`);
     }
   };
+
 
   return (
     <>
@@ -123,6 +139,8 @@ export default function CourseDetail() {
           <div className="flex flex-col gap-8">
             <h1 className="text-lg font-semibold">Course Details</h1>
             <div className="w-full grid grid-cols-3 items-center gap-5">
+              {/* Input fields */}
+              {/* ... other input fields as you already have them */}
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="courseName" className="text-lg font-normal text-black">
                   Course Name*
@@ -223,7 +241,7 @@ export default function CourseDetail() {
                   placeholder="Type here (e.g., Monday, Tuesday)"
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                   name="classDays"
-                  value={courseData.schedule.classDays.join(', ')}
+                  value={courseData.schedule.classDays}
                   onChange={handleScheduleChange}
                 />
               </div>
@@ -299,27 +317,41 @@ export default function CourseDetail() {
                 onChange={handleInputChange}
               />
             </div>
-          </div>
+            <div className="flex flex-col gap-3 w-full">
+              <label htmlFor="courseFile" className="text-lg font-normal text-black">
+                Upload Course*
+              </label>
+              <input
+                type="file"
+                id="courseFile"
+                className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                onChange={handleFileChange} // Handle file input
+              />
+            </div>
 
-          <div className="flex justify-center">
-            <button
-              role="button"
-              type="submit"
-              className="bg-black text-white text-lg font-semibold w-full py-4 rounded-md">
-              Save
-            </button>
+            <div className="flex ">
+              <button
+                role="button"
+                type="submit"
+                className="bg-blue-600 text-white text-lg font-semibold  py-4 rounded-md w-96">
+                Save
+              </button>
+            </div>
           </div>
         </form>
       </div>
 
       {isSelectOpen && (
         <div className="modal fixed inset-0 z-50 flex items-center justify-center">
-          <Successcard onClose={closeModal} />
+          <Successcard onClose={closeModal} url={"/teacherspanel/Course"} />
         </div>
       )}
     </>
   );
 }
+
+
+
 
 {/*
 import Successcard from "@/Components/Successcard";

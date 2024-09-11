@@ -21,6 +21,10 @@ const examSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    endTime: {
+        type: String,
+        required: true
+    },
     duration: {
         type: String,
         required: true

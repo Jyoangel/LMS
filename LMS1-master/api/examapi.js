@@ -9,17 +9,14 @@ export async function fetchExamData() {
     return res.json();
 }
 
-export async function addSExamData(examData) {
+export async function addExamData(formData) {
     const res = await fetch('http://localhost:5000/api/exam/add', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(examData),
+        body: formData, // Use FormData object here
     });
 
     if (!res.ok) {
-        throw new Error('Failed to add exam data');
+        throw new Error('Failed to add Library data');
     }
 
     return res.json();

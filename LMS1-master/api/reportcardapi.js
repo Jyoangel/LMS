@@ -155,3 +155,64 @@ export async function deleteAdmitCardData(id) {
     }
 }
 
+// api/reportcardapi.js
+
+export async function fetchReportCardByAdmitCardId(admitCardId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/reportcard/reportcard/${admitCardId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch report card data');
+        }
+        const data = await response.json();
+        return data.reportCard;
+    } catch (error) {
+        console.error('Error fetching report card:', error);
+        throw error;
+    }
+}
+
+
+
+
+export async function fetchReportCardByStudentID(studentID) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/reportcard/gets/${studentID}`);
+
+        // Check if the response status is not OK (e.g., 404 or 500)
+        if (!response.ok) {
+            if (response.status === 404) {
+                return { error: 'No report card found for this student.' }; // Custom message for 404
+            }
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+
+        // Parse the JSON response
+        const reportCard = await response.json();
+        return reportCard;
+
+    } catch (error) {
+        console.error('Error fetching report card:', error);
+
+        // Return the error message to handle it in the calling code
+        return { error: error.message };
+    }
+}
+
+export async function fetchAdmitCardByStudentID(studentID) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/admitcard/gets/${studentID}`);
+        if (!response.ok) {
+            if (response.status === 404) {
+                return { error: "No admit card found for this student." };
+            }
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        return data;
+
+    } catch (error) {
+        console.error("Error fetching admit card:", error);
+        return { error: error.message };
+    }
+}

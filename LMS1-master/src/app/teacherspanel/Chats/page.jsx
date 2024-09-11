@@ -77,6 +77,7 @@ export default function Chats() {
           );
           if (response.ok) {
             const data = await response.json();
+            console.log(data);
             setMessages(data);
           } else {
             console.error("Error fetching messages:", response.statusText);
@@ -97,6 +98,8 @@ export default function Chats() {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
     });
+
+
 
     socket.on("call", (data) => {
       if (data.to === user.sub) {
@@ -256,9 +259,7 @@ export default function Chats() {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleFileOptionsToggle = () => {
-    setShowFileOptions(!showFileOptions);
-  };
+
 
   const startRecording = () => {
     setIsRecording(true);
@@ -482,10 +483,10 @@ export default function Chats() {
             //console.log('Is sender ID equal to msg.sender?', senderId === msg.sender);
             <div key={index} className={`w-full flex items-center justify-${msg.sender === user.sub ? 'end' : 'start'}`}>
               {msg.sender === user.sub ? (
-                <ChatBubbleRight text={msg.text} time={msg.time} fileUrl={msg.fileUrl}
+                <ChatBubbleLeft text={msg.text} time={msg.time} fileUrl={msg.fileUrl}
                   voiceUrl={msg.voiceUrl} />
               ) : (
-                <ChatBubbleLeft text={msg.text} time={msg.time} fileUrl={msg.fileUrl}
+                <ChatBubbleRight text={msg.text} time={msg.time} fileUrl={msg.fileUrl}
                   voiceUrl={msg.voiceUrl} />
               )}
             </div>

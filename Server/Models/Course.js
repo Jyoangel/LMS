@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const scheduleSchema = require('./Schedule');
+
 
 const courseSchema = new Schema({
     courseName: {
@@ -30,10 +32,8 @@ const courseSchema = new Schema({
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
     schedule: {
-        classDays: [{ type: String }],
-        classTime: { type: String },
-        startDate: { type: Date },
-        endDate: { type: Date }
+        type: scheduleSchema,
+        required: [true, 'Schedule information is required']
     },
     courseObjectives: {
         type: String,
@@ -47,6 +47,10 @@ const courseSchema = new Schema({
     onlineResources: {
         type: String,
         trim: true
+    },
+    uploadCourse: {
+        type: String,  // assuming this is a URL or file path
+
     },
     liveClasses: [{
         type: Schema.Types.ObjectId,

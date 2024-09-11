@@ -1,37 +1,60 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { Calendar } from "antd";
+import { Calendar, Badge } from "antd";
 import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
-
-import { fetchStudentById } from "../../../../../../api/api";
 import { format } from "date-fns";
-
-
+import { fetchAttendanceByStudentId } from "../../../../../../api/attendanceapi";
 
 export default function StudentAtdDetails({ params }) {
-    const { studentID } = params;
-    const [studentData, setStudentData] = useState(null);
+    const { studentId } = params;
+    const [attendanceData, setAttendanceData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const getStudentData = async () => {
-            const data = await fetchStudentById(studentID);
-            setStudentData(data);
+        const fetchData = async () => {
+            try {
+                // Fetch attendance data
+                const data = await fetchAttendanceByStudentId(studentId);
+                setAttendanceData(data[0]);  // Assuming data[0] is the correct format
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        getStudentData();
-    }, [studentID]);
+        fetchData();
+    }, [studentId]);
 
-    if (!studentData) {
-        return <div>Loading...</div>; // Render a loading state while fetching data
+    // Convert dates array into an object with dates as keys
+    const attendanceMap = (attendanceData?.dates || []).reduce((map, entry) => {
+        const dateString = format(new Date(entry.date), "yyyy-MM-dd");
+        map[dateString] = entry.present ? 'Present' : 'Absent';
+        return map;
+    }, {});
+
+    const dateCellRender = (value) => {
+        const dateString = format(value.toDate(), "yyyy-MM-dd");
+        if (attendanceMap[dateString]) {
+            return (
+                <Badge status={attendanceMap[dateString] === 'Present' ? 'success' : 'default'} text={attendanceMap[dateString]} />
+            );
+        }
+        return null;
+    };
+
+    if (loading) {
+        return <div>Loading...</div>; // Show a loading state while fetching data
     }
 
     return (
         <>
             <div className="h-auto w-full flex flex-col p-5 gap-10">
                 {/* buttons */}
-                <div className="flex w-full justify-between items-center ">
+                <div className="flex w-full justify-between items-center">
                     <Link href={"/teacherspanel/Attendance"}>
                         <button className="flex items-center justify-center gap-2">
                             <FaArrowLeftLong className="h-10 w-10 bg-gray-100 rounded-full p-2" />
@@ -54,7 +77,7 @@ export default function StudentAtdDetails({ params }) {
                 <div className="w-full flex flex-col rounded-t-xl overflow-hidden">
                     <div className="w-full h-12 px-5 flex items-center bg-blue-200">
                         <h1 className="text-blue-600 font-semibold ">
-                            {studentData.name}
+                            {attendanceData?.studentId?.name}
                         </h1>
                     </div>
 
@@ -70,7 +93,7 @@ export default function StudentAtdDetails({ params }) {
                                         Form Number
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.formNumber}
+                                        {attendanceData?.studentId?.formNumber}
                                     </h1>
                                 </div>
 
@@ -80,7 +103,7 @@ export default function StudentAtdDetails({ params }) {
                                         Admission Number
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.admissionNumber}
+                                        {attendanceData?.studentId?.admissionNumber}
                                     </h1>
                                 </div>
 
@@ -88,7 +111,7 @@ export default function StudentAtdDetails({ params }) {
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">Name</h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.name}
+                                        {attendanceData?.studentId?.name}
                                     </h1>
                                 </div>
 
@@ -96,7 +119,7 @@ export default function StudentAtdDetails({ params }) {
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">Class</h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.class}
+                                        {attendanceData?.studentId?.class}
                                     </h1>
                                 </div>
 
@@ -106,7 +129,7 @@ export default function StudentAtdDetails({ params }) {
                                         Date of Birth
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {format(new Date(studentData.dateOfBirth), "yyyy-MM-dd")}
+                                        {attendanceData?.studentId?.dateOfBirth ? format(new Date(attendanceData.studentId.dateOfBirth), "yyyy-MM-dd") : "N/A"}
                                     </h1>
                                 </div>
 
@@ -114,7 +137,7 @@ export default function StudentAtdDetails({ params }) {
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">Gender</h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.gender}
+                                        {attendanceData?.studentId?.gender}
                                     </h1>
                                 </div>
 
@@ -124,7 +147,7 @@ export default function StudentAtdDetails({ params }) {
                                         Nationality
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.nationality}
+                                        {attendanceData?.studentId?.nationality}
                                     </h1>
                                 </div>
 
@@ -134,7 +157,7 @@ export default function StudentAtdDetails({ params }) {
                                         Mother Tongue
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.motherTongue}
+                                        {attendanceData?.studentId?.motherTongue}
                                     </h1>
                                 </div>
 
@@ -144,7 +167,7 @@ export default function StudentAtdDetails({ params }) {
                                         Religion
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.religion}
+                                        {attendanceData?.studentId?.religion}
                                     </h1>
                                 </div>
 
@@ -152,7 +175,7 @@ export default function StudentAtdDetails({ params }) {
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">Caste</h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.caste}
+                                        {attendanceData?.studentId?.caste}
                                     </h1>
                                 </div>
 
@@ -162,7 +185,7 @@ export default function StudentAtdDetails({ params }) {
                                         Blood Group
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.bloodGroup}
+                                        {attendanceData?.studentId?.bloodGroup}
                                     </h1>
                                 </div>
 
@@ -172,7 +195,7 @@ export default function StudentAtdDetails({ params }) {
                                         Aadhar Number
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.aadharNumber}
+                                        {attendanceData?.studentId?.aadharNumber}
                                     </h1>
                                 </div>
 
@@ -182,7 +205,7 @@ export default function StudentAtdDetails({ params }) {
                                         Contact Number
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.contactNumber}
+                                        {attendanceData?.studentId?.contactNumber}
                                     </h1>
                                 </div>
                             </div>
@@ -191,7 +214,7 @@ export default function StudentAtdDetails({ params }) {
                             <div className="flex flex-col gap-2">
                                 <h1 className="text-gray-400 font-normal text-lg">Address </h1>
                                 <h1 className="text-black font-bold text-lg">
-                                    {studentData.address}
+                                    {attendanceData?.studentId?.address}
                                 </h1>
                             </div>
 
@@ -205,47 +228,27 @@ export default function StudentAtdDetails({ params }) {
                                         Father Name
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.fatherName}
+                                        {attendanceData?.studentId?.parent.fatherName}
                                     </h1>
                                 </div>
 
-                                {/* Contact Number */}
+                                {/* Father Occupation */}
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">
-                                        Contact Number
+                                        Father Occupation
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.fatherContactNumber}
+                                        {attendanceData?.studentId?.parent.fatherOccupation}
                                     </h1>
                                 </div>
 
-                                {/* Aadhar Number */}
+                                {/* Father Contact */}
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">
-                                        Aadhar Number
+                                        Father Contact
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.fatherAadharNumber}
-                                    </h1>
-                                </div>
-
-                                {/* Occupation */}
-                                <div className="flex flex-col gap-2">
-                                    <h1 className="text-gray-400 font-normal text-lg">
-                                        Occupation
-                                    </h1>
-                                    <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.fatherOccupation}
-                                    </h1>
-                                </div>
-
-                                {/* Annual Income */}
-                                <div className="flex flex-col gap-2">
-                                    <h1 className="text-gray-400 font-normal text-lg">
-                                        Annual Income
-                                    </h1>
-                                    <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.annualIncome}
+                                        {attendanceData?.studentId?.parent.fatherContactNumber}
                                     </h1>
                                 </div>
 
@@ -255,88 +258,76 @@ export default function StudentAtdDetails({ params }) {
                                         Mother Name
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.parent.motherName}
+                                        {attendanceData?.studentId?.parent.motherName}
+                                    </h1>
+                                </div>
+
+                                {/* Mother Occupation */}
+                                <div className="flex flex-col gap-2">
+                                    <h1 className="text-gray-400 font-normal text-lg">
+                                        Mother Occupation
+                                    </h1>
+                                    <h1 className="text-black font-bold text-lg">
+                                        {attendanceData?.studentId?.parent.motherOccupation}
+                                    </h1>
+                                </div>
+
+                                {/* Mother Contact */}
+                                <div className="flex flex-col gap-2">
+                                    <h1 className="text-gray-400 font-normal text-lg">
+                                        Mother Contact
+                                    </h1>
+                                    <h1 className="text-black font-bold text-lg">
+                                        {attendanceData?.studentId?.parent.motherContactNumber}
                                     </h1>
                                 </div>
                             </div>
 
-                            {/* Address */}
-                            <div className="flex flex-col gap-2">
-                                <h1 className="text-gray-400 font-normal text-lg">Address </h1>
-                                <h1 className="text-black font-bold text-lg">
-                                    {studentData.parent.parentAddress}
-                                </h1>
-                            </div>
-
-                            {/* Local Guardian Details  */}
-                            <h1 className="text-black font-bold text-lg">
-                                Local Guardian Details{" "}
-                            </h1>
+                            {/* Local Guardian Details */}
+                            <h1 className="text-black font-bold text-lg">Local Guardian Details</h1>
 
                             <div className="w-full grid grid-cols-5 items-center justify-between gap-5">
-                                {/* Guardian name */}
+                                {/* Guardian Name */}
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">
-                                        Guardian name{" "}
+                                        Guardian Name
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.localGuardian.guardianName}
+                                        {attendanceData?.studentId?.localGuardian.guardianName}
                                     </h1>
                                 </div>
 
-                                {/* Relation With Student */}
+                                {/* Guardian Occupation */}
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">
-                                        Relation With Student{" "}
+                                        Guardian Occupation
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.localGuardian.relationWithStudent}
+                                        {attendanceData?.studentId?.localGuardian.guardianOccupation}
                                     </h1>
                                 </div>
 
-                                {/* Contact Number */}
+                                {/* Guardian Contact */}
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-gray-400 font-normal text-lg">
-                                        Contact Number{" "}
+                                        Guardian Contact
                                     </h1>
                                     <h1 className="text-black font-bold text-lg">
-                                        {studentData.localGuardian.guardianContactNumber}
-                                    </h1>
-                                </div>
-
-                                {/* Aadhar Number */}
-                                <div className="flex flex-col gap-2">
-                                    <h1 className="text-gray-400 font-normal text-lg">
-                                        Aadhar Number{" "}
-                                    </h1>
-                                    <h1 className="text-black font-bold text-lg">
-                                        {studentData.localGuardian.guardianAadharNumber}
-                                    </h1>
-                                </div>
-
-                                {/* Occupation*/}
-                                <div className="flex flex-col gap-2">
-                                    <h1 className="text-gray-400 font-normal text-lg">
-                                        Occupation{" "}
-                                    </h1>
-                                    <h1 className="text-black font-bold text-lg">
-                                        {studentData.localGuardian.guardianOccupation}
+                                        {attendanceData?.studentId?.localGuardian.guardianContactNumber}
                                     </h1>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Address */}
-                            <div className="flex flex-col gap-2">
-                                <h1 className="text-gray-400 font-normal text-lg">Address </h1>
-                                <h1 className="text-black font-bold text-lg">
-                                    {studentData.localGuardian.guardianAddress}
-                                </h1>
-                            </div>
+                        {/* Calendar */}
+                        <div className="flex flex-col gap-5 w-full">
+                            <h1 className="text-black font-bold text-lg">Attendance Calendar</h1>
+                            <Calendar dateCellRender={dateCellRender} />
                         </div>
                     </div>
                 </div>
-                <Calendar />
             </div>
+
         </>
     );
 }

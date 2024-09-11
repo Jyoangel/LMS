@@ -15,4 +15,3 @@ const emergencyContactSchema = new Schema({
 
 module.exports = emergencyContactSchema;
 
-{/**/ }

@@ -32,9 +32,7 @@ export default function Classes() {
         <div className="w-full flex items-center justify-between">
           <h1 className="text-base font-medium" data-testid="homework-count">Home Work: {totalCourses}</h1>
           <div className="flex items-center justify-center gap-5">
-            <button className="text-base font-semibold text-blue-500 underline">
-              import
-            </button>
+
             <Link href={"/teacherspanel/Classes/AddHomeWork"}>
               <button className="text-base font-semibold text-white bg-blue-500 px-4 py-2 rounded-lg">
                 Add New

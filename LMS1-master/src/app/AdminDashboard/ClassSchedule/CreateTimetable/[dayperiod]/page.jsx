@@ -27,6 +27,24 @@ export default function CreateTimetable({ params }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation for required fields
+    if (!subject || !startTime || !endTime || !day || !period) {
+      alert("Please fill out all required fields.");
+      return; // Stop form submission if validation fails
+    }
+
+    // Check if start time is before end time
+    if (startTime >= endTime) {
+      alert("Start time must be earlier than end time.");
+      return;
+    }
+
+    // Check if the day and period values are valid (you can customize this based on your specific needs)
+    if (day.trim() === "" || period.trim() === "") {
+      alert("Please provide valid values for day and period.");
+      return;
+    }
+
     const classData = {
       subject,
       startTime,
@@ -40,7 +58,7 @@ export default function CreateTimetable({ params }) {
       setIsSelectOpen(true); // Show success message
     } catch (error) {
       console.error("Error adding class schedule data:", error);
-      // Optionally, handle the error (e.g., show an error message)
+      alert("Failed to add class schedule. Please try again.");
     }
   };
 
@@ -101,7 +119,7 @@ export default function CreateTimetable({ params }) {
           </button>
 
           {isSelectOpen && (
-            <Successcard onClose={() => setIsSelectOpen(false)} para={"Time Table added successfully!"} />
+            <Successcard onClose={() => setIsSelectOpen(false)} para={"Time Table added successfully!"} url={"/AdminDashboard/ClassSchedule"} />
           )}
         </form>
       </div>

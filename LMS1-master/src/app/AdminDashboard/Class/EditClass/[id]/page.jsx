@@ -89,7 +89,9 @@ export default function EditClass({ params }) {
                                 Select
                             </option>
                             {[...Array(10)].map((_, index) => (
-                                <option key={index + 1} value={`Class ${index + 1}`}>{`Class ${index + 1}`}</option>
+                                <option key={index + 1} value={index + 1}>
+                                    {index + 1}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -104,6 +106,7 @@ export default function EditClass({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"class added/updated successfully!"}
+                            url={"/AdminDashboard/Class"}
                         />
                     )}
                 </form>

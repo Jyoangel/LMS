@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { fetchCourseData, deleteCourseData } from "../../../../api/courseapi";
 import { format } from "date-fns";
 
+
 export default function CourseTable({ filter, searchTerm }) {
   const [data, setData] = useState({ courses: [] });
   const [isLoading, setIsLoading] = useState(true);

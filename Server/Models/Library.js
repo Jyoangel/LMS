@@ -36,7 +36,12 @@ const librarySchema = new Schema({
     uploadedBy: {
         type: String,
         required: true
+    },
+    uploadBookPdf: {
+        type: String,  // assuming this is a URL or file path
+        required: true
     }
+
 });
 
 module.exports = mongoose.model('Library', librarySchema);

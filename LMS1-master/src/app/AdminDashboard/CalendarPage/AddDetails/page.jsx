@@ -13,6 +13,7 @@ const AddDetails = () => {
         startTime: '',
         endTime: '',
         duration: '',
+        description: '',
     });
     const [isSelectOpen, setIsSelectOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -27,6 +28,12 @@ const AddDetails = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const { type, title, date, startTime, endTime, duration, description } = formData;
+
+        if (!type || !title || !date || !startTime || !endTime || !duration || !description) {
+            alert('Please fill out all the fields.');
+            return; // Stop form submission if validation fails
+        }
         try {
             await addCalendarData(formData);
             setSuccessMessage('Event added successfully!');
@@ -135,6 +142,17 @@ const AddDetails = () => {
                             />
                         </div>
                     </div>
+                    <div className="flex flex-col gap-3 w-full">
+                        <label htmlFor="description" className="text-lg font-normal text-black">Description *</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Type here"
+                            className="h-20 border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                        ></textarea>
+                    </div>
 
                     <button
                         type="submit"
@@ -145,7 +163,7 @@ const AddDetails = () => {
                     </button>
 
                     {isSelectOpen && (
-                        <Successcard onClose={() => setIsSelectOpen(false)} para={successMessage} />
+                        <Successcard onClose={() => setIsSelectOpen(false)} para={successMessage} url={"/AdminDashboard/CalendarPage"} />
                     )}
                 </form>
             </div>

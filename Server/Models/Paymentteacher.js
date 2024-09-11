@@ -2,18 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const paymentTeacherSchema = new Schema({
-    teacher: {
+    teacherId: {
         type: Schema.Types.ObjectId,
         ref: 'TeacherDetail',
         required: true
     },
-    assignedClass: {
+    month: {
         type: String,
-        required: true
-    },
-    salary: {
-        type: Number,
-        required: true
+        required: true,
+        enum: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     },
     status: {
         type: String,
@@ -27,6 +24,10 @@ const paymentTeacherSchema = new Schema({
     dueAmount: {
         type: Number,
         required: true
+    },
+    remark: {
+        type: String,
+        require: true
     }
 
 }, { timestamps: true });

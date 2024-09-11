@@ -97,6 +97,7 @@ export default function AddLibrary() {
             <Successcard
               onClose={closeModal}
               para={"Subject added successfully!"}
+              url={"/AdminDashboard/Subject"}
             />
           )}
         </form>

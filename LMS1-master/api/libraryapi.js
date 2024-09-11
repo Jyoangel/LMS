@@ -9,13 +9,27 @@ export async function fetchLibraryData() {
     return res.json();
 }
 
-export async function addLibraryData(LibraryData) {
+// export async function addLibraryData(LibraryData) {
+//     const res = await fetch('http://localhost:5000/api/library/add', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(LibraryData),
+//     });
+
+//     if (!res.ok) {
+//         throw new Error('Failed to add Library data');
+//     }
+
+//     return res.json();
+// }
+
+
+export async function addLibraryData(formData) {
     const res = await fetch('http://localhost:5000/api/library/add', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(LibraryData),
+        body: formData, // Use FormData object here
     });
 
     if (!res.ok) {

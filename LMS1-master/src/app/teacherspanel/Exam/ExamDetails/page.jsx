@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Successcard from "@/Components/Successcard";
-import { addSExamData } from "../../../../../api/examapi"; // Update the path to where the addSExamData function is located
+import { addExamData } from "../../../../../api/examapi"; // Update the path to where the addSExamData function is located
 
 export default function ExamDetails() {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -13,31 +13,55 @@ export default function ExamDetails() {
     subject: "",
     date: "",
     startTime: "",
+    endTime: "",
     duration: "",
     instruction: "",
     totalMarks: "",
     passingMarks: "",
-    uploadQuestionPaper: "",
   });
+  const [questionPaperFile, setQuestionPaperFile] = useState(null); // For handling file input
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+  };
+
+  // Handle file input separately
+  const handleFileChange = (e) => {
+    setQuestionPaperFile(e.target.files[0]); // Get the first selected file
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    for (const key in formData) {
+      if (formData[key] === "") {
+        alert(`Please fill out the ${key.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+        return;
+      }
+    }
+
+    // Create a FormData object to include the file and form fields
+    const examData = new FormData();
+    Object.keys(formData).forEach((key) => {
+      examData.append(key, formData[key]);
+    });
+    if (questionPaperFile) {
+      examData.append("uploadQuestionPaper", questionPaperFile); // Append the file
+    }
+
     try {
-      await addSExamData(formData);
+      await addExamData(examData); // Send the FormData object
       setIsSelectOpen(true);
     } catch (error) {
       console.error("Failed to add exam data:", error);
-      // Handle error, e.g., show an error message to the user
+      alert('Failed to add exam data. Please try again.');
     }
   };
-
   return (
     <>
       <div className="h-screen w-full flex flex-col px-5 py-10 gap-10">
@@ -115,6 +139,17 @@ export default function ExamDetails() {
                 />
               </div>
               <div className="flex flex-col gap-3 w-full">
+                <label htmlFor="startTime" className="text-lg font-normal text-black">End Time*</label>
+                <input
+                  id="startTime"
+                  type="text"
+                  name="startTime"
+                  value={formData.endTime}
+                  onChange={handleChange}
+                  className="border border-gray-300 bg-gray-200 rounded-md w-full py-3 px-5 outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="duration" className="text-lg font-normal text-black">Duration*</label>
                 <input
                   id="duration"
@@ -126,18 +161,7 @@ export default function ExamDetails() {
                   className="border border-gray-300 bg-gray-200 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
-              <div className="flex flex-col gap-3 w-full">
-                <label htmlFor="instruction" className="text-lg font-normal text-black">Instruction*</label>
-                <input
-                  id="instruction"
-                  type="text"
-                  name="instruction"
-                  value={formData.instruction}
-                  onChange={handleChange}
-                  placeholder="Type here"
-                  className="border border-gray-300 bg-gray-200 rounded-md w-full py-3 px-5 outline-none"
-                />
-              </div>
+
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="totalMarks" className="text-lg font-normal text-black">Total Marks*</label>
                 <input
@@ -163,6 +187,18 @@ export default function ExamDetails() {
                 />
               </div>
             </div>
+            <div className="flex flex-col gap-3 w-full">
+              <label htmlFor="instruction" className="text-lg font-normal text-black">Instruction*</label>
+              <textarea
+                id="instruction"
+                type="text"
+                name="instruction"
+                value={formData.instruction}
+                onChange={handleChange}
+                placeholder="Type here"
+                className="border border-gray-300 bg-gray-200 rounded-md w-full py-3 px-5 outline-none"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-3 w-full">
@@ -172,7 +208,7 @@ export default function ExamDetails() {
               type="file"
               name="uploadQuestionPaper"
               value={formData.uploadQuestionPaper}
-              onChange={handleChange}
+              onChange={handleFileChange}
               placeholder="Upload"
               className="h-20 border border-gray-300 bg-gray-200 rounded-md w-full py-3 text-blue-500 px-5 outline-none"
             />
@@ -188,18 +224,21 @@ export default function ExamDetails() {
             <button
               type="button"
               className="w-44 text-black border border-gray-400 font-medium text-lg p-2"
-              onClick={() => setFormData({
-                type: "",
-                examTitle: "",
-                subject: "",
-                date: "",
-                startTime: "",
-                duration: "",
-                instruction: "",
-                totalMarks: "",
-                passingMarks: "",
-                uploadQuestionPaper: "",
-              })}
+              onClick={() => {
+                setFormData({
+                  type: "",
+                  examTitle: "",
+                  subject: "",
+                  date: "",
+                  startTime: "",
+                  endTime: "",
+                  duration: "",
+                  instruction: "",
+                  totalMarks: "",
+                  passingMarks: "",
+                });
+                setQuestionPaperFile(null); // Clear the file input
+              }}
             >
               Cancel
             </button>
@@ -208,6 +247,7 @@ export default function ExamDetails() {
             <Successcard
               onClose={() => setIsSelectOpen(false)}
               para={"Exam added successfully!"}
+              url={"/teacherspanel/Exam"}
             />
           )}
         </form>

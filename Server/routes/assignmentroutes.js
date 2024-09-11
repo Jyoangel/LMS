@@ -1,6 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const Assignment = require('../Models/Assignment');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = 'uploads/';
+        // Ensure the directory exists
+        fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath); // Save to 'uploads/books/' folder
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Rename the file
+    },
+});
+
+const upload = multer({ storage });
 
 // Utility function to get assignment count
 const getAssignmentCount = async () => {
@@ -8,7 +26,7 @@ const getAssignmentCount = async () => {
 };
 
 // Create a new assignment
-router.post('/add', async (req, res) => {
+router.post('/add', upload.single('uploadAssignment'), async (req, res) => {
     try {
         const {
             assignmentCode,
@@ -24,6 +42,14 @@ router.post('/add', async (req, res) => {
             createdBy
         } = req.body;
 
+        // Get file path from the uploaded file
+        const uploadAssignment = req.file ? req.file.path : null;
+
+        // Check if file was uploaded
+        if (!uploadAssignment) {
+            return res.status(400).json({ message: 'Assignment upload is required' });
+        }
+
         const newAssignment = new Assignment({
             assignmentCode,
             assignmentTitle,
@@ -36,6 +62,7 @@ router.post('/add', async (req, res) => {
             assignTo,
             courseDescription,
             createdBy,
+            uploadAssignment,  // Include the file path
         });
 
         await newAssignment.save();
@@ -45,7 +72,7 @@ router.post('/add', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Get all assignments
 router.get('/get', async (req, res) => {
     try {

@@ -13,10 +13,11 @@ import staffs from "./img/staffs.png";
 import student from "./img/student.png";
 import teachers from "./img/teachers.png";
 import Link from "next/link";
-import InteractiveGraph from "./components/InteractiveGraph";
-import { fetcheventData } from "../../../../api/api";
+
+import { fetchCalendarData } from "../../../../api/calendarapi";
 import SchoolChart from './components/InteractiveGraph';
 import { fetchReportCardData } from "../../../../api/reportcardapi";
+import { fetchSchoolOverviewData } from "../../../../api/attendanceapi";
 
 async function getData() {
   const res = await fetch('http://localhost:5000/api/count/count', { cache: 'no-store' });
@@ -34,6 +35,8 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [topStudents, setTopStudents] = useState([]);
+  const [schoolOverviewData, setSchoolOverviewData] = useState(null);
+
 
 
   useEffect(() => {
@@ -69,14 +72,54 @@ export default function Main() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const eventData = await fetcheventData();
-        setEvents(eventData);
+        const eventData = await fetchCalendarData();
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        // Filter the events to include only those for the current month and year
+        const filteredEvents = eventData.filter(event => {
+          const eventDate = new Date(event.date);
+          return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear;
+        });
+
+        setEvents(filteredEvents);
       } catch (err) {
         setError(err.message);
       }
     }
     fetchEvents();
   }, []);
+  useEffect(() => {
+    const getSchoolOverviewData = async () => {
+      setLoading(true);
+      const data = await fetchSchoolOverviewData();
+      if (data) {
+        setSchoolOverviewData(data);
+      } else {
+        setError('Error fetching school overview data.');
+      }
+      setLoading(false);
+    };
+
+    getSchoolOverviewData();
+  }, []);
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    const fetchData = async () => {
+      try {
+        const data = await fetchReportCardData();
+        const filteredStudents = data.filter(student => student.percentage > 80);
+        setTopStudents(filteredStudents);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -121,43 +164,43 @@ export default function Main() {
   };
 
 
-  const schoolOverviewData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: [
-      {
-        label: 'Total Present Students',
-        data: [65, 67, 70, 73, 75, 77, 80, 82, 80, 78, 75, 73],
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-      },
-      {
-        label: 'Total Present Teachers',
-        data: [100, 98, 95, 88, 86, 96, 97, 87, 85, 94, 92, 93],
-        borderColor: 'rgb(153, 102, 255)',
-        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-      },
+  // const schoolOverviewData = {
+  //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  //   datasets: [
+  //     {
+  //       label: 'Total Present Students',
+  //       data: [65, 67, 70, 73, 75, 77, 80, 82, 80, 78, 75, 73],
+  //       borderColor: 'rgb(75, 192, 192)',
+  //       backgroundColor: 'rgba(75, 192, 192, 0.5)',
+  //     },
+  //     {
+  //       label: 'Total Present Teachers',
+  //       data: [100, 98, 95, 88, 86, 96, 97, 87, 85, 94, 92, 93],
+  //       borderColor: 'rgb(153, 102, 255)',
+  //       backgroundColor: 'rgba(153, 102, 255, 0.5)',
+  //     },
 
-      {
-        label: 'Student Attendance (%)',
-        data: [95, 94, 93, 96, 97, 95, 96, 95, 94, 93, 92, 93],
-        borderColor: 'rgb(255, 159, 64)',
-        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-      },
-      {
-        label: 'Teacher Attendance (%)',
-        data: [98, 97, 96, 98, 99, 98, 97, 96, 97, 98, 97, 98],
-        borderColor: 'rgb(54, 162, 235)',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      },
+  //     {
+  //       label: 'Student Attendance (%)',
+  //       data: [95, 94, 93, 96, 97, 95, 96, 95, 94, 93, 92, 93],
+  //       borderColor: 'rgb(255, 159, 64)',
+  //       backgroundColor: 'rgba(255, 159, 64, 0.2)',
+  //     },
+  //     {
+  //       label: 'Teacher Attendance (%)',
+  //       data: [98, 97, 96, 98, 99, 98, 97, 96, 97, 98, 97, 98],
+  //       borderColor: 'rgb(54, 162, 235)',
+  //       backgroundColor: 'rgba(54, 162, 235, 0.2)',
+  //     },
 
 
-    ]
-  };
+  //   ]
+  // };
 
 
   return (
     <>
-      <div className=" w-full px-10 flex flex-col gap-5  py-10 ">
+      <div className=" w-full px-10 flex flex-col gap-3  py-10 ">
         <div className="flex w-full gap-9">
           <ColorCard
             icon={student}
@@ -207,7 +250,9 @@ export default function Main() {
           </div>
           <div className="w-[50%]   flex flex-col gap-3">
             <h1 className="text-black text-md font-bold">School Overview</h1>
-            <SchoolChart chartId="schoolOverviewChart" chartData={schoolOverviewData} />
+            {schoolOverviewData && (
+              <SchoolChart chartId="schoolOverviewChart" chartData={schoolOverviewData} />
+            )}
           </div>
         </div>
 
@@ -219,11 +264,11 @@ export default function Main() {
             {events.map((event) => (
               <EventCard
                 key={event._id}
-                name={event.eventName}
-                date={new Date(event.eventDate).toLocaleDateString()}
-                time={event.eventTime}
+                name={event.title}
+                date={new Date(event.date).toLocaleDateString()}
+                time={event.startTime}
                 description={event.description}
-                organizer={event.organizerName}
+
               />
             ))}
           </div>
@@ -231,15 +276,17 @@ export default function Main() {
         {/* Top Student */}
 
         <div className="flex flex-row gap-3 w-full ">
-          <div className="flex flex-col gap-3  w-[50%]">
+          <div className="flex flex-col gap-3 w-[50%]">
             <h1 className="text-black text-xl font-bold">Top Student</h1>
-            <div className="w-full h-[324px] bg-blue-100 grid grid-cols-2 gap-3  justify-items-center p-5 rounded-lg">
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
-              <StudentCard />
+            <div className="w-full h-[324px] bg-blue-100 grid grid-cols-2 gap-3 justify-items-center p-5 rounded-lg">
+              {error && <p className="text-red-500">{error}</p>}
+              {topStudents.map((student) => (
+                <StudentCard
+                  key={student.id} // assuming each student has a unique id
+                  name={student.name}
+                  percentage={student.percentage}
+                />
+              ))}
             </div>
           </div>
           <div className="flex flex-col gap-3 w-[50%]">

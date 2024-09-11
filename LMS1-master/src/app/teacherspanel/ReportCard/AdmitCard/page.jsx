@@ -3,18 +3,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
-
+import Successcard from "@/Components/Successcard";
 import { addAdmitCardData } from "../../../../../api/reportcardapi"; // Adjust this import
 
 export default function AdmitCard() {
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+
   const [formData, setFormData] = useState({
-    examination_roll_number: "",
-    school_name: "",
-    session: "",
+    //examination_roll_number: "",
+    //school_name: "",
+    //session: "",
     examination: "",
-    student_name: "",
+    //student_name: "",
     class: "",
     startdate: "",
     enddate: "",
@@ -23,14 +23,15 @@ export default function AdmitCard() {
     examsubjects: [{ subject: "", examination_date: "" }],
   });
 
-  const openModal = (id) => {
-    setSelectedId(id);
+
+
+
+  const openModal = () => {
     setIsSelectOpen(true);
   };
 
   const closeModal = () => {
     setIsSelectOpen(false);
-    setSelectedId(null);
   };
 
   const handleChange = (e) => {
@@ -64,6 +65,7 @@ export default function AdmitCard() {
     try {
       const result = await addAdmitCardData(formData);
       console.log('Server Response:', result);
+      setFormData(formData);
       openModal();
     } catch (error) {
       console.error('Failed to add admitcard data', error);
@@ -87,7 +89,7 @@ export default function AdmitCard() {
           {/* Student Details */}
           <div className="flex flex-col gap-8">
             <div className="w-full grid grid-cols-3 items-center gap-5">
-              {/* Examination Roll Number */}
+              {/* Examination Roll Number *
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="examination_roll_number" className="text-lg font-normal text-black">
                   Examination Roll No*
@@ -103,7 +105,7 @@ export default function AdmitCard() {
                 />
               </div>
 
-              {/* School Name */}
+              {/* School Name *
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="school_name" className="text-lg font-normal text-black">
                   School Name*
@@ -118,8 +120,8 @@ export default function AdmitCard() {
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
-
-              {/* Session */}
+*/}
+              {/* Session 
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="session" className="text-lg font-normal text-black">
                   Session*
@@ -134,6 +136,7 @@ export default function AdmitCard() {
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
+              */}
 
               {/* Examination */}
               <div className="flex flex-col gap-3 w-full">
@@ -151,7 +154,7 @@ export default function AdmitCard() {
                 />
               </div>
 
-              {/* Student Name */}
+              {/* Student Name *
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="student_name" className="text-lg font-normal text-black">
                   Student Name*
@@ -166,8 +169,9 @@ export default function AdmitCard() {
                   className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
                 />
               </div>
+              */}
 
-              {/* Class */}
+              {/* Class*/}
               <div className="flex flex-col gap-3 w-full">
                 <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
                 <input
@@ -281,13 +285,13 @@ export default function AdmitCard() {
             <button
               type="button"
               onClick={addSubjectField}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md w-96"
             >
               Add Subject
             </button>
           </div>
 
-          <div className="w-full flex justify-end">
+          <div className="w-full flex ">
             <button
               role="button"
               type="submit"
@@ -296,6 +300,9 @@ export default function AdmitCard() {
               Submit
             </button>
           </div>
+          {isSelectOpen && (
+            <Successcard onClose={closeModal} para={"Student added successfully!"} url={"/AdminDashboard/ReportCard"} />
+          )}
         </form>
       </div>
 

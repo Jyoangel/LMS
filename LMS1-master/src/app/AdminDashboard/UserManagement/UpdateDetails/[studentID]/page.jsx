@@ -104,7 +104,8 @@ export default function UpdateDetails({ params }) {
     };
 
 
-    const handleUpdate = async (studentID, formData) => {
+    const handleUpdate = async (e) => {
+        e.preventDefault();
         try {
             // Perform update operation using formData and studentID
             await updateStudentData(studentID, formData);
@@ -128,7 +129,7 @@ export default function UpdateDetails({ params }) {
                 </div>
 
 
-                <form className="flex flex-col gap-10">
+                <form className="flex flex-col gap-10" onSubmit={handleUpdate}>
                     <div className="flex flex-col gap-8">
                         <h1 className="text-lg font-semibold">Student Details</h1>
                         <div className="w-full grid grid-cols-3 items-center gap-5">
@@ -661,18 +662,18 @@ export default function UpdateDetails({ params }) {
 
                     <div className="flex gap-5 pb-10">
                         <button
-                            type="button"
-                            onClick={() => handleUpdate(studentID)}
+                            type="submit"
+
                             className="w-[33%] bg-blue-400 text-white font-medium text-lg p-3 rounded-lg"
                         >
-                            Update
+                            Submit
                         </button>
                         <button type="button" className="w-44 text-black border border-gray-400 font-medium text-lg p-2">
                             Cancel
                         </button>
                     </div>
                     {isSelectOpen && (
-                        <Successcard onClose={closeModal} para={"Student updated successfully!"} />
+                        <Successcard onClose={closeModal} para={"Student updated successfully!"} url={"/AdminDashboard/UserManagement"} />
                     )}
                 </form>
             </div>

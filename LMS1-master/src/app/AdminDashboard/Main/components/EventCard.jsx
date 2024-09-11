@@ -5,7 +5,7 @@ export default function EventCard({ name, date, time, description, organizer }) 
         <h1 className="text-black text-sm font-medium">{name} </h1>
         <p className="text-s text-gray-800">{date} | <span>{time}</span> </p>
         <p className="text-s text-gray-800">{description}</p>
-        <p className="text-s text-gray-800">{organizer}</p>
+        {/* <p className="text-s text-gray-800">{organizer}</p> */}
       </div>
     </>
   );

@@ -119,6 +119,7 @@ export default function EditSubject({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"Subject updated successfully!"}
+                            url={"/AdminDashboard/Subject"}
                         />
                     )}
                 </form>

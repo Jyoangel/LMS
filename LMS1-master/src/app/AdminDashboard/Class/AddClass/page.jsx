@@ -79,6 +79,7 @@ export default function AddClass() {
             <Successcard
               onClose={closeModal}
               para={" class added successfully!"}
+              url={"/AdminDashboard/Class"}
             />
           )}
         </form>

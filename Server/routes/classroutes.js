@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Class = require('../Models/class');
+const Class = require('../Models/Class');
 
 const getClassCount = async () => {
     return await Class.countDocuments();
@@ -35,15 +35,20 @@ router.put('/update/:id', async (req, res) => {
 // Delete a class by ID
 router.delete('/delete/:id', async (req, res) => {
     try {
+        // Attempt to delete the class
         const deletedClass = await Class.findByIdAndDelete(req.params.id);
         if (!deletedClass) {
             return res.status(404).json({ message: 'Class not found' });
         }
+
+        // Respond with success message
         res.json({ message: 'Class deleted successfully' });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error deleting class data:', error); // Log the error
+        res.status(500).json({ error: 'Failed to delete class data' }); // Send a more specific error message
     }
 });
+
 
 // Get all classes
 router.get('/get', async (req, res) => {

@@ -185,6 +185,7 @@ export default function EditLibrary({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"Library updated successfully!"}
+                            url={"/AdminDashboard/LibraryManage"}
                         />
                     )}
                 </form>

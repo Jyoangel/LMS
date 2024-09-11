@@ -7,40 +7,53 @@ const TeacherDetails = require('../Models/TeacherDetails');
 
 
 // Create a payment record for a teacher
-router.post('/create', async (req, res) => {
+router.post('/add', async (req, res) => {
     try {
-        const { teacherId, assignedClass, salary, paidAmount } = req.body;
+        console.log('Request body:', req.body); // Log the request body
+        const { teacherId, paidAmount, remark, month } = req.body;
 
-        // Calculate due amount and determine status
+        // Fetch teacher details by ID
         const teacher = await TeacherDetails.findById(teacherId);
         if (!teacher) {
+            console.log('Teacher not found:', teacherId); // Log if teacher not found
             return res.status(404).json({ message: 'Teacher not found' });
         }
 
+        console.log('Teacher details:', teacher); // Log teacher details
+
+        // Calculate dueAmount from teacher's salary
+        const salary = teacher.salary;
         const dueAmount = salary - paidAmount;
+
+        // Determine the payment status
         const status = dueAmount > 0 ? 'Due' : 'Paid';
 
+        // Create new payment record
         const newPayment = new PaymentTeacher({
-            teacher: teacherId,
-            assignedClass,
-            salary,
+            teacherId,
             status,
             paidAmount,
             dueAmount,
-
+            remark,
+            month
         });
 
-        const payment = await newPayment.save();
-        res.status(201).json({ message: 'Payment record created successfully', payment });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        // Save the payment record to the database
+        await newPayment.save();
+
+        console.log('Payment saved:', newPayment); // Log the saved payment
+
+        res.status(201).json({ message: 'Payment created successfully', payment: newPayment });
+    } catch (error) {
+        console.error('Error creating payment:', error); // Log the error
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
+
 router.get('/get', async (req, res) => {
     try {
-        const payments = await PaymentTeacher.find().populate('teacher', 'teacherID name aadharNumber subjectTaught highestDegreeEarned contactNumber parent.fatherName');
+        const payments = await PaymentTeacher.find().populate('teacherId', 'teacherID name aadharNumber subjectTaught highestDegreeEarned contactNumber parent.fatherName');
         const totalPayments = payments.length;
         const totalAmountPaid = payments.reduce((acc, payment) => acc + payment.paidAmount, 0);
 
@@ -66,7 +79,7 @@ router.get('/get', async (req, res) => {
 // Get payment record by ID
 router.get('/show/:id', async (req, res) => {
     try {
-        const payment = await PaymentTeacher.findById(req.params.id).populate('teacher', 'teacherID name aadharNumber subjectTaught highestDegreeEarned contactNumber parent.fatherName');
+        const payment = await PaymentTeacher.findById(req.params.id).populate('teacherId', 'teacherID name aadharNumber subjectTaught highestDegreeEarned contactNumber parent.fatherName');
         if (!payment) {
             return res.status(404).json({ message: 'Payment record not found' });
         }

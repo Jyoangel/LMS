@@ -1,3 +1,121 @@
+
+
+
+import React, { useState, useEffect } from 'react';
+import { fetchAttendanceData, updateAttendance } from '../../../../../api/attendanceapi';
+import { format } from "date-fns";
+import Link from "next/link";
+
+export default function Attendancetable({ setSelectedStudents }) {
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [checkboxState, setCheckboxState] = useState({}); // For tracking selected checkboxes
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await fetchAttendanceData();
+        setAttendanceData(data);
+        console.log(data); // Check if data includes populated student details
+      } catch (error) {
+        console.error('Failed to fetch attendance data:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const handleCheckboxChange = (studentId) => {
+    setCheckboxState((prev) => ({
+      ...prev,
+      [studentId]: !prev[studentId], // Toggle checkbox state
+    }));
+
+    // Update selected students for access
+    setSelectedStudents((prev) => {
+      if (prev.includes(studentId)) {
+        return prev.filter((id) => id !== studentId);
+      } else {
+        return [...prev, studentId];
+      }
+    });
+  };
+
+  const handleStatusChange = async (index) => {
+    const updatedData = [...attendanceData];
+    const item = updatedData[index];
+    const newStatus = !item.present; // Toggle the present status
+    item.present = newStatus; // Update local state
+
+    setAttendanceData(updatedData);
+
+    try {
+      await updateAttendance(item._id, newStatus); // Pass the item._id and newStatus
+    } catch (error) {
+      console.error('Failed to update attendance data:', error);
+      // Revert local state if update fails
+      item.present = !newStatus;
+      setAttendanceData([...updatedData]);
+    }
+  };
+
+  return (
+    <div className="w-full">
+      <table className="w-full bg-white">
+        <thead className="bg-blue-200 h-14 py-10">
+          <tr className="text-gray-700 text-sm font-normal leading-normal">
+            <th className="py-4 px-6 text-left">Select</th>
+            <th className="py-4 px-6 text-left">Sr. No</th>
+            <th className="py-4 px-6 text-left">Student Id</th>
+            <th className="py-4 px-6 text-left">Name</th>
+            <th className="py-4 px-6 text-left">Class</th>
+            <th className="py-4 px-6 text-left">DOB</th>
+            <th className="py-4 px-6 text-left">Gender</th>
+            <th className="py-4 px-6 text-left">Aadhar No</th>
+            <th className="py-4 px-6 text-left">Father Name</th>
+            <th className="py-4 px-6 text-left">Contact No</th>
+            <th className="py-4 px-6 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-600 text-sm font-light">
+          {attendanceData.map((item, index) => (
+            <tr key={index} className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}>
+              <td className="py-4 px-6 text-left">
+                <input
+                  type="checkbox"
+                  checked={!!checkboxState[item.studentId._id]} // Control checkbox state
+                  onChange={() => handleCheckboxChange(item.studentId._id)}
+                />
+              </td>
+              <td className="py-4 px-6 text-left">{index + 1}</td>
+              <td className="py-4 px-6 text-left">{item.studentId.studentID}</td>
+              <Link href={`/teacherspanel/Attendance/StudentAtdDetails/${item.studentId._id}`}>
+                <td className="py-4 px-6 text-left">{item.studentId.name}</td>
+              </Link>
+              <td className="py-4 px-6 text-left">{item.studentId.class}</td>
+              <td className="py-4 px-6 text-left">{format(new Date(item.studentId.dateOfBirth), "yyyy-MM-dd")}</td>
+              <td className="py-4 px-6 text-left">{item.studentId.gender}</td>
+              <td className="py-4 px-6 text-left">{item.studentId.aadharNumber}</td>
+              <td className="py-4 px-6 text-left">{item.studentId.parent.fatherName}</td>
+              <td className="py-4 px-6 text-left">{item.studentId.contactNumber}</td>
+              <td className="py-4 px-6 text-left">
+                <button
+                  onClick={() => handleStatusChange(index)}
+                  className={`underline ${item.present ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {item.present ? 'Present' : 'Absent'}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
+{/*
+
 import React, { useState, useEffect } from 'react';
 import { fetchAttendanceData, updateAttendance } from '../../../../../api/attendanceapi';
 import { format } from "date-fns";

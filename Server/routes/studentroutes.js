@@ -6,6 +6,7 @@ const xlsx = require('xlsx');
 const twilio = require('twilio');
 const StudentDetail = require('../Models/StudentDetails');
 const Communication = require('../Models/Communication');
+const Attendance = require('../Models/Attendance');
 const Message = require('../Models/Message');
 const nodemailer = require('nodemailer');
 const checkRole = require('../middleware/checkRole');
@@ -58,7 +59,7 @@ router.post('/import', upload.single('file'), async (req, res) => {
             name: studentData.name,
             nationality: studentData.nationality,
             motherTongue: studentData.motherTongue,
-            dateOfBirth: new Date(studentData.dateOfBirth),
+            dateOfBirth: new Date(studentData.dateOfBirth), // Handle date correctly
             gender: studentData.gender,
             religion: studentData.religion,
             caste: studentData.caste,
@@ -67,6 +68,8 @@ router.post('/import', upload.single('file'), async (req, res) => {
             contactNumber: studentData.contactNumber,
             email: studentData.email,
             address: studentData.address,
+            totalFee: studentData.totalFee, // Add totalFee
+            session: studentData.session,   // Add session
             parent: {
                 fatherName: studentData.parent_fatherName,
                 fatherContactNumber: studentData.parent_fatherContactNumber,
@@ -89,14 +92,43 @@ router.post('/import', upload.single('file'), async (req, res) => {
             }
         }));
 
-        await StudentDetail.insertMany(transformedData);
+        // Insert students into the StudentDetail collection
+        const insertedStudents = await StudentDetail.insertMany(transformedData);
+
+        // Create related Communication and Attendance records
+        for (const student of insertedStudents) {
+            // Create Communication document
+            const communication = new Communication({
+                studentID: student.studentID,
+                name: student.name,
+                dateOfBirth: student.dateOfBirth,
+                class: student.class,
+                gender: student.gender,
+                aadharNumber: student.aadharNumber,
+                fatherName: student.parent.fatherName,
+                contactNumber: student.contactNumber,
+                email: student.email,
+                selected: false // Default selected value
+            });
+            await communication.save();
+
+            // Create Attendance document
+            const attendance = new Attendance({
+                studentId: student._id,
+                present: false // Default selected value
+            });
+            await attendance.save();
+        }
 
         const count = await StudentDetail.countDocuments();
         res.status(201).json({ message: `Students imported successfully. Total students: ${count}` });
+
     } catch (error) {
+        console.error('Error during student import:', error);
         res.status(400).json({ error: error.message });
     }
 });
+
 
 // Create a new student
 router.post('/add', async (req, res) => {
@@ -123,7 +155,7 @@ router.get('/get', async (req, res) => {
 });
 
 // Get a single student by ID
-{/*router.get('/get/:studentID', async (req, res) => {
+router.get('/get/:studentID', async (req, res) => {
     try {
         const student = await StudentDetail.findOne({ studentID: req.params.studentID });
         if (!student) {
@@ -133,23 +165,22 @@ router.get('/get', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
-});*/}
-router.get('/get/:id', async (req, res) => {
+});
+router.get('/gets/:id', async (req, res) => {
     const _id = req.params.id;
 
     try {
-        const teacher = await StudentDetail.findById(_id);
+        const student = await StudentDetail.findById(_id);
 
-        if (!teacher) {
+        if (!student) {
             return res.status(404).json('Student not found');
         }
 
-        res.status(200).json(teacher);
+        res.status(200).json(student);
     } catch (error) {
         res.status(500).json(error);
     }
 });
-
 // Update a student by ID
 router.put('/update/:studentID', async (req, res) => {
     try {
@@ -172,15 +203,26 @@ router.put('/update/:studentID', async (req, res) => {
 // Delete a student by ID
 router.delete('/delete/:id', async (req, res) => {
     try {
-        const student = await StudentDetail.findByIdAndDelete(req.params.id);
+        // Find the student by ID
+        const student = await StudentDetail.findById(req.params.id);
         if (!student) {
             return res.status(404).json({ error: 'Student not found' });
         }
-        res.status(200).json({ message: 'Student deleted successfully' });
+
+        // Delete the student
+        await StudentDetail.findByIdAndDelete(req.params.id);
+
+        // Delete the related communication and attendance documents
+        await Communication.deleteOne({ studentID: student.studentID });
+        await Attendance.deleteOne({ studentId: student._id });
+
+        res.status(200).json({ message: 'Student and related data deleted successfully' });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
+
+
 
 router.put('/selectStudent/:studentId', async (req, res) => {
     const { studentId } = req.params;
@@ -337,7 +379,7 @@ router.post('/sendSMS', async (req, res) => {
 router.get('/count', async (req, res) => {
     try {
         const count = await StudentDetail.countDocuments();
-        res.status(200).json({ message: `The total number of students is: ${count}` });
+        res.status(200).json({ message: `The total number of students is: ${count}`, count });
     } catch (error) {
         res.status(500).json(error);
     }

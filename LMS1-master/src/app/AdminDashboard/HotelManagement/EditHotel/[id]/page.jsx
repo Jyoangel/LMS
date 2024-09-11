@@ -143,6 +143,7 @@ export default function EditHotel({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"Room updated successfully!"}
+                            url={"/AdminDashboard/HotelManagement/AddHotel"}
                         />
                     )}
                 </form>

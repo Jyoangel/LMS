@@ -246,6 +246,7 @@ export default function EditDetails({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"Homework updated successfully!"}
+                            url={"/teacherspanel/Classes"}
                         />
                     )}
                 </form>

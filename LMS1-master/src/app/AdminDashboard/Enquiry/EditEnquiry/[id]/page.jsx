@@ -146,6 +146,7 @@ export default function EditEnquiry({ params }) {
                         <Successcard
                             onClose={closeModal}
                             para={"Enquiry updated successfully!"}
+                            url={"/AdminDashboard/Enquiry"}
                         />
                     )}
                 </form>

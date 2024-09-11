@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import Successcard from "@/Components/Successcard";
@@ -10,23 +9,9 @@ export default function EditReportCard({ params }) {
     const { id } = params; // Extract the id from params
 
     const [formData, setFormData] = useState({
-        type: "",
-        name: "",
-        fatherName: "",
-        class: "",
-        session: "",
-        rollNumber: "",
-        dateOfBirth: "",
-        numberOfSubjects: "",
-        subjects: [
-            { subjectName: "", marks: "" },
-            { subjectName: "", marks: "" },
-            { subjectName: "", marks: "" },
-            { subjectName: "", marks: "" },
-            { subjectName: "", marks: "" },
-        ],
+
         classTeacher: "",
-        principleSignature: "",
+        marks: {}, // Store marks for subjects
     });
 
     const [isSelectOpen, setIsSelectOpen] = useState(false);
@@ -58,12 +43,31 @@ export default function EditReportCard({ params }) {
         event.preventDefault();
 
         try {
-            const updatedData = await updateReportCardData(formData._id, formData);
+            const updatedData = await updateReportCardData(id, formData);
             console.log("Report card updated successfully:", updatedData);
             openModal();
         } catch (error) {
             console.error("Failed to update report card:", error.message);
         }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+
+    const handleMarksChange = (subjectName, e) => {
+        const { value } = e.target;
+        setFormData({
+            ...formData,
+            marks: {
+                ...formData.marks,
+                [subjectName]: value,
+            },
+        });
     };
 
     return (
@@ -78,209 +82,71 @@ export default function EditReportCard({ params }) {
                     </Link>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col gap-10" data-testid="form"  >
-                    <div className="flex flex-col gap-8">
-                        <div className="w-full grid grid-cols-3 gap-5">
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="type" className="text-lg font-normal text-black">Type*</label>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+
+                    {/* Marks - Render dynamically based on subject names */}
+                    {formData.subjects && formData.subjects.length > 0 ? (
+                        formData.subjects.map((subject, index) => (
+                            <div key={index} className="flex flex-col gap-3">
+                                <label htmlFor={`marks-${index}`} className="text-lg font-normal text-black">
+                                    {subject.subjectName} Marks*
+                                </label>
                                 <input
-                                    id="type"
-                                    value={formData.type}
-                                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                                    id={`marks-${index}`}
+                                    type="number"
+                                    name={subject.subjectName}
+                                    value={subject.marks || ""}
+                                    onChange={(e) => handleMarksChange(subject.name, e)}
+                                    className="border border-gray-300 rounded-md py-3 px-5 outline-none"
                                     required
                                 />
                             </div>
+                        ))
+                    ) : (
+                        <p>No subjects available</p> // Fallback if subjects are empty or not present
+                    )}
 
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="name" className="text-lg font-normal text-black">Name*</label>
-                                <input
-                                    id="name"
-                                    data-testid="name-input"
-                                    type="text"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="fatherName" className="text-lg font-normal text-black">Father Name*</label>
-                                <input
-                                    id="fatherName"
-                                    type="text"
-                                    value={formData.fatherName}
-                                    onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="class" className="text-lg font-normal text-black">Class*</label>
-                                <input
-                                    id="class"
-                                    type="text"
-                                    value={formData.class}
-                                    onChange={(e) => setFormData({ ...formData, class: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="session" className="text-lg font-normal text-black">Session*</label>
-                                <input
-                                    id="session"
-                                    type="text"
-                                    value={formData.session}
-                                    onChange={(e) => setFormData({ ...formData, session: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="rollNumber" className="text-lg font-normal text-black">Roll Number*</label>
-                                <input
-                                    id="rollNumber"
-                                    type="text"
-                                    value={formData.rollNumber}
-                                    onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="dateOfBirth" className="text-lg font-normal text-black">Date of Birth*</label>
-                                <input
-                                    id="dateOfBirth"
-                                    type="date"
-                                    value={formData.dateOfBirth}
-                                    onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="numberOfSubjects" className="text-lg font-normal text-black">Number Of Subjects*</label>
-                                <select
-                                    id="numberOfSubjects"
-
-                                    value={formData.numberOfSubjects}
-                                    onChange={(e) => setFormData({ ...formData, numberOfSubjects: e.target.value })}
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                >
-                                    <option value="">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
-
-                            {/* Loop through subjects based on numberOfSubjects */}
-                            {formData.subjects.map((subject, index) => (
-                                <React.Fragment key={index}>
-                                    <div className="flex flex-col gap-3 w-full">
-                                        <label htmlFor={`subjectName-${index}`} className="text-lg font-normal text-black">Subject Name*</label>
-                                        <input
-                                            id={`subjectName-${index}`}
-                                            data-testid={`subject-name-input-${index}`}
-                                            type="text"
-                                            value={subject.subjectName}
-                                            onChange={(e) =>
-                                                setFormData({
-                                                    ...formData,
-                                                    subjects: formData.subjects.map((sub, idx) =>
-                                                        idx === index ? { ...sub, subjectName: e.target.value } : sub
-                                                    ),
-                                                })
-                                            }
-                                            placeholder="Type here"
-                                            className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-3 w-full">
-                                        <label htmlFor={`marks-${index}`} className="text-lg font-normal text-black">Marks*</label>
-                                        <input
-                                            id={`marks-${index}`}
-                                            data-testid={`marks-input-${index}`}
-                                            type="text"
-                                            value={subject.marks}
-                                            onChange={(e) =>
-                                                setFormData({
-                                                    ...formData,
-                                                    subjects: formData.subjects.map((sub, idx) =>
-                                                        idx === index ? { ...sub, marks: e.target.value } : sub
-                                                    ),
-                                                })
-                                            }
-                                            placeholder="Type here"
-                                            className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                            required
-                                        />
-                                    </div>
-                                </React.Fragment>
-                            ))}
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="classTeacher" className="text-lg font-normal text-black">Class Teacher*</label>
-                                <input
-                                    id="classTeacher"
-                                    type="text"
-                                    value={formData.classTeacher}
-                                    onChange={(e) => setFormData({ ...formData, classTeacher: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-3 w-full">
-                                <label htmlFor="principleSignature" className="text-lg font-normal text-black">Principal Signature*</label>
-                                <input
-                                    id="principleSignature"
-                                    type="text"
-                                    value={formData.principleSignature}
-                                    onChange={(e) => setFormData({ ...formData, principleSignature: e.target.value })}
-                                    placeholder="Type here"
-                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
-                                    required
-                                />
-                            </div>
-                        </div>
+                    {/* Class Teacher */}
+                    <div className="flex flex-col gap-3">
+                        <label htmlFor="classTeacher" className="text-lg font-normal text-black">
+                            Class Teacher*
+                        </label>
+                        <input
+                            id="classTeacher"
+                            name="classTeacher"
+                            type="text"
+                            value={formData.classTeacher}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded-md py-3 px-5 outline-none"
+                            placeholder="Type here"
+                            required
+                        />
                     </div>
-                    {/* Submit Button */}
-                    <button
 
-                        type="submit"
-                        className="bg-blue-500 text-white px-5 py-3 rounded-md"
-                    >
-                        Update
-                    </button>
+
+
+                    {/* Submit Button */}
+                    <div className="flex justify-end">
+                        <button
+                            role="button"
+                            type="submit"
+                            className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-md hover:bg-blue-600"
+                        >
+                            Update
+                        </button>
+                    </div>
                 </form>
+
+                {/* Success Modal */}
+                {isSelectOpen && (
+                    <Successcard
+                        title="Report Card Updated Successfully!"
+                        description="Your changes have been successfully saved."
+                        handleClose={closeModal}
+                        url={"/AdminDashboard/ReportCard"}
+                    />
+                )}
             </div>
-            {/* Success Modal */}
-            {isSelectOpen && (
-                <Successcard
-                    title="Report Card Updated Successfully!"
-                    description="Your changes have been successfully saved."
-                    handleClose={closeModal}
-                />
-            )}
         </>
     );
 }

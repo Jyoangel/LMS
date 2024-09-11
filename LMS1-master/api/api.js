@@ -10,25 +10,44 @@ export async function fetchStudentData() {
 }
 
 export async function addStudentData(studentData) {
-    const res = await fetch('http://localhost:5000/api/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(studentData),
-    });
+    try {
+        const res = await fetch('http://localhost:5000/api/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(studentData),
+        });
 
-    if (!res.ok) {
-        throw new Error('Failed to add student data');
+        // Check if the server response is not OK (status code is not in the range of 200-299)
+        if (!res.ok) {
+            // Try to extract the error message from the response body
+            const errorData = await res.json();
+            // Throw an error with the message returned from the server
+            throw new Error(errorData.message || 'Failed to add student data');
+        }
+
+        return res.json(); // Parse and return the JSON data if the response is OK
+    } catch (error) {
+        // Catch any network or server errors and rethrow with a proper message
+        throw new Error(error.message || 'Something went wrong while adding student data');
     }
-
-    return res.json();
 }
+
 
 
 
 export async function fetchStudentById(studentID) {
     const res = await fetch(`http://localhost:5000/api/get/${studentID}`);
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch student data');
+    }
+
+    return res.json();
+}
+export async function fetchStudentByID(id) {
+    const res = await fetch(`http://localhost:5000/api/gets/${id}`);
 
     if (!res.ok) {
         throw new Error('Failed to fetch student data');
@@ -72,6 +91,32 @@ export async function deleteStudentData(id) {
         return res.json();
     } catch (error) {
         throw new Error(`Error deleting student data: ${error.message}`);
+    }
+}
+
+
+// import Student 
+
+export async function importStudentData(file) {
+    try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch('http://localhost:5000/api/import', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Success:', result);
+        return result;
+    } catch (error) {
+        console.error('Error importing student data:', error);
+        throw error;
     }
 }
 
@@ -278,3 +323,5 @@ export const sendSMS = async (message) => {
         throw error;
     }
 };
+
+

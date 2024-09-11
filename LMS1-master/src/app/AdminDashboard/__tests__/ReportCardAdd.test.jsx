@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AddReportCard from '../ReportCard/AddReportCard/page';
+import AddReportCard from '../ReportCard/AddReportCard/[admitCardId]/page';
 import { addReportCardData } from '../../../../api/reportcardapi';
 
 

@@ -33,6 +33,29 @@ export default function AddEnquiry() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation for required fields
+    const { name, contactNumber, email, enquiryRelated } = formData;
+
+    if (!name || !contactNumber || !email || !enquiryRelated) {
+      alert("Please fill out all required fields.");
+      return; // Stop form submission if validation fails
+    }
+
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // Validate contact number (for simplicity, let's assume it should be a 10-digit number)
+    const contactNumberPattern = /^\d{10}$/;
+    if (!contactNumberPattern.test(contactNumber)) {
+      alert("Please enter a valid contact number (10 digits).");
+      return;
+    }
+
     try {
       await addEnquiryData(formData);
       openModal();
@@ -44,8 +67,10 @@ export default function AddEnquiry() {
       });
     } catch (error) {
       console.error("Failed to add enquiry data:", error);
+      alert("Failed to add enquiry data. Please try again.");
     }
   };
+
 
   return (
     <>
@@ -130,6 +155,7 @@ export default function AddEnquiry() {
             <Successcard
               onClose={closeModal}
               para={"Enquiry Created successfully!"}
+              url={"/AdminDashboard/Enquiry"}
             />
           )}
         </form>

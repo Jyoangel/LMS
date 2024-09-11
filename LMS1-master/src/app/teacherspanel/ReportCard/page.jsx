@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -18,8 +19,10 @@ export default function ReportCard() {
         <div className="w-full flex items-center justify-between">
           <h1 className="text-base font-medium">Total Report Card: 10</h1>
           <div className="flex items-center justify-center gap-5">
-
-            <Link href={"/teacherspanel/ReportCard/SelectCard"}>
+            <button className="text-base font-semibold text-blue-500 underline">
+              import
+            </button>
+            <Link href={"/AdminDashboard/ReportCard/SelectCard"}>
               <button className="text-base font-semibold text-white bg-blue-500 px-4 py-2 rounded-lg">
                 Add New
               </button>
@@ -27,7 +30,12 @@ export default function ReportCard() {
           </div>
         </div>
 
-
+        {/* student teacher staff */}
+        <div className="h-12 w-full border border-gray-300 flex flex-row gap-6 p-2 py-3 rounded-lg">
+          <h1 className="text-blue-500 underline font-medium">Students</h1>
+          <h1 className="text-gray-500 underline font-medium">Teachers</h1>
+          <h1 className="text-gray-500 underline font-medium">Staffs</h1>
+        </div>
 
         {/* table */}
         <div className="h-auto w-full flex flex-col rounded-lg  border border-gray-300">

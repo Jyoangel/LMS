@@ -182,6 +182,7 @@ export default function AddTranspotation() {
             <Successcard
               onClose={closeModal}
               para={"Transportation data added successfully!"}
+              url={"/AdminDashboard/Transportation"}
             />
           )}
         </form>

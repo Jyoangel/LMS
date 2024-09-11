@@ -1,36 +1,18 @@
 "use client";
-import ConfirmationCard from "@/Components/ConfirmationCard";
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { fetchStudentData, deleteStudentData, selectStudent } from "../../../../api/api"; // Replace with your actual API functions
+import { fetchStudentData, selectStudent } from "../../../../api/api"; // Replace with your actual API functions
 import { format } from "date-fns";
 
 export default function CommunicationTable({ filter, searchTerm, setSelectedStudent }) {
   const [data, setData] = useState({ students: [] });
-  const [isDelete, setDelete] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [studentToDelete, setStudentToDelete] = useState(null);
 
-  const openDelete = (id) => {
-    setStudentToDelete(id);
-    setDelete(true);
-  };
 
-  const closeDelete = () => {
-    setStudentToDelete(null);
-    setDelete(false);
-  };
 
-  const handleDelete = async () => {
-    try {
-      await deleteStudentData(studentToDelete);
-      loadItems();
-      closeDelete();
-    } catch (error) {
-      console.error("Failed to delete student data:", error);
-    }
-  };
 
   const loadItems = async () => {
     try {
@@ -90,7 +72,7 @@ export default function CommunicationTable({ filter, searchTerm, setSelectedStud
               <th className="py-4 px-6 text-left">Aadhar No</th>
               <th className="py-4 px-6 text-left">Father Name</th>
               <th className="py-4 px-6 text-left">Contact No</th>
-              <th className="py-4 px-6 text-left">Action</th>
+
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
@@ -121,30 +103,14 @@ export default function CommunicationTable({ filter, searchTerm, setSelectedStud
                 <td className="py-4 px-6 text-left">{item.aadharNumber}</td>
                 <td className="py-4 px-6 text-left">{item.parent.fatherName}</td>
                 <td className="py-4 px-6 text-left">{item.contactNumber}</td>
-                <td className="py-4 px-6 text-left flex gap-2">
-                  <button className="text-blue-600">
-                    <Link href={`/AdminDashboard/UserManagement/UpdateDetails/${item.studentID}`}>
-                      Edit
-                    </Link>
-                  </button>
-                  <h1 className="text-gray-400">|</h1>
-                  <button onClick={() => openDelete(item._id)} className="text-red-600">
-                    Delete
-                  </button>
-                </td>
+
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {isDelete && (
-        <ConfirmationCard
-          para={"Do you really want to delete this record?"}
-          onConfirm={handleDelete}
-          onClose={closeDelete}
-        />
-      )}
+
     </>
   );
 }

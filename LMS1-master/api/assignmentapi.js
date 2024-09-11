@@ -8,17 +8,14 @@ export async function fetchAssignmentData() {
     return res.json();
 }
 
-export async function addAssignmentData(assignmentData) {
+export async function addAssignmentData(formData) {
     const res = await fetch('http://localhost:5000/api/assignment/add', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(assignmentData),
+        body: formData, // Use FormData object here
     });
 
     if (!res.ok) {
-        throw new Error('Failed to add assignment data');
+        throw new Error('Failed to add Library data');
     }
 
     return res.json();

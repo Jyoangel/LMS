@@ -5,9 +5,28 @@ const xlsx = require('xlsx');
 const Course = require('../Models/Course');
 const checkRole = require('../middleware/checkRole');
 const auth = require('../middleware/auth');
-const LiveClass = require('../Models/LiveClass'); // Assuming path to your LiveClass model
+const LiveClass = require('../Models/LiveClass'); // 
 
-const upload = multer({ dest: 'uploads/' });
+const path = require('path');
+const fs = require('fs');
+
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = 'uploads/';
+        // Ensure the directory exists
+        fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath); // Save to 'uploads/books/' folder
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Rename the file
+    },
+});
+
+const upload = multer({ storage });
+
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+//const upload = multer({ dest: 'uploads/' });
 
 // Import courses from an Excel file
 router.post('/import', upload.single('file'), async (req, res) => {
@@ -34,10 +53,10 @@ router.post('/import', upload.single('file'), async (req, res) => {
             primaryInstructorname: courseData.primaryInstructorname,
             instructorEmail: courseData.instructorEmail,
             schedule: {
-                classDays: courseData.classDays.split(','),
-                classTime: courseData.classTime,
-                startDate: new Date(courseData.startDate),
-                endDate: new Date(courseData.endDate)
+                classDays: courseData.schedule_classDays,
+                classTime: courseData.schedule_classTime,
+                startDate: new Date(courseData.schedule_startDate),
+                endDate: new Date(courseData.schedule_endDate)
             },
             courseObjectives: courseData.courseObjectives,
             supplementaryMaterials: courseData.supplementaryMaterials,
@@ -98,14 +117,21 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // Add a new course
-router.post('/add', async (req, res) => {
+router.post('/add', upload.single('uploadCourse'), async (req, res) => {
     try {
-        const course = new Course(req.body);
+        // Create a new course object
+        const courseData = {
+            ...req.body,
+            uploadCourse: req.file ? req.file.path : '' // Store the file path in uploadCourse field
+        };
+
+        const course = new Course(courseData);
         await course.save();
+
         const count = await Course.countDocuments();
         res.status(200).json({ course, message: `The total number of courses is: ${count}` });
     } catch (error) {
-        console.log('Error adding course:', error);
+        console.error('Error adding course:', error);
         res.status(400).json({ message: error.message });
     }
 });

@@ -1,6 +1,6 @@
 "use server";
 
-import { Student } from "@/model/student";
+//import { Student } from "@/model/student";
 import { connectDB } from "@/utils/database";
 import { revalidatePath } from "next/cache";
 
@@ -27,7 +27,7 @@ export const createNewStudent = async (formdata) => {
     console.log("studnet data add ", saveStudent);
 
     revalidatePath("/");
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const updateStudent = async (formdata) => {
@@ -80,7 +80,7 @@ export const updateStudent = async (formdata) => {
 
       console.log("Update Student response", response);
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const showStudent = async () => {
@@ -88,7 +88,7 @@ export const showStudent = async () => {
     await connectDB();
     const students = await Student.find().exec();
     return students;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getStudentById = async (id) => {
@@ -97,7 +97,7 @@ export const getStudentById = async (id) => {
     const student = await Student.findOne({ _id: id });
 
     return student;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const deleteStudent = async (formdata) => {

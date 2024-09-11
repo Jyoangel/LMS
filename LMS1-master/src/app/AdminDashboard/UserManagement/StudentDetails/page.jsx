@@ -103,6 +103,7 @@ export default function StudentDetails() {
     } catch (error) {
       console.error('Error creating student:', error);
       // Handle error (e.g., show error message)
+      alert(`Error: ${error.message}`);
     }
   };
 
@@ -716,7 +717,7 @@ export default function StudentDetails() {
             </button>
           </div>
           {isSelectOpen && (
-            <Successcard onClose={closeModal} para={"Student added successfully!"} />
+            <Successcard onClose={closeModal} para={"Student added successfully!"} url={"/AdminDashboard/UserManagement"} />
           )}
         </form>
       </div>

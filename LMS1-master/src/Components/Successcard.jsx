@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
-
-export default function Successcard({ onClose, para }) {
+import Link from "next/link";
+export default function Successcard({ onClose, para, url }) {
   const successRef = useRef();
 
   useEffect(() => {
@@ -29,12 +29,15 @@ export default function Successcard({ onClose, para }) {
           {" "}
           <h1 className="text-xl font-bold">Successful</h1>
           <h1 className="text-sm font-normal">{para}</h1>
-          <button
-            className="mt-4 bg-blue-600 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            onClick={onClose}
-          >
-            Done
-          </button>
+          <Link href={url}>
+            <button
+              className="mt-4 bg-blue-600 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              onClick={onClose}
+            >
+              Done
+
+            </button>
+          </Link>
         </div>
       </div>
     </>

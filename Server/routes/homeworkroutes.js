@@ -1,15 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const Homework = require('../Models/HomeWork'); // Ensure the correct path
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = 'uploads/';
+        // Ensure the directory exists
+        fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath); // Save to 'uploads/books/' folder
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Rename the file
+    },
+});
+
+const upload = multer({ storage });
 
 const getHomeworkCount = async () => {
     return await Homework.countDocuments();
 };
 
 // Create Homework
-router.post('/add', async (req, res) => {
+router.post('/add', upload.single('uploadHomework'), async (req, res) => {
     try {
-        const homework = new Homework(req.body);
+        // Create a new Homework document
+        const homework = new Homework({
+            ...req.body,
+            uploadHomework: req.file ? req.file.path : '' // Save file path or URL
+        });
+
         await homework.save();
         const count = await getHomeworkCount();
         res.status(201).send({ homework, count });
@@ -17,6 +40,8 @@ router.post('/add', async (req, res) => {
         res.status(400).send(e);
     }
 });
+
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Get all Homework
 router.get('/get', async (req, res) => {

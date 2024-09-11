@@ -72,9 +72,10 @@ export default function HomeworkTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">Kamlesh Kumar</td>
                 <td className="py-4 px-6 text-left">{item.attachments}</td>
                 <td className="py-4 px-6 text-left flex gap-2">
+                  <Link href={`http://localhost:5000/api/homework/${item.uploadHomework}`} target="_blank">
 
-                  <Image src={download} alt="download" />
-
+                    <Image src={download} alt="download" />
+                  </Link>
                 </td>
               </tr>
             ))}

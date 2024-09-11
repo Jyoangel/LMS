@@ -6,7 +6,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { addLibraryData } from "../../../../../api/libraryapi"; // Adjust the import path according to your file structure
 
 export default function AddLibrary() {
-  const [isSelectOpen, setisSelectOpen] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     type: "",
@@ -15,14 +15,23 @@ export default function AddLibrary() {
     authorName: "",
     uploadedBy: "",
     description: "",
+    uploadBookPdf: null, // Change to null to handle file upload
   });
+  const [error, setError] = useState(""); // To display error messages
 
   const openModal = () => {
-    setisSelectOpen(true);
+    setIsSelectOpen(true);
   };
 
   const closeModal = () => {
-    setisSelectOpen(false);
+    setIsSelectOpen(false);
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      uploadBookPdf: e.target.files[0], // Update file input to handle files
+    });
   };
 
   const handleChange = (e) => {
@@ -34,13 +43,52 @@ export default function AddLibrary() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Basic validation
+    for (const key in formData) {
+      if (formData[key] === null || formData[key] === "") {
+        alert("All fields are required.");
+        return;
+      }
+    }
+
+    // Additional validation for specific fields
+    if (formData.title.length < 3) {
+      alert("Title must be at least 3 characters long.");
+      return;
+    }
+
+    if (formData.uploadBookPdf && formData.uploadBookPdf.size > 5 * 1024 * 1024) { // 5MB size limit
+      alert("Uploaded PDF file size should be less than 5MB.");
+      return;
+    }
+
+    // Create a FormData object
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("type", formData.type);
+    data.append("subject", formData.subject);
+    data.append("class", formData.class);
+    data.append("authorName", formData.authorName);
+    data.append("uploadedBy", formData.uploadedBy);
+    data.append("description", formData.description);
+
+    // Check if uploadBookPdf is a valid file
+    if (formData.uploadBookPdf instanceof File) {
+      data.append("uploadBookPdf", formData.uploadBookPdf);
+    }
+
     try {
-      await addLibraryData(formData);
+      await addLibraryData(data);
       openModal();
+      setError(""); // Clear any previous errors
     } catch (error) {
       console.error("Failed to add Library data", error);
+      alert("Failed to add Library data. Please try again.");
     }
   };
+
+
 
   return (
     <div className="h-screen w-full flex flex-col p-5 gap-10">
@@ -54,7 +102,11 @@ export default function AddLibrary() {
       </div>
 
       {/* form */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-10" encType="multipart/form-data">
+        {error && <p className="text-red-500">{error}</p>} {/* Display error message */}
+
+        {/* Input fields */}
+        {/* ... all your input fields here ... */}
         <div className="w-full grid grid-cols-3 items-center gap-8">
           {/* title */}
           <div className="flex flex-col gap-2 w-full">
@@ -135,7 +187,6 @@ export default function AddLibrary() {
               className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
             />
           </div>
-
           {/* uploaded by */}
           <div className="flex flex-col gap-2 w-full">
             <label
@@ -173,6 +224,16 @@ export default function AddLibrary() {
             className="h-20 border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
           ></textarea>
         </div>
+        <div className="flex flex-col gap-3 w-full">
+          <label htmlFor="uploadBookPdf" className="text-lg font-normal text-black">Upload PDF*</label>
+          <input
+            id="uploadBookPdf"
+            type="file"
+            name="uploadBookPdf"
+            onChange={handleFileChange}
+            className="h-20 border border-gray-300 bg-gray-200 rounded-md w-full py-3 text-blue-500 px-5 outline-none"
+          />
+        </div>
 
         <button
           type="submit"
@@ -185,6 +246,7 @@ export default function AddLibrary() {
           <Successcard
             onClose={closeModal}
             para={"Library added successfully!"}
+            url={"/AdminDashboard/LibraryManage"}
           />
         )}
       </form>

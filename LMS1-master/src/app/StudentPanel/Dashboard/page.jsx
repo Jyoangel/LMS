@@ -12,7 +12,7 @@ import teachers from "./img/teachers.png";
 import InteractiveGraph from "./components/InteractiveGraph";
 import { useUser } from '@auth0/nextjs-auth0/client';
 import AttendanceChart from './components/AttendanceChart';
-import { fetcheventData } from '../../../../api/api';
+import { fetchCalendarData } from '../../../../api/calendarapi';
 import { fetchHomeWorkData } from '../../../../api/homeworkapi';
 import { fetchAssignmentData } from '../../../../api/assignmentapi';
 import { fetchClassScheduleData } from '../../../../api/classScheduleapi';
@@ -31,6 +31,24 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isError, setIsError] = useState(null);
   const [Error, setError] = useState(null); // Renamed to avoid confusion with user error
+  const [attendanceData, setAttendanceData] = useState({});
+  useEffect(() => {
+    async function fetchAttendance() {
+      try {
+        // Hardcoded studentId for demonstration
+        const studentId = '66cc0a5e9fae1990a3916b66'; // Replace with an actual studentId from your database
+        const response = await fetch(`http://localhost:5000/api/attendance/student/${studentId}`);
+        const data = await response.json();
+        console.log(data);
+        setAttendanceData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchAttendance();
+  }, []);
 
   const [studentData, setStudentData] = useState({
     loginUser: { name: 'My Performance', scores: [60, 70, 80, 90, 75, 85, 95] },
@@ -39,13 +57,13 @@ export default function Dashboard() {
     top3: { name: 'Top Three Student', scores: [18, 48, 77, 9, 100, 27, 40] }
   });
 
-  const [selectedAttendanceStudent, setSelectedAttendanceStudent] = useState('loginUser');
-  const attendanceData = {
-    loginUser: { name: user?.name, monthlyAttendance: [20, 19, 22, 21, 18, 23, 24, 22, 23, 21, 20, 19] },
-    top1: { name: 'Top Student 1', monthlyAttendance: [21, 20, 23, 24, 19, 24, 25, 23, 24, 22, 21, 20] },
-    top2: { name: 'Top Student 2', monthlyAttendance: [22, 21, 24, 25, 20, 25, 26, 24, 25, 23, 22, 21] },
-    top3: { name: 'Top Student 3', monthlyAttendance: [23, 22, 25, 26, 21, 26, 27, 25, 26, 24, 23, 22] }
-  };
+  //const [selectedAttendanceStudent, setSelectedAttendanceStudent] = useState('loginUser');
+  // const attendanceData = {
+  //   loginUser: { name: user?.name, monthlyAttendance: [20, 19, 22, 21, 18, 23, 24, 22, 23, 21, 20, 19] },
+  //   top1: { name: 'Top Student 1', monthlyAttendance: [21, 20, 23, 24, 19, 24, 25, 23, 24, 22, 21, 20] },
+  //   top2: { name: 'Top Student 2', monthlyAttendance: [22, 21, 24, 25, 20, 25, 26, 24, 25, 23, 22, 21] },
+  //   top3: { name: 'Top Student 3', monthlyAttendance: [23, 22, 25, 26, 21, 26, 27, 25, 26, 24, 23, 22] }
+  // };
 
   useEffect(() => {
     if (user) {
@@ -56,14 +74,25 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const eventData = await fetcheventData();
-        setEvents(eventData);
+        const eventData = await fetchCalendarData();
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        // Filter the events to include only those for the current month and year
+        const filteredEvents = eventData.filter(event => {
+          const eventDate = new Date(event.date);
+          return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear;
+        });
+
+        setEvents(filteredEvents);
       } catch (err) {
-        setIsError(err.message);
+        setError(err.message);
       }
     }
     fetchEvents();
   }, []);
+
 
   useEffect(() => {
     // Fetch data when the component mounts
@@ -274,11 +303,11 @@ export default function Dashboard() {
             {events.map((event) => (
               <EventCard
                 key={event._id}
-                name={event.eventName}
-                date={new Date(event.eventDate).toLocaleDateString()}
-                time={event.eventTime}
+                name={event.title}
+                date={new Date(event.date).toLocaleDateString()}
+                time={event.startTime}
                 description={event.description}
-                organizer={event.organizerName}
+
               />
             ))}
           </div>
@@ -291,15 +320,15 @@ export default function Dashboard() {
             <h1 className="text-black text-xl font-bold">Attendance</h1>
             <div className="flex flex-row items-center justify-center gap-2">
               <h1 className="text-lg font-medium">Filter</h1>
-              <select className="h-10 w-32 p-2 rounded-lg border border-gray-300" value={selectedAttendanceStudent} onChange={e => setSelectedAttendanceStudent(e.target.value)}>
+              {/* <select className="h-10 w-32 p-2 rounded-lg border border-gray-300" value={selectedAttendanceStudent} onChange={e => setSelectedAttendanceStudent(e.target.value)}>
                 <option value="loginUser">{user?.name} (You)</option>
                 <option value="top1">Top Student 1</option>
                 <option value="top2">Top Student 2</option>
                 <option value="top3">Top Student 3</option>
-              </select>
+              </select> */}
             </div>
           </div>
-          <AttendanceChart attendanceData={attendanceData} selectedStudent={selectedAttendanceStudent} />
+          <AttendanceChart attendanceData={attendanceData} />
         </div>
       </div>
     </>

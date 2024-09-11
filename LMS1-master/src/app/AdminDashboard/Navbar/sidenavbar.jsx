@@ -133,7 +133,7 @@ export default function sidenavbar() {
               src={hotelmanagement}
               className={`h-6 w-6 ${isSelected === 6 ? "invert" : "invert-0 "}`}
             />
-            <h1 className="">Hotel Management</h1>
+            <h1 className="">Hostel Management</h1>
           </button>
         </Link>
         <Link href={"/AdminDashboard/Enquiry"}>

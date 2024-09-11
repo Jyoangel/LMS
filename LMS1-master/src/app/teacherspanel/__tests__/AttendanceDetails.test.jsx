@@ -1,5 +1,5 @@
 import { render, screen, waitFor, act } from "@testing-library/react";
-import StudentAtdDetails from "../Attendance/StudentAtdDetails/[studentID]/page";
+import StudentAtdDetails from "../Attendance/StudentAtdDetails/[studentId]/page";
 import { fetchStudentById } from "../../../../api/api";
 
 import userEvent from "@testing-library/user-event";

@@ -207,7 +207,7 @@ export default function UpdateLiveClasses({ params }) {
                     </button>
 
                     {isSelectOpen && (
-                        <Successcard onClose={closeModal} para={"Live class updated successfully!"} />
+                        <Successcard onClose={closeModal} para={"Live class updated successfully!"} url={"/AdminDashboard/LiveClassScreen/CourseName"} />
                     )}
                 </form>
             </div>

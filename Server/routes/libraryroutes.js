@@ -3,6 +3,42 @@
 const express = require('express');
 const router = express.Router();
 const LibraryItem = require('../Models/Library');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Set storage engine
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadPath = 'uploads/';
+        // Ensure the directory exists
+        fs.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath); // Save to 'uploads/books/' folder
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Rename the file
+    },
+});
+
+const upload = multer({ storage });
+
+// Add library item route with file upload
+router.post('/add', upload.single('uploadBookPdf'), async (req, res) => {
+    const libraryItem = new LibraryItem({
+        ...req.body,
+        uploadBookPdf: req.file.path, // Local file path
+    });
+
+    try {
+        const newLibraryItem = await libraryItem.save();
+        res.status(201).json(newLibraryItem);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+// Serve static files from the 'uploads' directory
+router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const getLibraryCount = async () => {
     return await LibraryItem.countDocuments();
@@ -25,16 +61,16 @@ router.get('/get/:id', getLibraryItem, (req, res) => {
 });
 
 // POST a new library item
-router.post('/add', async (req, res) => {
-    const libraryItem = new LibraryItem(req.body);
+// router.post('/add', async (req, res) => {
+//     const libraryItem = new LibraryItem(req.body);
 
-    try {
-        const newLibraryItem = await libraryItem.save();
-        res.status(201).json(newLibraryItem);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
+//     try {
+//         const newLibraryItem = await libraryItem.save();
+//         res.status(201).json(newLibraryItem);
+//     } catch (err) {
+//         res.status(400).json({ message: err.message });
+//     }
+// });
 
 // PUT update a library item
 router.put('/update/:id', async (req, res) => {

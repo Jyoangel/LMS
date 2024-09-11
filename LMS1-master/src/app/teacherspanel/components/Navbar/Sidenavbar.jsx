@@ -6,6 +6,7 @@ import logo from "./img/logo.png";
 import calender from "./img/calender.png";
 import dashboard from "./img/dashboard.png";
 import attendance from "./img/attendance.png";
+import classschedule from "./img/classschedule.png";
 import assignment from "./img/assignment.png";
 import student from "./img/student.png";
 import chats from "./img/chats.png";
@@ -62,6 +63,23 @@ export default function Sidenavbar() {
             <h1 className="">Attendance</h1>
           </button>
         </Link>
+        <Link href={"/teacherspanel/ClassSchedule"}>
+          <button
+            onClick={() => {
+              handleSelect(11);
+            }}
+            className={` ${isSelected === 11 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
+          >
+            <Image
+              src={classschedule}
+              alt="img"
+              className={`h-6 w-6 ${isSelected === 11 ? "invert" : "invert-0 "
+                }`}
+            />
+            <h1 className="">ClassSchedule</h1>
+          </button>
+        </Link>
 
         <Link href={"/teacherspanel/Assignment"}>
           <button
@@ -111,7 +129,7 @@ export default function Sidenavbar() {
               alt="img"
               className={`h-6 w-6 ${isSelected === 4 ? "invert" : "invert-0 "}`}
             />
-            <h1 className="">Classes</h1>
+            <h1 className="">HomeWork</h1>
           </button>
         </Link>
 

@@ -1,16 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import ConfirmationCard from "@/Components/ConfirmationCard";
+
 import Link from "next/link";
 import { fetchAssignmentData, } from "../../../../api/assignmentapi";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { format } from "date-fns";
 
 export default function AssignmentTable({ filter, searchTerm }) {
-  const [isDelete, setDelete] = useState(false);
+
   const [assignmentData, setAssignmentData] = useState({ assignments: [] });
   const [isLoading, setLoading] = useState(true);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,30 +27,9 @@ export default function AssignmentTable({ filter, searchTerm }) {
     fetchData();
   }, []);
 
-  const openDelete = (id) => {
-    setSelectedAssignmentId(id);
-    setDelete(true);
-  };
 
-  const closeDelete = () => {
-    setDelete(false);
-    setSelectedAssignmentId(null);
-  };
 
-  const handleDelete = async () => {
-    try {
-      await deleteAssignmentData(selectedAssignmentId);
-      setAssignmentData((prevState) => ({
-        assignments: prevState.assignments.filter(
-          (assignment) => assignment._id !== selectedAssignmentId
-        ),
-      }));
-    } catch (error) {
-      console.error('Error deleting assignment data:', error);
-    } finally {
-      closeDelete();
-    }
-  };
+
 
 
   const filteredData = (assignmentData.assignments || []).filter(
@@ -103,9 +82,11 @@ export default function AssignmentTable({ filter, searchTerm }) {
                 <td className="py-4 px-6 text-left">{format(new Date(item.date), "yyyy-MM-dd")}|{item.time}</td>
                 <td className="py-4 px-6 text-left">{item.createdBy}</td>
                 <td className={`py-4 px-6 text-left flex gap-2  `}>
-                  <button>
-                    <LiaFileDownloadSolid size={30} className="text-blue-600" />
-                  </button>
+                  <Link href={`http://localhost:5000/api/assignment/${item.uploadAssignment}`} target="_blank">
+                    <button>
+                      <LiaFileDownloadSolid size={30} className="text-blue-600" />
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -113,13 +94,7 @@ export default function AssignmentTable({ filter, searchTerm }) {
         </table>
       </div>
 
-      {isDelete && (
-        <ConfirmationCard
-          para={"Do you really want to delete this record?"}
-          onClose={closeDelete}
-          onConfirm={handleDelete} // Add this line
-        />
-      )}
+
     </>
   );
 }

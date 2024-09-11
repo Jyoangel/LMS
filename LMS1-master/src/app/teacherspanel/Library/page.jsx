@@ -40,12 +40,7 @@ export default function Library() {
             <h1 className="text-black text-lg font-medium">
               Total Book: {totalCourses}
             </h1>
-            <h1 className="text-gray-500 text-sm">
-              Amount:{" "}
-              <span className="text-blue-500 text-lg font-semibold">
-                ₹1,00,000
-              </span>
-            </h1>
+
           </div>
           <div className="flex flex-row gap-2">
             <h1 className="text-black text-lg font-medium">Filter</h1>

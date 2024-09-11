@@ -1,7 +1,7 @@
 "use client"
 // src/components/TeacherTable.js
 import React, { useEffect, useState } from 'react';
-import { fetchPaymentTeacherData } from "../../../../../api/teacherapi"
+import { fetchTeacherData } from "../../../../../api/teacherapi"
 
 
 
@@ -14,9 +14,9 @@ export default function TeacherTable() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetchPaymentTeacherData();
+        const data = await fetchTeacherData();
         setTeacherList(data.teachers || []);
-        setPaymentList(data.payments || []);
+
       } catch (err) {
         setError(err.message);
       } finally {
@@ -26,10 +26,10 @@ export default function TeacherTable() {
     fetchData();
   }, []);
 
-  const getTeacherSalary = (teacherId) => {
-    const payment = paymentList.find(payment => payment.teacher._id === teacherId);
-    return payment ? payment.salary : 'N/A';
-  };
+  // const getTeacherSalary = (teacherId) => {
+  //   const payment = paymentList.find(payment => payment.teacher._id === teacherId);
+  //   return payment ? payment.salary : 'N/A';
+  // };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -45,7 +45,7 @@ export default function TeacherTable() {
         <thead className="bg-blue-200 h-14 py-10">
           <tr className="text-gray-700 text-sm font-normal leading-normal">
             <th className="py-4 px-6 text-left">Sr. No</th>
-            <th className="py-4 px-6 text-left">UserId</th>
+            <th className="py-4 px-6 text-left">TeacherId</th>
             <th className="py-4 px-6 text-left">Name</th>
             <th className="py-4 px-6 text-left">Subject</th>
             <th className="py-4 px-6 text-left">Qualification</th>
@@ -63,7 +63,7 @@ export default function TeacherTable() {
               <td className="py-4 px-6 text-left">{teacher.name}</td>
               <td className="py-4 px-6 text-left">{teacher.subjectTaught}</td>
               <td className="py-4 px-6 text-left">{teacher.highestDegreeEarned}</td>
-              <td className="py-4 px-6 text-left">{getTeacherSalary(teacher._id)}</td>
+              <td className="py-4 px-6 text-left">{teacher.salary}</td>
             </tr>
           ))}
         </tbody>

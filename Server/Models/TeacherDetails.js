@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const parentSchema = require('./Parent');
+const emergencyContactSchema = require('./EmergencyContact');
 const Schema = mongoose.Schema;
 
 const teacherSchema = new Schema({
@@ -47,6 +48,10 @@ const teacherSchema = new Schema({
         type: String,
         required: [true, 'Subject taught is required']
     },
+    assignedClass: {
+        type: String,
+        required: true
+    },
     gradeLevelTaught: {
         type: String,
         required: [true, 'Grade level taught is required']
@@ -68,24 +73,28 @@ const teacherSchema = new Schema({
         required: [true, 'Year of graduation is required']
     },
     emergencyContact: {
-        type: Schema.Types.Mixed,
+        type: emergencyContactSchema,
         required: [true, 'Emergency contact is required']
+    },
+    salary: {
+        type: Number,
+        required: true
     },
     parent: {
         type: parentSchema,
         required: [true, 'Parent information is required']
     },
-    password: {
-        type: String,
-        required: [true, 'Password is required'],
-        minlength: [8, 'Password must be at least 8 characters long'],
-        validate: {
-            validator: function (v) {
-                return /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v) && /[^a-zA-Z\d]/.test(v);
-            },
-            message: props => 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'
-        }
-    },
+    // password: {
+    //     type: String,
+    //     required: [true, 'Password is required'],
+    //     minlength: [8, 'Password must be at least 8 characters long'],
+    //     validate: {
+    //         validator: function (v) {
+    //             return /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v) && /[^a-zA-Z\d]/.test(v);
+    //         },
+    //         message: props => 'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'
+    //     }
+    // },
     otp: {
         type: Number,
         required: false

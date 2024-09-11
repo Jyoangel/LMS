@@ -22,63 +22,47 @@ const ExamSubjectSchema = new Schema({
     examination_date: {
         type: Date,
         required: [true, 'Examination date is required'],
-
     }
 });
 
 // AdmitCard schema
 const AdmitCaardSchema = new Schema({
+    studentID: {
+        type: Schema.Types.ObjectId, // Reference to StudentDetail model
+        ref: 'StudentDetail', // Assuming StudentDetail is the model name
+        required: [true, 'Student ID is required'],
+        unique: true
+    },
     examination_roll_number: {
         type: String,
-        required: [true, 'Examination roll number is required'],
-        trim: true,
         unique: true,
-        minlength: [5, 'Examination roll number must be at least 5 characters long']
+        required: [true, 'Examination roll number is required'],
     },
     school_name: {
         type: String,
-        required: [true, 'School name is required'],
-        trim: true
-    },
-    session: {
-        type: String,
-        required: [true, 'Session is required'],
-        trim: true
+        default: 'DPS',
+        required: true
     },
     examination: {
         type: String,
         required: [true, 'Examination is required'],
         trim: true
     },
-    student_name: {
-        type: String,
-        required: [true, 'Student name is required'],
-        trim: true
-    },
-    class: {
-        type: String,
-        required: [true, 'Class name is required'],
-        trim: true
-    },
     startdate: {
         type: Date,
         required: [true, 'Start date is required'],
-
     },
     enddate: {
         type: Date,
         required: [true, 'End date is required'],
-
     },
     examstarting_time: {
         type: String,
         required: [true, 'Exam starting time is required'],
-
     },
     examending_time: {
         type: String,
         required: [true, 'Exam ending time is required'],
-
     },
     examsubjects: {
         type: [ExamSubjectSchema],
@@ -95,6 +79,8 @@ const AdmitCaardSchema = new Schema({
     },
     date: { type: Date, default: () => new Date() },
     time: { type: String, default: getCurrentTime },
+}, {
+    id: false,
 });
 
 // Create model from schema

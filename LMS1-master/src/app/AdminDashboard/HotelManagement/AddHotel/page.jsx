@@ -111,6 +111,7 @@ export default function AddHotel() {
           <Successcard
             onClose={closeModal}
             para={"Room Created successfully!"}
+            url={"/AdminDashboard/HotelManagement/AddHotel"}
           />
         )}
       </form>

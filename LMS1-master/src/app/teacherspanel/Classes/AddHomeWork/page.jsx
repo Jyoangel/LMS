@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Successcard from "@/Components/Successcard";
 import Link from "next/link";
 import { useState } from "react";
@@ -20,6 +20,8 @@ export default function AddHomeWork() {
         description: ''
     });
 
+    const [file, setFile] = useState(null);
+
     const openModal = () => {
         setIsSelectOpen(true);
     };
@@ -36,14 +38,49 @@ export default function AddHomeWork() {
         });
     };
 
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Basic validation
+        for (const key in formData) {
+            if (formData[key] === '' && key !== 'attachments') {
+                alert(`Please fill out the ${key.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
+                return;
+            }
+        }
+
+        // Create FormData object
+        const formDataWithFile = new FormData();
+        Object.keys(formData).forEach(key => {
+            formDataWithFile.append(key, formData[key]);
+        });
+        if (file) {
+            formDataWithFile.append('uploadHomework', file);
+        }
+
         try {
-            await addHomeworkData(formData);
+            await addHomeworkData(formDataWithFile);
+            setFormData({
+                class: '',
+                subjects: '',
+                chapter: '',
+                homework: '',
+                submissionMethod: '',
+                startDate: '',
+                endDate: '',
+                assignTo: '',
+                attachments: '',
+                description: ''
+            });
+            setFile(null);
             openModal();
         } catch (error) {
             console.error("Failed to add homework data:", error);
-            // Handle error, e.g., show an error message to the user
+            alert('Failed to add homework data. Please try again.');
         }
     };
 
@@ -62,6 +99,7 @@ export default function AddHomeWork() {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-10">
                     <div className="flex flex-col gap-8">
                         <div className="w-full grid grid-cols-3 items-center gap-5">
+                            {/* Existing input fields */}
                             <div className="flex flex-col gap-3 w-full">
                                 <label htmlFor="class" className="text-lg font-normal text-black">Class *</label>
                                 <input
@@ -180,6 +218,18 @@ export default function AddHomeWork() {
                                     required
                                 />
                             </div>
+
+                            {/* File upload input */}
+                            <div className="flex flex-col gap-3 w-full">
+                                <label htmlFor="uploadHomework" className="text-lg font-normal text-black">Upload Homework *</label>
+                                <input
+                                    id="uploadHomework"
+                                    type="file"
+                                    name="uploadHomework"
+                                    onChange={handleFileChange}
+                                    className="border border-gray-300 rounded-md w-full py-3 px-5 outline-none"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -226,6 +276,7 @@ export default function AddHomeWork() {
                         <Successcard
                             onClose={closeModal}
                             para={"Homework created successfully!"}
+                            url={"/teacherspanel/Classes"}
                         />
                     )}
                 </form>

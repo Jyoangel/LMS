@@ -136,7 +136,7 @@ export default function EditClass({ params }) {
         </form>
 
         {isSelectOpen && (
-          <Successcard message="Class schedule successfully updated!" onClose={closeModal} />
+          <Successcard message="Class schedule successfully updated!" onClose={closeModal} url={"/AdminDashboard/ClassSchedule"} />
         )}
       </div>
     </>

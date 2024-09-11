@@ -1,4 +1,349 @@
 "use client";
+
+
+
+import { useEffect, useState } from "react";
+import { fetchStudentData } from "../../../../api/api"; // Assuming you have a function to fetch student data
+import Link from "next/link";
+
+export default function ReportCardTable({ filter, searchTerm }) {
+  const [data, setData] = useState({ students: [] });
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const studentDataResponse = await fetchStudentData();
+        setData(studentDataResponse); // Fetch student data instead of admit card data
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const filteredData = data.students.filter(
+    (item) =>
+      (filter === "" || item.class === filter) &&
+      (searchTerm === "" || item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  return (
+    <div className="w-full">
+      <table className="w-full bg-white">
+        <thead className="bg-blue-200 h-14 py-10">
+          <tr className="text-gray-700 text-sm font-normal leading-normal">
+            <th className="py-4 px-6 text-left">Sr. No</th>
+            <th className="py-4 px-6 text-left">Student Name</th>
+            <th className="py-4 px-6 text-left">Class</th>
+            <th className="py-4 px-6 text-left">Admission Number</th>
+          </tr>
+        </thead>
+        <tbody className="text-gray-600 text-sm font-light">
+          {filteredData.map((item, index) => (
+            <tr
+              key={index}
+              className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+            >
+              <td className="py-4 px-6 text-left">{index + 1}</td>
+              <td className="py-4 px-6 text-left text-blue-600 underline">
+                <Link href={`/AdminDashboard/ReportCard/AdmitCard/FinalAdmitcard/${item._id}`}>
+                  {item.name} {/* Use student name from fetched data */}
+                </Link>
+              </td>
+              <td className="py-4 px-6 text-left">{item.class}</td>
+              <td className="py-4 px-6 text-left">{item.admissionNumber}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+
+{/*
+
+import { useEffect, useState } from "react";
+import ConfirmationCard from "@/Components/ConfirmationCard";
+import Image from "next/image";
+import group from "./group.png";
+import { fetchAdmitCardData, deleteAdmitCardData } from "../../../../api/reportcardapi";
+import Link from "next/link";
+//import FinalAdmitcard from "./AdmitCard/FinalAdmitcard/[id]/page";
+
+export default function ReportCardTable({ filter, searchTerm }) {
+  const [isDelete, setDelete] = useState(false);
+  const [data, setData] = useState([]);
+  const [deleteItem, setDeleteItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const admitCardResponse = await fetchAdmitCardData();
+        setData(admitCardResponse); // Only fetch admit card data
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const openDelete = (item) => {
+    setDelete(true);
+    setDeleteItem(item);
+  };
+
+  const closeDelete = () => {
+    setDelete(false);
+    setDeleteItem(null);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteAdmitCardData(deleteItem._id);
+      setData(data.filter((item) => item._id !== deleteItem._id));
+      closeDelete();
+    } catch (error) {
+      console.error("Failed to delete data:", error);
+    }
+  };
+
+  const openViewModal = (item) => {
+    setSelectedItem(item);
+    setViewModal(true);
+  };
+
+  const closeViewModal = () => {
+    setViewModal(false);
+    setSelectedItem(null);
+  };
+
+  const filteredData = data.filter(
+    (item) =>
+      (filter === "" || item.class === filter) &&
+      (searchTerm === "" || item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  return (
+    <>
+      <div className="w-full">
+        <table className="w-full bg-white">
+          <thead className="bg-blue-200 h-14 py-10">
+            <tr className="text-gray-700 text-sm font-normal leading-normal">
+              <th className="py-4 px-6 text-left">Sr. No</th>
+              <th className="py-4 px-6 text-left">Student Name</th>
+              <th className="py-4 px-6 text-left">Class</th>
+              <th className="py-4 px-6 text-left">Examination Roll Number</th>
+              <th className="py-4 px-6 text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-600 text-sm font-light">
+            {filteredData.map((item, index) => (
+              <tr
+                key={index}
+                className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+              >
+                <td className="py-4 px-6 text-left">{index + 1}</td>
+                <td className="py-4 px-6 text-left text-blue-600 underline">
+                  <Link href={`/AdminDashboard/ReportCard/AdmitCard/FinalAdmitcard/${item._id}`}>
+                    {item.student_name}
+                  </Link>
+                </td>
+                <td className="py-4 px-6 text-left">{item.class}</td>
+                <td className="py-4 px-6 text-left">{item.examination_roll_number}</td>
+                <td className="py-4 px-6 text-left flex gap-2">
+                  <Link href={`/AdminDashboard/ReportCard/AddReportCard/${item._id}`}>
+                    <button className="text-green-600">Add ReportCard |</button>
+                  </Link>
+                  <span className="text-gray-400">|</span>
+                  <Link href={`/AdminDashboard/ReportCard/EditAdmitCard/${item._id}`}>
+                    <button className="text-blue-600">Edit AdmitCard</button>
+                  </Link>
+                  <span className="text-gray-400">|</span>
+                  <button onClick={() => openDelete(item)} className="text-red-600">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {isDelete && (
+        <ConfirmationCard
+          para={"Do you really want to delete this record?"}
+          onClose={closeDelete}
+          onConfirm={handleDelete}
+        />
+      )}
+
+
+    </>
+  );
+}
+
+{/*
+import { useEffect, useState } from "react";
+import ConfirmationCard from "@/Components/ConfirmationCard";
+import Image from "next/image";
+import group from "./group.png";
+import { fetchReportCardData, fetchAdmitCardData, deleteReportCardData, deleteAdmitCardData } from "../../../../api/reportcardapi";
+import Link from "next/link";
+import FinalReportcard from "../../AdminDashboard/ReportCard/[id]/FinalReportcard";
+import FinalAdmitcard from "../../AdminDashboard/ReportCard/AdmitCard/[id]/FinalAdmitcard";
+
+export default function ReportCardTable({ filter, searchTerm }) {
+  const [isDelete, setDelete] = useState(false);
+  const [data, setData] = useState([]);
+  const [deleteItem, setDeleteItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const admitCardResponse = await fetchAdmitCardData();
+        const reportCardResponse = await fetchReportCardData();
+
+        // Combine the data
+        const combinedData = [...admitCardResponse, ...reportCardResponse];
+
+        setData(combinedData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const openDelete = (item) => {
+    setDelete(true);
+    setDeleteItem(item);
+  };
+
+  const closeDelete = () => {
+    setDelete(false);
+    setDeleteItem(null);
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (deleteItem.ReportCard) {
+        await deleteReportCardData(deleteItem._id);
+      } else if (deleteItem.admitCard) {
+        await deleteAdmitCardData(deleteItem._id);
+      }
+      setData(data.filter((item) => item._id !== deleteItem._id));
+      closeDelete();
+    } catch (error) {
+      console.error("Failed to delete data:", error);
+    }
+  };
+
+  const openViewModal = (item) => {
+    setSelectedItem(item);
+    setViewModal(true);
+  };
+
+  const closeViewModal = () => {
+    setViewModal(false);
+    setSelectedItem(null);
+  };
+
+  const filteredData = data.filter(
+    (item) =>
+      (filter === "" || item.class === filter) &&
+      (searchTerm === "" || item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  return (
+    <>
+      <div className="w-full">
+        <table className="w-full bg-white">
+          <thead className="bg-blue-200 h-14 py-10">
+            <tr className="text-gray-700 text-sm font-normal leading-normal">
+              <th className="py-4 px-6 text-left">Sr. No</th>
+              <th className="py-4 px-6 text-left"> Card Name</th>
+              <th className="py-4 px-6 text-left">Student Name</th>
+              <th className="py-4 px-6 text-left">Class</th>
+              <th className="py-4 px-6 text-left">Examination Roll Number</th>
+              <th className="py-4 px-6 text-left">Action</th>
+              <th className="py-4 px-6 text-left">View</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-600 text-sm font-light">
+            {filteredData.map((item, index) => (
+              <tr
+                key={index}
+                className={`text-gray-700 text-sm font-normal leading-normal ${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+              >
+                <td className="py-4 px-6 text-left">{index + 1}</td>
+                <td className="py-4 px-6 text-left text-blue-600 underline">
+                  {item.ReportCard || item.admitCard}
+                </td>
+                <td className="py-4 px-6 text-left">
+                  {item.name || item.student_name}
+                </td>
+                <td className="py-4 px-6 text-left">{item.class}</td>
+                <td className="py-4 px-6 text-left">{item.rollNumber || item.examination_roll_number}</td>
+                <td className="py-4 px-6 text-left flex gap-2">
+                  {item.admitCard && (
+                    <>
+                      <Link href={`/AdminDashboard/ReportCard/AddReportCard/${item._id}`}>
+                        <button className="text-green-600">Add ReportCard |</button>
+                      </Link>
+                      <Link href={`/AdminDashboard/ReportCard/EditAdmitCard/${item._id}`}>
+                        <button className="text-blue-600">Edit AdmitCard</button>
+                      </Link>
+                    </>
+                  )}
+                  {item.ReportCard && (
+                    <Link href={`/AdminDashboard/ReportCard/EditReportCard/${item._id}`}>
+                      <button className="text-blue-600">Edit ReportCard</button>
+                    </Link>
+                  )}
+                  <span className="text-gray-400">|</span>
+                  <button onClick={() => openDelete(item)} className="text-red-600">
+                    Delete
+                  </button>
+                </td>
+                <td className="py-4 px-6 text-left">
+                  <button onClick={() => openViewModal(item)}>
+                    <Image src={group} alt="View" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {isDelete && (
+        <ConfirmationCard
+          para={"Do you really want to delete this record?"}
+          onClose={closeDelete}
+          onConfirm={handleDelete}
+        />
+      )}
+
+      {viewModal && selectedItem && (
+        selectedItem.ReportCard ? (
+          <FinalReportcard onClose={closeViewModal} params={{ id: selectedItem._id }} />
+        ) : (
+          <FinalAdmitcard onClose={closeViewModal} params={{ id: selectedItem._id }} />
+        )
+      )}
+    </>
+  );
+}
+
+{/*
 import { useEffect, useState } from "react";
 import ConfirmationCard from "@/Components/ConfirmationCard";
 import Image from "next/image";

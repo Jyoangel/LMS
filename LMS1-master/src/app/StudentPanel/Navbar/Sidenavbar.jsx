@@ -14,6 +14,7 @@ import reportcard from "./img/reportcard.png";
 import exam from "./img/exam.png";
 import course from "./img/course.png";
 import attendance from "./img/attendance.png";
+import classschedule from "./img/classschedule.png";
 
 export default function Sidenavbar() {
   const [isSelected, setIsSelected] = useState(1);
@@ -60,6 +61,23 @@ export default function Sidenavbar() {
                 }`}
             />
             <h1 className="">Attendance</h1>
+          </button>
+        </Link>
+        <Link href={"/StudentPanel/ClassSchedule"}>
+          <button
+            onClick={() => {
+              handleSelect(11);
+            }}
+            className={` ${isSelected === 11 ? "bg-blue-600 text-white" : " text-black"
+              } h-[50px] w-full  px-5 py-3 flex gap-3`}
+          >
+            <Image
+              src={classschedule}
+              alt="homework"
+              className={`h-6 w-6 ${isSelected === 11 ? "invert" : "invert-0 "
+                }`}
+            />
+            <h1 className="">ClassScedule</h1>
           </button>
         </Link>
 

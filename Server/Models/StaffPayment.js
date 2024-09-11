@@ -2,16 +2,17 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const staffPaymentSchema = new Schema({
-    staff: {
+    staffId: {
         type: Schema.Types.ObjectId,
         ref: 'StaffDetail',
         required: true
     },
-
-    salary: {
-        type: Number,
-        required: true
+    month: {
+        type: String,
+        required: true,
+        enum: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     },
+
     status: {
         type: String,
         enum: ['Paid', 'Due'],
@@ -24,6 +25,10 @@ const staffPaymentSchema = new Schema({
     dueAmount: {
         type: Number,
         required: true
+    },
+    remark: {
+        type: String,
+        require: true
     }
 
 }, { timestamps: true });

@@ -5,18 +5,105 @@ const checkRole = require('../middleware/checkRole');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
+const multer = require('multer');
+const xlsx = require('xlsx');
 
+
+
+// Set up multer for file upload
+const upload = multer({ dest: 'uploads/' });
+
+// Helper function to validate date
+const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime()); // Returns true if valid date
+};
+
+// Route to import teacher data from Excel
+router.post('/import', upload.single('file'), async (req, res) => {
+    try {
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        // Read the uploaded Excel file
+        const workbook = xlsx.readFile(file.path);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+
+        // Convert Excel data to JSON
+        const teacherData = xlsx.utils.sheet_to_json(worksheet);
+
+        // Transform the data to match the Teacher schema
+        const transformedData = teacherData.map(data => ({
+            teacherID: data.teacherID,
+            name: data.name,
+            dateOfBirth: isValidDate(data.dateOfBirth) ? new Date(data.dateOfBirth) : null,
+            gender: data.gender,
+            contactNumber: data.contactNumber,
+            email: data.email,
+            aadharNumber: data.aadharNumber,
+            address: data.address,
+            subjectTaught: data.subjectTaught,
+            assignedClass: data.assignedClass,
+            gradeLevelTaught: data.gradeLevelTaught,
+            department: data.department,
+            highestDegreeEarned: data.highestDegreeEarned,
+            instituteName: data.instituteName,
+            yearOfGraduation: data.yearOfGraduation,
+            emergencyContact: {
+                contactNumber: data.emergencyContact_contactNumber,
+                relationship: data.emergencyContact_relationship
+            },
+            salary: data.salary,
+            parent: {
+                fatherName: data.fatherName,
+                fatherContactNumber: data.parent_fatherContactNumber,
+                fatherAadharNumber: data.parent_fatherAadharNumber,
+                fatherOccupation: data.parent_fatherOccupation,
+                motherName: data.parent_motherName,
+                motherContactNumber: data.parent_motherContactNumber,
+                motherAadharNumber: data.parent_motherAadharNumber,
+                motherOccupation: data.parent_motherOccupation,
+                annualIncome: data.parent_annualIncome,
+                parentAddress: data.parent_parentAddress
+            }
+        }));
+
+        // Filter out any invalid records (e.g., missing date of birth)
+        const validTeachers = transformedData.filter(teacher => teacher.dateOfBirth !== null);
+
+        if (validTeachers.length === 0) {
+            return res.status(400).json({ error: 'No valid teacher data to import' });
+        }
+
+        // Insert valid teacher data into the database
+        await Teacher.insertMany(validTeachers);
+
+        // Return success response with the total number of teachers
+        const count = await Teacher.countDocuments();
+        res.status(201).json({ message: `Teacher data imported successfully. Total teachers: ${count}` });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
 // Create a new teacher
 router.post('/add', async (req, res) => {
     try {
+        console.log("Request body:", req.body); // Log request body to check data being sent
         const teacher = new Teacher(req.body);
         await teacher.save();
         const count = await Teacher.countDocuments();
+        console.log("Teacher added successfully, total teachers:", count); // Log success
         res.status(200).json({ teacher, message: `The total number of teachers is: ${count}` });
     } catch (error) {
-        res.status(400).json(error);
+        console.error("Error while adding teacher:", error); // Log error for more details
+        res.status(400).json({ error: error.message }); // Send detailed error response
     }
 });
+
 
 // Get all teachers
 router.get('/get', async (req, res) => {
@@ -47,39 +134,7 @@ router.get('/get/:id', async (req, res) => {
 });
 
 // Update a teacher by ID
-{/*
-router.put('/update/:id', async (req, res) => {
-    const updates = Object.keys(req.body);
-    const allowedUpdates = [
-        'teacherID', 'name', 'dateOfBirth', 'gender', 'contactNumber', 'email', 'aadharNumber', 'address',
-        'subjectTaught', 'gradeLevelTaught', 'department', 'highestDegreeEarned', 'instituteName',
-        'yearOfGraduation', 'emergencyContact', 'parent'
-    ];
-    const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
-    if (!isValidOperation) {
-        return res.status(400).json({ error: 'Invalid updates!' });
-    }
-
-    try {
-        const teacher = await Teacher.findById(req.params.id);
-
-        if (!teacher) {
-            return res.status(404).json('Teacher not found');
-        }
-
-        updates.forEach((update) => {
-            teacher[update] = req.body[update];
-        });
-
-        await teacher.save();
-        res.status(200).json(teacher);
-    } catch (error) {
-        console.log(msg.error)
-        res.status(400).json(error);
-    }
-});
-*/}
 router.put('/update/:id', async (req, res) => {
     try {
         const teacher = await Teacher.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });

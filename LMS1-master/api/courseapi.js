@@ -8,23 +8,30 @@ export async function fetchCourseData() {
     return res.json();
 }
 
-export async function addCourseData(courseData) {
-    const res = await fetch('http://localhost:5000/api/course/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(courseData),
-    });
 
-    if (!res.ok) {
-        const errorData = await res.json();
-        console.error('Error response from server:', errorData);
-        throw new Error('Failed to add course data');
+
+export async function addCourseData(formData) {
+    try {
+        const res = await fetch('http://localhost:5000/api/course/add', {
+            method: 'POST',
+            body: formData, // Use FormData object here
+        });
+
+        // Check if the server response is not OK (status code is not in the range of 200-299)
+        if (!res.ok) {
+            // Try to extract the error message from the response body
+            const errorData = await res.json();
+            // Throw an error with the message returned from the server
+            throw new Error(errorData.message || 'Failed to add course data');
+        }
+
+        return res.json(); // Parse the JSON data if the response is OK
+    } catch (error) {
+        // Catch any network or server errors
+        throw new Error(error.message || 'Something went wrong while adding course data');
     }
-
-    return res.json();
 }
+
 
 export async function deleteCourseData(id) {
     const url = `http://localhost:5000/api/course/delete/${id}`;
@@ -75,26 +82,31 @@ export async function fetchCourseById(id) {
 }
 
 
-export const importCourses = async (file) => {
+export async function importCourseData(file) {
     try {
+        // Create FormData to upload the file
         const formData = new FormData();
         formData.append('file', file);
 
+        // Send a POST request to the import route
         const response = await fetch('http://localhost:5000/api/course/import', {
             method: 'POST',
-            body: formData
+            body: formData,
         });
 
+        // Check for errors in the response
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to import courses');
+            throw new Error(`Error: ${response.statusText}`);
         }
 
-        const responseData = await response.json();
-        console.log(responseData.message); // Log success message
-        return responseData; // Optionally return any data from the response
+        // Parse the JSON response
+        const result = await response.json();
+        console.log('Success:', result);
+
+        return result;
     } catch (error) {
-        console.error('Error importing courses:', error.message);
-        throw error; // Propagate the error
+        console.error('Error importing course data:', error);
+        throw error;
     }
-};
+}
+

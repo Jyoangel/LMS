@@ -282,7 +282,7 @@ export default function EditDetails({ params }) {
                         </button>
                     </div>
                 </form>
-                {isSelectOpen && <Successcard message="Assignment updated successfully!" onClose={closeModal} />}
+                {isSelectOpen && <Successcard message="Assignment updated successfully!" onClose={closeModal} url={"/teacherspanel/Assignment"} />}
             </div>
         </>
     );

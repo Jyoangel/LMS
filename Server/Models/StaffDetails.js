@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const emergencyContactSchema = require('./EmergencyContact');
 
+
 const staffSchema = new Schema({
     staffID: {
         type: String,
@@ -64,7 +65,11 @@ const staffSchema = new Schema({
     languageSpoken: {
         type: String,
         required: true
-    }
+    },
+    salary: {
+        type: Number,
+        required: true
+    },
 }, { timestamps: true });
 
 const Staff = mongoose.model('StaffDetail', staffSchema);
