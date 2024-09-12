@@ -279,11 +279,12 @@ export default function Dashboard() {
                 onChange={(e) => setSelectedClass(e.target.value)}
               >
                 <option value="">Select Class</option>
-                {classes.map((classItem, index) => (
-                  <option key={index} value={classItem.class}>{classItem.class}</option>
+                {[...new Set(classes.map((classItem) => classItem.class))].map((classItem, index) => (
+                  <option key={index} value={classItem}>{classItem}</option>
                 ))}
               </select>
             </div>
+
           </div>
 
           {console.log('Class data passed to AttendanceChart:', classData)}

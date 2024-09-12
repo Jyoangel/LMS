@@ -1,23 +1,42 @@
-import { NextResponse } from 'next/server';
-import { getSession } from '@auth0/nextjs-auth0';
+// import { NextResponse } from 'next/server';
+// import { getSession } from '@auth0/nextjs-auth0';
+
+// export async function middleware(req) {
+//     const session = await getSession(req, NextResponse.next());
+
+//     // If there is no session, redirect to the login page
+//     if (!session) {
+//         const url = new URL('/api/auth/login', req.url);
+//         url.searchParams.set('returnTo', req.nextUrl.pathname);
+//         return NextResponse.redirect(url);
+//     }
+
+//     // If there is a session, allow the request to continue
+//     return NextResponse.next();
+// }
+
+// // Specify which paths to protect
+// export const config = {
+//     matcher: ['/protected/(.*)', "/StudentPanel/:path*"],
+// };
+// middleware.js
+import { NextResponse } from "next/server";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export async function middleware(req) {
-    const session = await getSession(req, NextResponse.next());
+    const session = await getSession(req, res);
 
-    // If there is no session, redirect to the login page
-    if (!session) {
-        const url = new URL('/api/auth/login', req.url);
-        url.searchParams.set('returnTo', req.nextUrl.pathname);
-        return NextResponse.redirect(url);
+    if (!session || !session.user) {
+        // Redirect the user to the login page if they are not authenticated
+        return NextResponse.redirect(new URL('/api/auth/login', req.url));
     }
 
-    // If there is a session, allow the request to continue
-    return NextResponse.next();
+    return NextResponse.next(); // Continue to the requested page if authenticated
 }
 
-// Specify which paths to protect
+// Apply middleware to all routes
 export const config = {
-    matcher: ['/protected/(.*)',],
+    matcher: ["/profile/:path*"], // Adjust this to the routes you want to protect
 };
 
 {/*

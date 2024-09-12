@@ -2,7 +2,7 @@
 import React from 'react';
 
 const ChatBubbleRight = ({ text, time, fileUrl, voiceUrl }) => {
-  console.log('ChatBubbleRight props:', { text, time, fileUrl, voiceUrl });
+  // console.log('ChatBubbleRight props:', { text, time, fileUrl, voiceUrl });
   return (
     <div className="max-w-xs p-3 m-1 bg-blue-200 rounded-lg self-end">
       {text && <p className="text-black">{text}</p>}

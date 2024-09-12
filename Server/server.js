@@ -51,11 +51,11 @@ app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
 }));
-
+//http://192.168.6.152:3000
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: 'http://localhost:3000',
     methods: ["GET", "POST"]
   }
 });
@@ -202,6 +202,12 @@ const port = process.env.PORT || 5000;
 server.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}`);
 });
+
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, '0.0.0.0', () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
 
 {/*
 const storage = multer.diskStorage({

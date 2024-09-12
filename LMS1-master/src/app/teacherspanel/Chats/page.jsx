@@ -16,7 +16,7 @@ import ReceiverCard from "./ReceiverCard";
 import axios from "axios";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
-const socket = io("http://localhost:5000"); // Update the server URL
+const socket = io("http://localhost:5000"); // Update the server UR
 
 export default function Chats() {
   const [messages, setMessages] = useState([]);
@@ -36,6 +36,8 @@ export default function Chats() {
   const [showReceiverCard, setShowReceiverCard] = useState(false);
   const [incomingSignal, setIncomingSignal] = useState(null);
   const [callerId, setCallerId] = useState(null);
+  const [incomingCall, setIncomingCall] = useState(null);  // Manages the incoming call data
+
 
   const { user, error: userError, isLoading: userLoading } = useUser();
   const [users, setUsers] = useState([]);
@@ -64,12 +66,94 @@ export default function Chats() {
     }
   }, [user]);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     socket.emit("register", user.sub);
+  //   }
+
+  //   if (selectedUser) {
+  //     const fetchMessages = async () => {
+  //       try {
+  //         const response = await fetch(
+  //           `http://localhost:5000/api/chat/messages?sender=${user.sub}&receiver=${selectedUser.user_id}`
+  //         );
+  //         if (response.ok) {
+  //           const data = await response.json();
+  //           console.log(data);
+  //           setMessages(data);
+  //         } else {
+  //           console.error("Error fetching messages:", response.statusText);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching messages:", error);
+  //       }
+  //     };
+
+  //     fetchMessages();
+  //   }
+
+  //   socket.on("receiveMessage", (message) => {
+  //     if (
+  //       (message.sender === user.sub && message.receiver === selectedUser?.user_id) ||
+  //       (message.receiver === user.sub && message.sender === selectedUser?.user_id)
+  //     ) {
+  //       setMessages((prevMessages) => [...prevMessages, message]);
+  //     }
+  //   });
+
+
+
+  //   socket.on("call", (data) => {
+  //     console.log("Incoming Call Signal Data:", data.signal);
+  //     console.log("Receiving call from:", data.from);
+  //     if (data.to === selectedUser.user_id) {
+  //       setIncomingSignal(data.signal);
+  //       setCallerId(data.from);
+  //       setShowReceiverCard(true);
+
+  //       // Log the values after setting them
+  //       console.log("Incoming Signal set to:", data.signal);
+  //       console.log("Caller ID set to:", data.from);
+  //       console.log("Receiver Card visibility set to:", true);
+  //     }
+  //   });
+
+
+  //   // socket.on("answer", (data) => {
+  //   //   if (data.to === user.sub && peer) {
+  //   //     peer.signal(data.signal);
+  //   //   }
+  //   // });
+
+  //   socket.on("answer", (data) => {
+  //     if (data.to === selectedUser.user_id && peer) {
+  //       console.log("Caller received answer signal:", data.signal);
+  //       peer.signal(data.signal); // Caller processes the answer signal
+  //     }
+  //   });
+
+
+  //   return () => {
+  //     socket.off("receiveMessage");
+  //     socket.off("call");
+  //     socket.off("answer");
+  //   };
+  // }, [localStream, peer, selectedUser, user]);
+
+  // useEffect(() => {
+  //   console.log("showReceiverCard:", showReceiverCard);
+  //   console.log("callerId:", callerId);
+  // }, [showReceiverCard, callerId]);
+
+
   useEffect(() => {
     if (user) {
+      // Register the user with the socket when available
       socket.emit("register", user.sub);
     }
 
     if (selectedUser) {
+      // Fetch chat messages between the logged-in user and the selected user
       const fetchMessages = async () => {
         try {
           const response = await fetch(
@@ -77,7 +161,7 @@ export default function Chats() {
           );
           if (response.ok) {
             const data = await response.json();
-            console.log(data);
+            console.log("Fetched messages:", data);
             setMessages(data);
           } else {
             console.error("Error fetching messages:", response.statusText);
@@ -90,6 +174,7 @@ export default function Chats() {
       fetchMessages();
     }
 
+    // Handle incoming messages
     socket.on("receiveMessage", (message) => {
       if (
         (message.sender === user.sub && message.receiver === selectedUser?.user_id) ||
@@ -99,28 +184,55 @@ export default function Chats() {
       }
     });
 
-
-
+    // Handle incoming call signal
     socket.on("call", (data) => {
-      if (data.to === user.sub) {
+      console.log("Incoming Call Signal Data:", data.signal);
+      console.log("Receiving call from:", data.from);
+
+      if (data.to === selectedUser?.user_id) {
         setIncomingSignal(data.signal);
         setCallerId(data.from);
         setShowReceiverCard(true);
+
+        // Log the updated values
+        console.log("Incoming Signal set to:", data.signal);
+        console.log("Caller ID set to:", data.from);
+        console.log("Receiver Card visibility set to:", true);
       }
     });
 
+    // Handle the answer signal for the call
     socket.on("answer", (data) => {
-      if (data.to === user.sub && peer) {
-        peer.signal(data.signal);
+      if (data.to === selectedUser?.user_id && peer) {
+        console.log("Caller received answer signal:", data.signal);
+        peer.signal(data.signal); // Caller processes the answer signal
       }
     });
 
+    // Clean up event listeners on unmount or dependency change
     return () => {
       socket.off("receiveMessage");
       socket.off("call");
       socket.off("answer");
     };
-  }, [localStream, peer, selectedUser, user]);
+  }, [localStream, peer, selectedUser, user]); // Dependency array
+
+  // useEffect(() => {
+  //   if (incomingSignal) {
+  //     console.log("Updated Incoming Signal:", incomingSignal);
+  //   }
+  // }, [incomingSignal]);
+
+  // useEffect(() => {
+  //   if (callerId) {
+  //     console.log("Updated Caller ID:", callerId);
+  //   }
+  // }, [callerId]);
+
+  // useEffect(() => {
+  //   console.log("Receiver Card visibility:", showReceiverCard);
+  // }, [showReceiverCard]);
+
 
   const handleSendMessage = async () => {
     if (!selectedUser) return;
@@ -331,78 +443,307 @@ export default function Chats() {
       });
   };
 
+  // const handleCall = async () => {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getUserMedia({
+  //       video: false,
+  //       audio: true,
+  //     });
+  //     setLocalStream(stream);
+
+  //     const newPeer = new Peer({
+  //       initiator: true,
+  //       trickle: false,
+  //       stream,
+  //     });
+
+  //     setPeer(newPeer);
+
+  //     newPeer.on("signal", (signal) => {
+  //       console.log("Caller Signal Data:", signal);
+  //       socket.emit("call", {
+  //         signal,
+  //         to: selectedUser.user_id,
+  //         from: user.sub,
+  //       });
+  //     });
+
+  //     newPeer.on("stream", (stream) => {
+  //       setRemoteStream(stream);
+  //       setCallEstablished(true);
+  //     });
+
+  //     setShowCallerCard(true);
+
+  //     // newPeer.on("data", (data) => {
+  //     //   console.log("Received data:", data.toString());
+  //     // });
+
+  //     // socket.on("receiveCall", (data) => {
+  //     //   handleIncomingCall(data.signal);
+  //     // });
+
+  //     // socket.on("answer", (data) => {
+  //     //   if (peer) {
+  //     //     peer.signal(data.signal);
+  //     //   }
+  //     // });
+  //   } catch (error) {
+  //     console.error("Error accessing media devices:", error);
+  //   }
+  // };
+
+  // const handleAnswerCall = () => {
+  //   const answerPeer = new Peer({
+  //     initiator: false,
+  //     trickle: false,
+  //     stream: localStream,
+  //   });
+
+  //   setPeer(answerPeer);
+
+  //   answerPeer.on("signal", (signal) => {
+  //     socket.emit("answer", {
+  //       signal,
+  //       to: callerId,
+  //       from: user.sub,
+  //     });
+  //   });
+
+  //   answerPeer.signal(incomingSignal);
+
+  //   answerPeer.on("stream", (stream) => {
+  //     setRemoteStream(stream);
+  //     setCallEstablished(true);
+  //   });
+
+  //   setShowReceiverCard(false);
+
+  // };
+
+
+  // const handleAnswerCall = () => {
+  //   const answerPeer = new Peer({
+  //     initiator: false,
+  //     trickle: false,
+  //     stream: localStream, // Answerer's local stream
+  //   });
+
+  //   setPeer(answerPeer);
+
+  //   // Send the answer signal back to the caller
+  //   answerPeer.on("signal", (signal) => {
+  //     socket.emit("answer", {
+  //       signal,
+  //       to: callerId, // Send the answer back to the caller
+  //       from: user.sub,
+  //     });
+  //   });
+
+  //   // Signal the incoming call data (received signal)
+  //   answerPeer.signal(incomingSignal);
+
+  //   // When the stream is received from the caller
+  //   answerPeer.on("stream", (stream) => {
+  //     setLocalStream(stream); // Set the remote stream to play the caller's audio/video
+  //     setCallEstablished(true); // Indicate the call has been established
+  //   });
+
+  //   // Hide the receiver card after answering the call
+  //   setShowReceiverCard(false);
+
+  //   // Inform the caller to hide their caller card
+  //   socket.emit("hideCallerCard", { to: callerId });
+  // };
+
   const handleCall = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: false,
-        audio: true,
-      });
-      setLocalStream(stream);
-
-      const newPeer = new Peer({
-        initiator: true,
-        trickle: false,
-        stream,
-      });
-
-      setPeer(newPeer);
-
-      newPeer.on("signal", (signal) => {
-        socket.emit("call", {
-          signal,
-          to: selectedUser.user_id,
-          from: user.sub,
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: true,
         });
-      });
+        setLocalStream(stream);
 
-      newPeer.on("stream", (stream) => {
-        setRemoteStream(stream);
-        setCallEstablished(true);
-      });
+        const newPeer = new Peer({
+          initiator: true,
+          trickle: false,
+          stream,
+        });
 
-      setShowCallerCard(true);
+        setPeer(newPeer);
+
+        newPeer.on("signal", (signal) => {
+          console.log("Caller Signal Data:", signal);
+          socket.emit("call", {
+            signal,
+            to: selectedUser.user_id,
+            from: user.sub,
+          });
+        });
+
+        newPeer.on("stream", (stream) => {
+          setRemoteStream(stream);
+          setCallEstablished(true);
+        });
+
+        setShowCallerCard(true);
+
+        // Uncomment as needed for additional functionality
+        // newPeer.on("data", (data) => {
+        //   console.log("Received data:", data.toString());
+        // });
+
+        // socket.on("receiveCall", (data) => {
+        //   handleIncomingCall(data.signal);
+        // });
+
+        // socket.on("answer", (data) => {
+        //   if (peer) {
+        //     peer.signal(data.signal);
+        //   }
+        // });
+      } else {
+        console.error("MediaDevices API not available.");
+      }
     } catch (error) {
       console.error("Error accessing media devices:", error);
     }
   };
 
   const handleAnswerCall = () => {
+    // Get the user's media stream (audio in this case)
+    if (!localStream) {
+      navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
+        setLocalStream(stream);
+        initializeAnswerPeer(stream);
+      });
+    } else {
+      initializeAnswerPeer(localStream);
+    }
+  };
+
+  // Function to initialize the Peer for answering the call
+  const initializeAnswerPeer = (stream) => {
     const answerPeer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: localStream,
+      initiator: false,  // The receiver is not the initiator
+      trickle: false,    // Disable trickling for signaling
+      stream: stream,    // Use the receiver's local stream (audio)
     });
 
     setPeer(answerPeer);
 
+    // Send the answer signal back to the caller
     answerPeer.on("signal", (signal) => {
       socket.emit("answer", {
         signal,
-        to: callerId,
+        to: callerId, // Send the answer back to the caller
         from: user.sub,
       });
     });
 
+    // Process the incoming signal from the caller
     answerPeer.signal(incomingSignal);
 
-    answerPeer.on("stream", (stream) => {
-      setRemoteStream(stream);
-      setCallEstablished(true);
+    // When the stream from the caller is received
+    answerPeer.on("stream", (remoteStream) => {
+      setRemoteStream(remoteStream); // Set the remote stream (caller’s audio)
+      setCallEstablished(true);      // Call is established, show the stream
+      playAudio(remoteStream);       // Play the audio automatically
     });
 
+    // Hide the receiver card after answering the call
     setShowReceiverCard(false);
+
+    // Inform the caller to hide their caller card
+    socket.emit("hideCallerCard", { to: callerId });
   };
 
-  const handleEndCall = () => {
-    if (peer) {
-      peer.destroy();
+  // Play the audio stream
+  const playAudio = (remoteStream) => {
+    const audioTracks = remoteStream.getAudioTracks();
+    if (audioTracks.length > 0) {
+      const audio = new Audio();
+      audio.srcObject = remoteStream;
+      audio.play().catch((err) => console.error("Error playing audio:", err));
+      console.log("Playing received audio stream...");
+    } else {
+      console.log("No audio tracks received");
     }
+  };
+
+  // When the caller receives the message to hide the caller card
+  socket.on("hideCallerCard", (data) => {
+    if (data.to === selectedUser.user_id) {
+      setShowCallerCard(false); // Hide the caller card on the caller's side
+    }
+  });
+
+  // When the caller receives the message to hide the caller card
+  socket.on("hideCallerCard", (data) => {
+    if (data.to === selectedUser.user_id) {
+      setShowCallerCard(false); // Hide the caller card on the caller's side
+    }
+  });
+
+
+  const handleIncomingCall = (signal) => {
+    if (signal.type === 'offer') {
+      console.log('Incoming Call Signal Data:', signal);
+      setIncomingSignal(signal);  // This will trigger the receiver card UI
+      setShowReceiverCard(true);
+
+      // Setup peer connection for the incoming call
+      const newPeer = new Peer({
+        initiator: false,
+        trickle: false,
+      });
+
+      newPeer.on("signal", (answer) => {
+        socket.emit("callAnswer", { to: callerId, signal: answer }); // Send answer back to caller
+      });
+
+      newPeer.on("stream", (stream) => {
+        setRemoteStream(stream);
+      });
+
+      newPeer.signal(signal); // Signal the incoming call
+
+      setPeer(newPeer);
+    }
+  };
+
+
+  // const handleEndCall = () => {
+  //   if (peer) {
+  //     peer.destroy();
+  //   }
+  //   setLocalStream(null);
+  //   setRemoteStream(null);
+  //   setCallEstablished(false);
+  //   setShowCallerCard(false);
+  //   setShowReceiverCard(false);
+  // };
+
+  const handleEndCall = () => {
+    // Stop the local audio stream
+    if (localStream) {
+      console.log(localStream.getTracks());
+      localStream.getTracks().forEach(track => track.stop()); // Stop all tracks (audio tracks in this case)
+    }
+
+    // Clean up peer connection and state
+    if (peer) {
+      peer.destroy(); // Destroy the peer connection
+    }
+
     setLocalStream(null);
     setRemoteStream(null);
     setCallEstablished(false);
     setShowCallerCard(false);
     setShowReceiverCard(false);
   };
+
   return (
     <div className="bg-gray-100 p-4 flex h-screen">
       <div className="flex flex-col bg-white p-4 shadow-lg rounded-lg w-1/4 h-full">
@@ -544,11 +885,19 @@ export default function Chats() {
         </div>
       </div>
       {showCallerCard && <CallerCard onEndCall={handleEndCall} />}
-      {showReceiverCard && <ReceiverCard onReceiveCall={handleAnswerCall} onEndCall={handleEndCall} />}
+      {showReceiverCard && <ReceiverCard onReceiveCall={handleAnswerCall} onEndCall={handleEndCall} callerId={callerId} />}
       {callEstablished && (
-        <div className="fixed bottom-5 right-5 w-[300px] h-[400px] border border-gray-500 rounded-xl bg-white">
-          <video autoPlay ref={(video) => { if (video) video.srcObject = remoteStream; }}></video>
-          <button onClick={handleEndCall}>End Call</button>
+        <div className="fixed bottom-5 right-5 w-[300px] h-[150px] border border-gray-500 rounded-xl bg-white p-4">
+          {/* Audio for Local Stream (Your own audio, no need to attach as it's local) */}
+          {/* Audio for Remote Stream (Other person's audio) */}
+          <audio
+            autoPlay
+            ref={(audio) => {
+              if (audio && remoteStream) audio.srcObject = remoteStream; // Attach the remote stream (other person's audio)
+            }}
+          ></audio>
+
+          <button className="mt-2" onClick={handleEndCall}>End Call</button>
         </div>
       )}
 
