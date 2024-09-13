@@ -5,7 +5,7 @@ import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SlRefresh } from "react-icons/sl";
-import ReportcardTable from "./ReportCardTable";
+import ReportcardTable from "./ReportcardTable";
 
 export default function ReportCard() {
   const [filter, setFilter] = useState("");
