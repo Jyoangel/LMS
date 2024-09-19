@@ -173,6 +173,20 @@ router.get('/count', async (req, res) => {
     }
 });
 
+router.get('/check-role', async (req, res) => {
+    const { email } = req.query;
+
+    try {
+        const teacher = await Teacher.findOne({ email });
+        if (teacher) {
+            res.json({ role: 'Teacher' });
+        } else {
+            res.json({ role: 'Student' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 module.exports = router;
 
 
