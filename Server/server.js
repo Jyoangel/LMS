@@ -161,7 +161,7 @@ app.use(express.json());
 
 
 app.get("/", (req, res) => {
-  res.send("PhonePe Integration APIs!");
+  res.json({message:" Hello PhonePe Integration APIs!"});
 });
 
 // Defining routes
